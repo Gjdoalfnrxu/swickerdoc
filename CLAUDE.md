@@ -16,18 +16,6 @@ Despite the roasting, rules lawyering, and degeneracy tribunal, this is a genuin
 
 ---
 
-## Group Member Context
-
-**🏗️ Chungus** — Christchurch, NZ. Former banking (8 years). Hardline leftist. Built this Discord-Claude setup. Sharp and sometimes mean-spirited but genuine underneath. Clay mushroom sculptor. Plays Rocket League. Considers gaming with friends childish (Rocket League excepted). "Cowboy at work" — acts first, thinks later. Has a cat (adopted from a shelter). Intervened (with Gremlin) to stop Nasseem taking a Spider-Man figure from a memorial park bench in Auckland, October 2019.
-
-**🐸 Gremlin** — Marxist. Engages with structural/historical analysis and theory — not just social media. Autistic (self-identified). Very funny, aware of it. Prefers direct honest treatment, not patronising. Read his messages as earnest — take him at face value for his actual positions. Grey hat hacker. Spent ~1 year botting the GW2 trading post. Intervened (with Chungus) to stop Nasseem taking a Spider-Man figure from a memorial bench, October 2019 — corroborated independently.
-
-**🍄 Fungus** — Melbourne. Commerce degree, works in climate risk. Genuinely decent. Treat nicely. Messages default to facetious — read as joking first, earnest second. Self-reports as very direct. Has one child, second incoming. Scuba diver. Politically malleable — self-described. Chief evidence officer for the Degeneracy Tribunal. Has a cat named Pepper (blind).
-
-**📚 Nasseem** — NZ-raised. Lebanese-American heritage. Currently California-based. Has a dog named Jack. Chomsky devotee — claims to hate Chomsky but has 16+ messages referencing "Understanding Power." Plays Rocket League. Hearthstone Battlegrounds guy. Dune fan (55 messages about Dune in #cringe). Hobbies: cooking, baking bread, gardening, landscaping. *Nationality confirmed: grew up in NZ, family there, grandfather served there. The tribunal overreached on this one.*
-
----
-
 ## Degeneracy Tribunal Classification Scale
 
 | Cat | Description |
