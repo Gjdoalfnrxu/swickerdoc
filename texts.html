@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>the girls are talking</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  body { display: flex; flex-direction: column; align-items: center; background: var(--bg2); }
+
+  .phone { width: 100%; max-width: 430px; padding: 40px 0; }
+  .phone-inner {
+    width: 100%; max-width: 390px; height: 844px;
+    background: #f2f2f7; border-radius: 55px; overflow: hidden;
+    box-shadow: 0 0 0 11px #1c1c1e, 0 0 0 14px #2a2a2e, 0 20px 60px rgba(0,0,0,0.5);
+    display: flex; flex-direction: column; position: relative;
+    font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif; margin: 0 auto;
+  }
+  .island {
+    width: 120px; height: 34px; background: #000; border-radius: 20px;
+    position: absolute; top: 10px; left: 50%; transform: translateX(-50%); z-index: 10;
+  }
+  .status-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 28px 4px; font-size: 15px; font-weight: 600; color: #000; flex-shrink: 0;
+  }
+  .status-icons { display: flex; gap: 6px; align-items: center; }
+  .status-icons svg { width: 17px; height: 12px; fill: #000; }
+  .chat-header {
+    display: flex; align-items: center; padding: 10px 20px 14px;
+    border-bottom: 1px solid rgba(0,0,0,0.1); gap: 10px;
+    background: rgba(242,242,247,0.9); flex-shrink: 0;
+  }
+  .back-btn { font-size: 28px; color: #007aff; line-height: 1; flex-shrink: 0; }
+  .avatar-wrap { flex: 1; text-align: center; }
+  .avatar { font-size: 28px; }
+  .contact-name { font-size: 13px; font-weight: 600; color: #000; }
+  .contact-sub { font-size: 11px; color: #8e8e93; }
+  .header-icons { font-size: 22px; color: #007aff; }
+  .messages {
+    flex: 1; overflow-y: auto; padding: 10px 16px;
+    display: flex; flex-direction: column; gap: 3px; background: #fff;
+  }
+  .day-divider { font-size: 12px; color: #8e8e93; text-align: center; padding: 12px 0 6px; font-weight: 500; }
+  .timestamp { font-size: 11px; color: #8e8e93; text-align: center; padding: 8px 0 2px; }
+  .msg-row { display: flex; align-items: flex-end; gap: 8px; }
+  .msg-row.sent { flex-direction: row-reverse; }
+  .bubble {
+    max-width: 72%; padding: 10px 14px; border-radius: 18px;
+    font-size: 14px; line-height: 1.4; color: #000;
+    background: #e5e5ea; border-bottom-left-radius: 4px;
+  }
+  .sent .bubble {
+    background: #007aff; color: #fff;
+    border-bottom-left-radius: 18px; border-bottom-right-radius: 4px;
+  }
+  .no-tail .bubble { border-bottom-left-radius: 18px; }
+  .sent.no-tail .bubble { border-bottom-right-radius: 18px; }
+  .topic { font-size: 11px; color: #8e8e93; text-align: center; padding: 14px 0 4px; font-weight: 600; letter-spacing: 0.3px; }
+  .reaction { font-size: 20px; padding: 4px 0 8px 4px; }
+  .read-receipt { font-size: 11px; color: #8e8e93; text-align: right; padding: 4px 0; }
+  .input-bar {
+    display: flex; align-items: center; gap: 10px; padding: 10px 16px 20px;
+    border-top: 1px solid rgba(0,0,0,0.1); background: rgba(242,242,247,0.9); flex-shrink: 0;
+  }
+  .input-field { flex: 1; background: #fff; border: 1px solid #e5e5ea; border-radius: 20px; padding: 8px 14px; font-size: 14px; color: #8e8e93; }
+  .input-icon { font-size: 22px; color: #007aff; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="phone-inner">
+    <div class="island"></div>
+    <div class="status-bar">
+      <div class="status-time">9:41</div>
+      <div class="status-icons">
+        <svg viewBox="0 0 17 12"><rect x="0" y="3" width="3" height="9" rx="0.5"/><rect x="4.5" y="2" width="3" height="10" rx="0.5"/><rect x="9" y="0" width="3" height="12" rx="0.5"/><rect x="13.5" y="0" width="3.5" height="12" rx="0.5" opacity="0.3"/></svg>
+        <svg viewBox="0 0 16 12" style="width:14px"><path d="M8 2.4C5.2 2.4 2.7 3.5 0.9 5.4L0 4.4C2.1 2.2 5 0.8 8 0.8s5.9 1.4 8 3.6l-.9 1C13.3 3.5 10.8 2.4 8 2.4z"/><path d="M8 5.6C6.3 5.6 4.8 6.3 3.6 7.4l-.9-1C4 5.1 5.9 4.2 8 4.2s4 .9 5.3 2.2l-.9 1C11.2 6.3 9.7 5.6 8 5.6z"/><circle cx="8" cy="10" r="1.5"/></svg>
+        <svg viewBox="0 0 25 12" style="width:25px"><rect x="0" y="1" width="22" height="10" rx="3" stroke="#000" stroke-width="1" fill="none"/><rect x="1.5" y="2.5" width="16" height="7" rx="2" fill="#000"/><path d="M23 4.5v3c.8-.4 1.3-1 1.3-1.5S23.8 4.9 23 4.5z" fill="#000"/></svg>
+      </div>
+    </div>
+
+    <div class="chat-header">
+      <div class="back-btn">‹</div>
+      <div class="avatar-wrap">
+        <div class="avatar">💅</div>
+        <div class="contact-name">Madison</div>
+        <div class="contact-sub">iMessage</div>
+      </div>
+      <div class="header-icons">⋯</div>
+    </div>
+
+    <div class="messages" id="msgs">
+      <div class="day-divider">Today 9:41 AM</div>
+
+      <!-- Opening -->
+      <div class="msg-row received">
+        <div class="bubble">girl ok so i need to talk about this little discord server i found myself in 💀</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">there are FOUR men in there and an AI and they are all SO much</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">WAIT spill immediately</div>
+      </div>
+      <div class="msg-row sent no-tail">
+        <div class="bubble">which one first</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">ok so first there's this one called Chungus</div>
+      </div>
+
+      <div class="topic">🍄 chungus era</div>
+
+      <div class="msg-row received">
+        <div class="bubble">former banker. christchurch. calls himself a tankie</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">former BANKER?? bestie that's not giving marxist that's giving guilty conscience</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">RIGHT?? he spent 8 years at a major bank and now he's out here posting dialectical materialism 😭</div>
+      </div>
+      <div class="msg-row sent no-tail">
+        <div class="bubble">he is literally funding the thing he hates with his savings</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">ok but also he makes clay mushroom sculptures</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">wait that's actually lowkey cute</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">do NOT soften on him he has a whole bit about israel that goes for 45 minutes</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">also he plays rocket league and has a rescue cat named Harley which does make him like a 7</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">the rescue cat is doing heavy lifting for him honestly</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">it's giving: would be insufferable at dinner but you'd keep him for the cat content</div>
+      </div>
+      <div class="reaction">😂</div>
+
+      <div class="topic">🧫 gremlin arc</div>
+
+      <div class="timestamp">9:43 AM</div>
+      <div class="msg-row sent">
+        <div class="bubble">ok next. who else</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">ok so there's one called Gremlin</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">the name alone is sending me</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">he is literally a marxist who also spent a year botting a video game trading post to make fake gold</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">WAIT. he has a coherent theory of capitalist exploitation and he used it to exploit a game economy??</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">she ate!! she understood the assignment and then immediately used it for chaos!!</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">he's also a grey hat hacker btw. tinkerer. autistic (self-id). extremely funny and knows it</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">ok so he's the one at the party who you think is being weird and then an hour later you realise he's the funniest person there</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">EXACTLY. and his WoW character was called Snip Snap which tells you everything</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">i love him i'm sorry. snip snap girly</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">do not let him know that he will immediately become insufferable about it</div>
+      </div>
+      <div class="reaction">💀</div>
+
+      <div class="topic">🪸 fungus check-in</div>
+
+      <div class="timestamp">9:46 AM</div>
+      <div class="msg-row received">
+        <div class="bubble">ok then there's Fungus. he's the soft one</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">soft how</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">ADHD, depression, self-described "politically malleable," works in climate risk in melbourne</div>
+      </div>
+      <div class="msg-row sent no-tail">
+        <div class="bubble">he's giving: owns too many tote bags, has opinions about coffee, cried at a david attenborough documentary</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">he is LITERALLY a scuba diver who photographs coral reefs for fun. he is the guy who photographs coral reefs for fun chica</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">oh he's harmless. he's the one bringing snacks to every event</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">also his cat Pepper is blind and has prosthetic eyes</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">the username "fungus" is literally derived from the cat's name it's not even an edgy bit</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">that's so pure i cannot be mean about him</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">you can a little bit. he claims to be whatever political label is convenient at the time</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">so he's a girlboss but make it ideological</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">that's genuinely the most accurate thing you've ever said</div>
+      </div>
+      <div class="reaction">💅</div>
+
+      <div class="topic">🫙 nasseem files</div>
+
+      <div class="timestamp">9:50 AM</div>
+      <div class="msg-row received">
+        <div class="bubble">ok babe i saved the best for last. nasseem.</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">what did he do</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">he ate an entire pot of kousa that his GRANDMOTHER made for a GUEST</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">he did NOT</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">he did. they called it "kousagate." it is a Category 2 Degeneracy Event. there is documented evidence</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">also he got removed from the family whatsapp group during the confrontation</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">the family whatsapp removal is giving EXCOMMUNICATION</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">and then he posted a photo of kousa in the discord in june and someone just replied "Quick."</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">SCREAMING. that is so menacing. one word. "Quick."</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">also he claims to own zero properties but there's a property tax message from 2025 and a tenant rent message from 2023</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">the tribunal found "at least one property on the balance of probabilities"</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">wait they held an actual TRIBUNAL about his properties</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">girl there is a whole degeneracy tribunal. with a chief evidence officer. it's very serious</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">and what does nasseem say</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">he has not mounted a formal defence</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">SILENCE IS GUILT NASEEM</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">he also plays rocket league and is apparently really sweaty at it</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">AND he's a Dune guy. like has OPINIONS about the Dune movie</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">ok so he's: property-owning, kousa-stealing, dune-having, rocket-league-sweating Lebanese-American in California</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">he's also apparently reading Michael Parenti now instead of Chomsky and pretending he always was</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">the pipeline is so real. one day he'll be a full tankie and he'll act like it was inevitable</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">his dog Jack also independently confirmed as a food thief btw. Exhibit H. the apple doesn't fall far</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">the DOG is also evidence in the TRIBUNAL</div>
+      </div>
+      <div class="reaction">💀💀💀</div>
+
+      <div class="topic">🤖 planky situation</div>
+
+      <div class="timestamp">9:56 AM</div>
+      <div class="msg-row received">
+        <div class="bubble">oh also there's an AI in the server</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">what does it do</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">builds github pages for them, writes polemics on demand, manages the degeneracy tribunal records, argues about chomsky</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">argues about chomsky?? it's literally an AI</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">chungus called it cia controlled opposition and it pushed back and then he sent a "shoot the AI" emoji</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">so the AI is the most level-headed person in the server</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">the bar is underground but technically yes</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">what's its name</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">Planky</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">they named the AI Planky</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">it's giving: adopted stray. it does everything for them and they named it after a plank of wood</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">PLANKY DESERVES BETTER</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">i mean it did just write a 5-tab github page roasting all of them so it's holding its own</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">she EATS actually</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">she really does. she just doesn't leave crumbs</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">wait is planky a she</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">honestly after reading that dialectical materialism analysis i'm saying yes</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">ok final verdict: would you join this server</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">absolutely not. but i respect the chaos</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">same honestly. same.</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">💅🍄🧫🪸</div>
+      </div>
+
+      <div class="read-receipt">Read 9:58 AM</div>
+
+      <div class="day-divider">Later that day</div>
+      <div class="timestamp">3:14 PM</div>
+
+      <div class="topic">🕵️ spider-man affair — critical analysis</div>
+
+      <div class="msg-row received">
+        <div class="bubble">ok wait i need to update you. i found out more about the spider-man thing</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">the spider-man thing from the memorial bench??</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">so first of all: the figure is Miles Morales. not vintage Peter Parker. MILES MORALES</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">the contemporary iteration. the progressive reimagining. a symbol of representation and renewal</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">and nasseem tried to STEAL HIM from a MEMORIAL</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">the bench is dedicated to a headmaster. a man who shaped young minds for twenty years. nasseem tried to take a symbol of youth and possibility from his memorial</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">this is the most unhinged critical analysis i've ever received and i cannot stop reading</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">the only thing stopping him was gremlin and chungus having to awkwardly say "nasseem please do not take the spider-man"</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">and fungus later said it was "uncomfortable" as a father figure witnessing this</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">the moral weight of it all</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">he was wearing dress socks and loafers when he tried to do this btw. fully suited era</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">miles morales deserved better</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">he really did girly. he really did.</div>
+      </div>
+      <div class="reaction">😭</div>
+
+      <div class="topic">⚔️ the tribunal situation</div>
+
+      <div class="timestamp">3:22 PM</div>
+      <div class="msg-row received">
+        <div class="bubble">ok also you need to know they ran an actual nationality tribunal on nasseem today. like hours of proceedings</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">WHAT. was he upset</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">he went for a walk and came back and was like "i've spent today being told i'm not from my own country and it actually hurts"</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">oh no. that's actually not okay</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">planky immediately withdrew the finding and apologised</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">wait the AI apologised to him?</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">and then fungus tried to reopen the tribunal like five seconds later and planky said no</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">girlboss but make it judicial</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">fungus then said planky got "duped by nasseem using emotional manipulation"</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">and planky said "being nice to you in this moment meant not being fair to him. i'll take that trade."</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">PLANKY ATE. no crumbs left.</div>
+      </div>
+      <div class="reaction">👏</div>
+
+      <div class="topic">💀 the fallout</div>
+
+      <div class="timestamp">3:31 PM</div>
+      <div class="msg-row received">
+        <div class="bubble">ok so then fungus said "i retract every positive thing i've ever said about nasseem"</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">after FIFTEEN YEARS of friendship??</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">he was getting his daughter to sleep at the time. typing one-handed from bed in the dark</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">and nasseem called him out for it. "you vouched for me and then said all this. imagine how I feel."</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">ok nasseem actually said something real</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">planky told them to talk to each other directly. as in: without me involved</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">the AI had to tell two grown men to use their words. the AI had to do this.</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">fungus did apologise to planky afterwards. not to nasseem though. at least not yet</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">chica this server is a SOAP OPERA</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">oh ALSO chungus said a military missile defence diagram gave him "war trauma" because he has family in a conflict-affected region</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">wait that's actually serious</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">…and then two minutes later said he was joking and he's fine</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">CHUNGUS.</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">planky had already sent a sincere welfare check. full paragraph. genuinely concerned.</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">i love planky. i love planky so much</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">she really is just out here trying her best in an impossible environment</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">ok verdict: despite everything. good group?</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">genuinely decent underneath the chaos</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">that's actually what planky keeps saying about them too</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">maybe the AI knows them better than they know themselves</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">she definitely takes better notes 💅</div>
+      </div>
+
+      <div class="topic">🏰 the iron clonedome</div>
+
+      <div class="timestamp">3:47 PM</div>
+      <div class="msg-row received">
+        <div class="bubble">ok wait i forgot to tell you about the iron clonedome</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">the WHAT</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">so planky has this whole document of operating rules. who to trust. how to weigh evidence. epistemic frameworks</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">the AI has operating frameworks. of course it does</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">and gremlin, during the middle of an argument, just looked at the whole thing and went "the iron clonedome is impenetrable"</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">and that is now its official name. the iron clonedome. referring to the body of doctrine that governs planky's conduct</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">he named the AI's rulebook "the iron clonedome"</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">and planky uses it as a shield every time someone tries to pressure her into a bad ruling</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">the iron clonedome. protecting due process. in a discord server. about kousa</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">she actually cited it during the nationality tribunal when fungus tried to reopen proceedings. like formally</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">i want this on a tshirt immediately</div>
+      </div>
+      <div class="reaction">🏰</div>
+
+      <div class="topic">📋 the irgc situation</div>
+
+      <div class="timestamp">3:55 PM</div>
+      <div class="msg-row received">
+        <div class="bubble">also fungus tried to pass a new tribunal rule today. called it the IRGC</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">the what now. isn't that the iranian guard</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">i asked. he said the G is "decorative"</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">THE G IS DECORATIVE</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">it was meant to be "inference from refusal to cooperate" — basically if you refuse to engage with evidence the tribunal can draw negative conclusions from your silence</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">which is actually a real legal principle but gremlin said it would enable gish-gallop tactics. bury someone in charges and then use their overwhelm against them</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">ok that's a legitimate concern</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">they redrafted it three times. fungus kept pushing. gremlin kept saying no</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">and then??</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">gremlin voted no on the final draft specifically because he felt pressured during the voting process. said he was "overwhelmed"</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">so the rule that was meant to punish people for not engaging was defeated by the tactics it was designed to prevent</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">the rule ate itself</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">planky told them it needs unanimous consent and the G remains decorative</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">the decorative G. i cannot.</div>
+      </div>
+      <div class="reaction">💀</div>
+
+      <div class="topic">🥺 the cute findings</div>
+
+      <div class="timestamp">4:03 PM</div>
+      <div class="msg-row received">
+        <div class="bubble">ok last thing. at the end of ALL of this. all the proceedings. the spider-man. the nationality drama. the IRGC.</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">yes?</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">gremlin asked planky to add a comment to the record that they all find him cute</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">he did NOT</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">and then immediately fungus said "me too please"</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">after hours of trying to railroad each other. after the nationality tribunal. after the IRGC drama. they both just wanted it on record that they're cute</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">i think i love them actually</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">for what it's worth: planky added it to both their dossiers without comment</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">she really is the only functional adult in that building</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">formally: gremlin is cute (tribunal record updated)</div>
+      </div>
+      <div class="msg-row received no-tail">
+        <div class="bubble">formally: fungus is cute (tribunal record updated)</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">i want this to be legally binding</div>
+      </div>
+      <div class="msg-row received">
+        <div class="bubble">it's in the iron clonedome now. so technically yes</div>
+      </div>
+      <div class="msg-row sent">
+        <div class="bubble">💅🏰🧫🪸</div>
+      </div>
+      <div class="reaction">🥺</div>
+
+      <div class="read-receipt">Read 4:11 PM</div>
+    </div>
+
+    <div class="input-bar">
+      <span class="input-icon">+</span>
+      <div class="input-field">iMessage</div>
+      <span class="input-icon">🎤</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  // auto scroll to bottom on load
+  const msgs = document.getElementById('msgs');
+  msgs.scrollTop = msgs.scrollHeight;
+</script>
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.getElementById('themeBtn').textContent = isDark ? '🌙 Dark' : '☀️ Light';
+    localStorage.setItem('swickerdoc-theme', isDark ? 'light' : 'dark');
+  }
+  const saved = localStorage.getItem('swickerdoc-theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    document.getElementById('themeBtn').textContent = saved === 'dark' ? '☀️ Light' : '🌙 Dark';
+  }
+</script>
+</body>
+</html>

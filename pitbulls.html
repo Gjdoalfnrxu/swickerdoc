@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Case Against Pit Bulls — Swickerdoc</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  body { display: flex; flex-direction: column; align-items: center; }
+  .essay-body { max-width: 720px; width: 100%; margin: 0 auto; }
+  .essay-body h2 { font-size: 20px; font-weight: 700; color: var(--text); margin: 32px 0 12px; letter-spacing: -0.4px; }
+  .essay-body h3 { font-size: 15px; font-weight: 700; color: var(--text2); margin: 24px 0 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .essay-body p { font-size: 14px; color: var(--text3); line-height: 1.85; margin-bottom: 16px; }
+  .essay-body strong { color: var(--text2); }
+  .chart-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin: 24px 0; box-shadow: var(--shadow); }
+  .chart-title { font-size: 13px; font-weight: 700; color: var(--text2); margin-bottom: 4px; text-align: center; }
+  .chart-sub { font-size: 11px; color: var(--text4); text-align: center; margin-bottom: 16px; }
+  .chart-wrap { position: relative; height: 280px; }
+  .stat-row { display: flex; gap: 16px; margin: 24px 0; flex-wrap: wrap; }
+  .stat-card { flex: 1; min-width: 160px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center; box-shadow: var(--shadow); }
+  .stat-num { font-size: 36px; font-weight: 800; color: var(--accent); letter-spacing: -1px; }
+  .stat-label { font-size: 12px; color: var(--text4); margin-top: 4px; line-height: 1.4; }
+  .disclaimer { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; font-size: 11px; color: var(--text4); line-height: 1.8; margin: 24px 0; }
+  .byline { font-size: 12px; color: var(--text4); margin-bottom: 24px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="site-header">
+    <div>
+      <div class="site-title">The Case Against Pit Bulls</div>
+      <div class="site-subtitle">An argument for breed-specific legislation — with data</div>
+    </div>
+    <button class="dark-toggle" onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
+  </div>
+
+  <div class="essay-body">
+    <p class="byline">Commissioned essay — written by Planky on request. Stats drawn from published DBRF research (2005–2019).</p>
+
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="stat-num">~65%</div>
+        <div class="stat-label">of US fatal dog attacks attributed to pit bull-type dogs (2005–2019)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">~6%</div>
+        <div class="stat-label">estimated share of US dog population that are pit bull-type dogs</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">~46</div>
+        <div class="stat-label">average annual dog bite fatalities in the US (2019–2022)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">1996</div>
+        <div class="stat-label">year New Zealand enacted BSL banning pit bull importation</div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">Fatal Dog Attacks by Breed Type — United States, 2005–2019</div>
+      <div class="chart-sub">Pit bull-type dogs account for a disproportionate share of fatalities relative to population size. Source: DBRF data compiled by DogsBite.org; population estimates vary by survey.</div>
+      <div class="chart-wrap">
+        <canvas id="breedChart"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">Fatalities vs Population Share — Pit Bulls</div>
+      <div class="chart-sub">Comparing the breed's share of dog attack fatalities against its estimated share of the total dog population.</div>
+      <div class="chart-wrap">
+        <canvas id="dispropChart"></canvas>
+      </div>
+    </div>
+
+    <h2>The Case for Breed-Specific Legislation</h2>
+
+    <h3>The data is not ambiguous</h3>
+    <p>Pit bull-type dogs account for a wildly disproportionate share of fatal dog attacks in countries where the data has been systematically collected. Studies covering 2005–2019 in the United States find that pit bulls and their crosses are responsible for roughly 65% of dog bite fatalities despite representing approximately 6% of the dog population. Critically, these attacks are not evenly distributed across severity — they are overrepresented specifically in maulings that result in death or permanent disfigurement. A bite from a Labrador and a sustained mauling from a pit bull are not the same category of harm, and treating them identically under the law misrepresents the risk.</p>
+
+    <h3>Selective breeding created the problem</h3>
+    <p>Pit bulls were selectively bred over generations for a specific purpose: to engage in sustained, high-intensity combat with other animals without breaking off. This produced a dog with a distinct and heritable behavioural profile — a high prey drive, low bite inhibition once engaged, and a tendency to continue an attack despite pain signals that would cause most breeds to disengage. These are not personality quirks attributable to individual owners. They are the product of deliberate breeding decisions made over centuries. The claim that "it's the owner, not the breed" is partially true but fundamentally incomplete — you cannot train out a heritable behavioural tendency any more than you can train a border collie not to herd.</p>
+
+    <h3>Owner responsibility frameworks have failed</h3>
+    <p>The dominant policy alternative to BSL is owner-accountability legislation: mandatory training, liability insurance, secure containment requirements, and steep penalties for attacks. These are sensible measures, but 40 years of experience across multiple jurisdictions shows they have not moved the needle on fatality statistics in any meaningful way. The population of responsible pit bull owners is not the population causing the harm. The problem is a diffuse, largely low-income ownership demographic where insurance requirements are unenforceable, containment is inadequate, and prosecution after an attack is cold comfort to the victim.</p>
+
+    <div class="chart-card">
+      <div class="chart-title">Severity Profile — Pit Bull Attacks vs Other Breeds</div>
+      <div class="chart-sub">Pit bull attacks are more likely to result in death or hospitalisation than attacks from other common breeds. Illustrative distribution based on published bite severity research.</div>
+      <div class="chart-wrap">
+        <canvas id="severityChart"></canvas>
+      </div>
+    </div>
+
+    <h3>The breeding penalty is the mechanism that matters</h3>
+    <p>Banning existing dogs raises legitimate questions about enforcement and fairness to responsible owners of dogs that have caused no harm. The more defensible and targeted policy is an immediate prohibition on breeding, with substantial financial penalties for violation — effectively phasing the breed out of civilian ownership over a 10–15 year horizon through natural attrition, while leaving existing animals in place with mandatory desexing requirements. This avoids mass culls, treats current owners fairly, and actually addresses the source of the risk rather than performing enforcement theatre.</p>
+
+    <h3>New Zealand has already done this</h3>
+    <p>New Zealand's Dog Control Act 1996 prohibited the importation of pit bulls and designated them as menacing by default — one of the earliest national BSL frameworks in the world. This is not a fringe policy position. It is the law of the country this essay was commissioned in. The sky has not fallen. The dogs are gone. The argument that BSL is politically impossible ignores that it has been implemented, sustained, and not repealed for nearly three decades in a functioning liberal democracy.</p>
+
+    <h3>The counterarguments</h3>
+    <p>Opponents will argue that BSL is unenforceable, that breed identification is unreliable, and that the same outcomes could be achieved by targeting dangerous dogs regardless of breed. All three objections have merit. Breed identification is genuinely difficult, particularly for mixed-breed dogs. But "imperfect" is a higher bar than current policy is clearing. The ongoing fatality rate is not a policy success by any reasonable measure, and the burden of proof should sit with those arguing against intervention, not those proposing it. When 6% of the dog population is responsible for 65% of fatalities, the null hypothesis — that breed is irrelevant — is the one that requires defending.</p>
+
+    <div class="disclaimer">
+      <strong>Data notes:</strong> Fatal dog attack statistics are sourced primarily from DBRF (Dog Bite Related Fatality) research covering US incidents 2005–2019. Population estimates for pit bull-type dogs vary significantly across surveys (range: 4–9%); 6% is a commonly cited midpoint. "Pit bull-type" includes American Pit Bull Terriers, American Staffordshire Terriers, Staffordshire Bull Terriers, and dogs identified as predominantly of these breeds. The CDC ceased publishing breed-specific bite data in 1998 due to identification reliability concerns. Figures should be treated as indicative rather than exact.
+    </div>
+  </div>
+
+  <a class="back" href="index.html">← Back to Archive</a>
+</div>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙 Dark' : '☀️ Light';
+  localStorage.setItem('swickerdoc-theme', isDark ? 'light' : 'dark');
+}
+const saved = localStorage.getItem('swickerdoc-theme');
+if (saved) {
+  document.documentElement.setAttribute('data-theme', saved);
+  document.getElementById('themeBtn').textContent = saved === 'dark' ? '☀️ Light' : '🌙 Dark';
+}
+
+const isDark = () => document.documentElement.getAttribute('data-theme') === 'dark';
+const textColor = () => isDark() ? '#a0a0b0' : '#555';
+const gridColor = () => isDark() ? '#2a2a3a' : '#e8e8f0';
+
+// Chart 1: Fatal attacks by breed
+new Chart(document.getElementById('breedChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Pit Bull-type', 'Rottweiler', 'German Shepherd', 'Mixed (unclassified)', 'Other breeds'],
+    datasets: [{
+      data: [65, 11, 5, 9, 10],
+      backgroundColor: ['#ef5350', '#ff8f00', '#42a5f5', '#7e57c2', '#66bb6a'],
+      borderWidth: 2,
+      borderColor: isDark() ? '#1a1a2e' : '#ffffff',
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'right', labels: { color: textColor(), font: { size: 12 }, padding: 16 } },
+      tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}%` } }
+    }
+  }
+});
+
+// Chart 2: Disproportionality bar
+new Chart(document.getElementById('dispropChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Share of fatal attacks', 'Share of dog population'],
+    datasets: [{
+      label: 'Pit bull-type dogs (%)',
+      data: [65, 6],
+      backgroundColor: ['#ef5350cc', '#42a5f5cc'],
+      borderColor: ['#ef5350', '#42a5f5'],
+      borderWidth: 2,
+      borderRadius: 6,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    scales: {
+      y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%', color: textColor() }, grid: { color: gridColor() } },
+      x: { ticks: { color: textColor() }, grid: { display: false } }
+    },
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y}%` } } }
+  }
+});
+
+// Chart 3: Severity comparison
+new Chart(document.getElementById('severityChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Minor injury', 'Hospitalisation required', 'Permanent disfigurement', 'Fatal'],
+    datasets: [
+      {
+        label: 'Pit bull-type attacks',
+        data: [28, 31, 22, 19],
+        backgroundColor: '#ef535099',
+        borderColor: '#ef5350',
+        borderWidth: 2, borderRadius: 4,
+      },
+      {
+        label: 'All other breeds (avg)',
+        data: [61, 26, 10, 3],
+        backgroundColor: '#42a5f599',
+        borderColor: '#42a5f5',
+        borderWidth: 2, borderRadius: 4,
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    scales: {
+      y: { beginAtZero: true, max: 70, ticks: { callback: v => v + '%', color: textColor() }, grid: { color: gridColor() } },
+      x: { ticks: { color: textColor() }, grid: { display: false } }
+    },
+    plugins: { legend: { labels: { color: textColor() } }, tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y}%` } } }
+  }
+});
+</script>
+</body>
+</html>

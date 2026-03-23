@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Degeneracy Tribunal — Height Analysis</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #111;
+    color: #ccc;
+    font-family: 'Courier New', Courier, monospace;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px 60px;
+  }
+
+  h1 {
+    font-size: 22px;
+    color: #fff;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    text-align: center;
+  }
+
+  .subtitle {
+    font-size: 12px;
+    color: #444;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+
+  .disclaimer {
+    font-size: 11px;
+    color: #2a2a2a;
+    letter-spacing: 1px;
+    margin-bottom: 32px;
+    text-align: center;
+  }
+
+  .chart-wrap {
+    width: 100%;
+    max-width: 700px;
+    background: #0d0d0d;
+    border: 1px solid #1e1e1e;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+
+  .axis-note {
+    font-size: 11px;
+    color: #cc4444;
+    letter-spacing: 1px;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .data-table {
+    width: 100%;
+    max-width: 700px;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-bottom: 24px;
+  }
+
+  .data-table th {
+    color: #444;
+    letter-spacing: 2px;
+    font-size: 10px;
+    text-transform: uppercase;
+    padding: 8px 12px;
+    border-bottom: 1px solid #1e1e1e;
+    text-align: left;
+  }
+
+  .data-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #141414;
+    color: #aaa;
+  }
+
+  .data-table tr:hover td { background: #111; }
+
+  .rank-1 { color: #ef5350; }
+  .rank-2 { color: #ffb300; }
+  .rank-3 { color: #66bb6a; }
+  .rank-4 { color: #42a5f5; }
+
+  .finding {
+    width: 100%;
+    max-width: 700px;
+    background: #0d0d0d;
+    border: 1px solid #1e1e1e;
+    border-left: 3px solid #cc4444;
+    padding: 16px 20px;
+    font-size: 13px;
+    color: #888;
+    line-height: 1.7;
+  }
+
+  .finding strong { color: #ccc; }
+
+  a.back {
+    display: inline-block;
+    margin-top: 32px;
+    font-size: 11px;
+    color: #333;
+    text-decoration: none;
+    letter-spacing: 2px;
+  }
+  a.back:hover { color: #666; }
+</style>
+</head>
+<body>
+
+<h1>Height Analysis</h1>
+<div class="subtitle">DEGENERACY TRIBUNAL — PHYSICAL EVIDENCE DIVISION</div>
+<div class="disclaimer">* Y-axis starts at 150cm for maximum dramatic effect. This is intentional. The tribunal regrets nothing.</div>
+
+<div class="axis-note">⚠ NOTE: Y-AXIS DOES NOT START AT ZERO. THIS IS BY DESIGN. DO NOT TRUST THIS GRAPH.</div>
+
+<div class="chart-wrap">
+  <canvas id="heightChart"></canvas>
+</div>
+
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Rank</th>
+      <th>Alias</th>
+      <th>Height</th>
+      <th>Imperial</th>
+      <th>Classification</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="rank-4">🥇</td>
+      <td class="rank-4">Chungus</td>
+      <td class="rank-4">193 cm</td>
+      <td>6'4"</td>
+      <td>Tankie altitude. Structurally imposing. Consistent with revolutionary energy.</td>
+    </tr>
+    <tr>
+      <td class="rank-3">🥈</td>
+      <td class="rank-3">Fungus</td>
+      <td class="rank-3">180 cm</td>
+      <td>5'11"</td>
+      <td>Comfortably average. Climate risk does not require great height.</td>
+    </tr>
+    <tr>
+      <td class="rank-2">🥉</td>
+      <td class="rank-2">Gremlin</td>
+      <td class="rank-2">178 cm</td>
+      <td>5'10"</td>
+      <td>Within margin of error of Fungus. The 2cm gap is contested.</td>
+    </tr>
+    <tr>
+      <td class="rank-1">4th</td>
+      <td class="rank-1">Nasseem</td>
+      <td class="rank-1">152 cm</td>
+      <td>5'0"</td>
+      <td>Legally a hobbit. Consistent with reaching for things on low shelves, including memorial benches.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="finding">
+  <strong>Tribunal Finding — Height Division:</strong><br><br>
+  The gap between Nasseem (152 cm) and Chungus (193 cm) is <strong>41 cm</strong> — approximately the height of a standard kitchen cat. The gap between Nasseem and the next shortest member (Gremlin, 178 cm) is <strong>26 cm</strong>, which the tribunal classifies as statistically significant and emotionally devastating.<br><br>
+  The 2 cm difference between Fungus (180 cm) and Gremlin (178 cm) remains disputed. Fungus has not provided a certified measurement. The tribunal notes that 2 cm is within the margin of morning vs. evening measurement variance and declines to issue a finding at this time.<br><br>
+  Nasseem's height of 5'0" is consistent with his previously documented ability to reach the bottom of a kousa pot. It is not consistent with his self-image as a Rocket League sweaty. The tribunal files both observations without comment.<br><br>
+  <strong>The skewed y-axis was intentional.</strong> On a correctly scaled graph starting at 0, the differences would appear minor. On this graph, Nasseem appears to be approximately half the height of Chungus. The tribunal considers this the more honest representation of the lived experience.
+</div>
+
+<a class="back" href="index.html">← Back to Archive</a>
+
+<script>
+const ctx = document.getElementById('heightChart').getContext('2d');
+
+const members = ['Nasseem', 'Gremlin', 'Fungus', 'Chungus'];
+const heights = [152, 178, 180, 193];
+const colors = ['#ef5350', '#ffb300', '#66bb6a', '#42a5f5'];
+const labels = ["5'0\" — legally a hobbit", "5'10\" — gremlin height", "5'11\" — banker height", "6'4\" — tankie altitude"];
+
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: members,
+    datasets: [{
+      label: 'Height (cm)',
+      data: heights,
+      backgroundColor: colors.map(c => c + '33'),
+      borderColor: colors,
+      borderWidth: 2,
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      title: {
+        display: true,
+        text: 'Member Heights — Y-axis: 150–200cm (deliberately misleading)',
+        color: '#555',
+        font: { family: 'Courier New', size: 12 },
+        padding: { bottom: 16 }
+      },
+      tooltip: {
+        callbacks: {
+          label: (ctx) => {
+            const i = ctx.dataIndex;
+            return ` ${heights[i]}cm — ${labels[i]}`;
+          }
+        },
+        backgroundColor: '#0d0d0d',
+        borderColor: '#2a2a2a',
+        borderWidth: 1,
+        titleColor: '#ccc',
+        bodyColor: '#888',
+        titleFont: { family: 'Courier New' },
+        bodyFont: { family: 'Courier New' }
+      }
+    },
+    scales: {
+      y: {
+        min: 150,
+        max: 200,
+        ticks: {
+          color: '#444',
+          font: { family: 'Courier New', size: 11 },
+          callback: (v) => {
+            const notes = { 152: '◄ NASSEEM', 178: '◄ GREMLIN', 180: '◄ FUNGUS', 193: '◄ CHUNGUS' };
+            return notes[v] ? `${v}cm ${notes[v]}` : `${v}cm`;
+          }
+        },
+        grid: { color: '#1a1a1a' },
+        border: { color: '#2a2a2a' }
+      },
+      x: {
+        ticks: {
+          color: '#888',
+          font: { family: 'Courier New', size: 13 }
+        },
+        grid: { color: '#1a1a1a' },
+        border: { color: '#2a2a2a' }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>

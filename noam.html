@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOAM ZONE</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=VT323&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green: #4caf50;
+    --amber: #ffb300;
+    --red: #f44336;
+    --dim: #1a1a1a;
+    --paper: #f5f0e8;
+  }
+
+  body {
+    background: #0a0a0a;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px;
+    font-family: 'VT323', monospace;
+  }
+
+  /* Title screen */
+  #title-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 90vh;
+    text-align: center;
+  }
+
+  .title-art {
+    font-size: 11px;
+    line-height: 1.1;
+    color: var(--green);
+    white-space: pre;
+    margin-bottom: 20px;
+    text-shadow: 0 0 8px rgba(76,175,80,0.6);
+  }
+
+  .game-title {
+    font-size: 64px;
+    color: var(--green);
+    text-shadow: 0 0 20px rgba(76,175,80,0.8);
+    letter-spacing: 8px;
+    margin-bottom: 8px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  .game-subtitle {
+    font-size: 22px;
+    color: #666;
+    margin-bottom: 40px;
+    letter-spacing: 3px;
+  }
+
+  @keyframes pulse {
+    0%, 100% { text-shadow: 0 0 20px rgba(76,175,80,0.8); }
+    50% { text-shadow: 0 0 40px rgba(76,175,80,1), 0 0 60px rgba(76,175,80,0.4); }
+  }
+
+  .start-btn {
+    font-family: 'VT323', monospace;
+    font-size: 32px;
+    background: transparent;
+    color: var(--green);
+    border: 2px solid var(--green);
+    padding: 12px 40px;
+    cursor: pointer;
+    letter-spacing: 4px;
+    transition: all 0.2s;
+    margin-bottom: 12px;
+  }
+
+  .start-btn:hover {
+    background: var(--green);
+    color: #000;
+    box-shadow: 0 0 20px rgba(76,175,80,0.6);
+  }
+
+  .start-note {
+    font-size: 16px;
+    color: #333;
+    letter-spacing: 1px;
+  }
+
+  .noam-zoom-face {
+    font-size: 13px;
+    line-height: 1.1;
+    color: var(--amber);
+    white-space: pre;
+    text-shadow: 0 0 12px rgba(255,179,0,0.7);
+    margin-bottom: 24px;
+    animation: zoomspin 3s ease-in-out infinite;
+    display: inline-block;
+  }
+
+  @keyframes zoomspin {
+    0%   { transform: scale(0.7);  opacity: 0.5; text-shadow: 0 0 4px rgba(255,179,0,0.3); }
+    40%  { transform: scale(1.3);  opacity: 1;   text-shadow: 0 0 24px rgba(255,179,0,1), 0 0 48px rgba(255,179,0,0.4); }
+    60%  { transform: scale(1.15); opacity: 1;   text-shadow: 0 0 16px rgba(255,179,0,0.8); }
+    100% { transform: scale(0.7);  opacity: 0.5; text-shadow: 0 0 4px rgba(255,179,0,0.3); }
+  }
+
+  /* Game screen */
+  #game-screen {
+    display: none;
+    width: 100%;
+    max-width: 760px;
+    min-height: 90vh;
+    flex-direction: column;
+  }
+
+  .game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0 16px;
+    border-bottom: 1px solid #1e1e1e;
+    margin-bottom: 20px;
+  }
+
+  .q-counter {
+    font-size: 18px;
+    color: #444;
+    letter-spacing: 2px;
+  }
+
+  .backroom-btn {
+    font-family: 'VT323', monospace;
+    font-size: 18px;
+    background: transparent;
+    color: #3a0000;
+    border: 1px solid #3a0000;
+    padding: 6px 16px;
+    cursor: pointer;
+    letter-spacing: 2px;
+    transition: all 0.3s;
+    animation: flicker 4s ease-in-out infinite;
+  }
+
+  .backroom-btn:hover {
+    background: #3a0000;
+    color: #ff4444;
+    box-shadow: 0 0 10px rgba(180,0,0,0.4);
+    border-color: #880000;
+  }
+
+  @keyframes flicker {
+    0%, 90%, 100% { opacity: 1; }
+    92% { opacity: 0.4; }
+    94% { opacity: 1; }
+    96% { opacity: 0.2; }
+    98% { opacity: 1; }
+  }
+
+  /* Noam portrait area */
+  .noam-area {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 24px;
+    align-items: flex-start;
+  }
+
+  .noam-portrait {
+    flex-shrink: 0;
+    width: 120px;
+  }
+
+  .noam-face {
+    font-size: 9px;
+    line-height: 1.05;
+    color: var(--amber);
+    white-space: pre;
+    text-shadow: 0 0 4px rgba(255,179,0,0.4);
+  }
+
+  .noam-nameplate {
+    text-align: center;
+    font-size: 13px;
+    color: #555;
+    margin-top: 4px;
+    letter-spacing: 1px;
+  }
+
+  .speech-bubble {
+    flex: 1;
+    background: #0d0d0d;
+    border: 1px solid #2a2a2a;
+    border-left: 3px solid var(--amber);
+    padding: 18px 20px;
+    position: relative;
+    min-height: 120px;
+  }
+
+  .speech-bubble::before {
+    content: '';
+    position: absolute;
+    left: -12px;
+    top: 20px;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 12px solid var(--amber);
+  }
+
+  .quote-tag {
+    font-size: 13px;
+    color: #444;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+
+  .speech-text {
+    font-size: 22px;
+    color: #e0e0cc;
+    line-height: 1.4;
+  }
+
+  .speech-text em {
+    color: var(--amber);
+    font-style: normal;
+    font-weight: bold;
+  }
+
+  /* Answers */
+  .answers {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .answer-btn {
+    font-family: 'VT323', monospace;
+    font-size: 22px;
+    background: #0a0a0a;
+    color: #aaa;
+    border: 1px solid #252525;
+    padding: 14px 20px;
+    cursor: pointer;
+    text-align: left;
+    letter-spacing: 1px;
+    line-height: 1.4;
+    transition: all 0.15s;
+    position: relative;
+  }
+
+  .answer-btn::before {
+    content: attr(data-label);
+    color: #444;
+    margin-right: 12px;
+  }
+
+  .answer-btn:hover {
+    border-color: var(--amber);
+    color: #fff;
+    background: #111;
+    box-shadow: 0 0 8px rgba(255,179,0,0.15);
+  }
+
+  .answer-btn.selected-good {
+    border-color: var(--green);
+    color: var(--green);
+    background: #001a00;
+  }
+
+  .answer-btn.selected-bad {
+    border-color: var(--red);
+    color: var(--red);
+    background: #1a0000;
+  }
+
+  .answer-btn:disabled { cursor: default; }
+
+  .noam-reaction {
+    font-size: 18px;
+    color: #555;
+    min-height: 30px;
+    margin-bottom: 16px;
+    font-style: italic;
+    transition: color 0.3s;
+    letter-spacing: 1px;
+  }
+
+  .next-btn {
+    font-family: 'VT323', monospace;
+    font-size: 24px;
+    background: transparent;
+    color: var(--green);
+    border: 1px solid #1e3a1e;
+    padding: 10px 28px;
+    cursor: pointer;
+    letter-spacing: 3px;
+    display: none;
+    transition: all 0.2s;
+    align-self: flex-end;
+  }
+
+  .next-btn:hover {
+    background: var(--green);
+    color: #000;
+  }
+
+  /* Results screen */
+  #results-screen {
+    display: none;
+    width: 100%;
+    max-width: 760px;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 40px 0;
+  }
+
+  .results-title {
+    font-size: 36px;
+    color: var(--amber);
+    letter-spacing: 4px;
+    margin-bottom: 8px;
+  }
+
+  .results-name {
+    font-size: 52px;
+    color: #fff;
+    letter-spacing: 2px;
+    margin-bottom: 24px;
+  }
+
+  .stars-display {
+    font-size: 48px;
+    margin-bottom: 12px;
+    min-height: 60px;
+  }
+
+  .stars-label {
+    font-size: 22px;
+    color: #555;
+    margin-bottom: 32px;
+    letter-spacing: 2px;
+  }
+
+  .results-quote {
+    background: #0d0d0d;
+    border: 1px solid #2a2a2a;
+    border-left: 3px solid var(--amber);
+    padding: 20px;
+    font-size: 22px;
+    color: #ccc;
+    line-height: 1.5;
+    max-width: 600px;
+    margin-bottom: 32px;
+    font-style: italic;
+  }
+
+  .results-verdict {
+    font-size: 26px;
+    color: #888;
+    max-width: 560px;
+    line-height: 1.4;
+    margin-bottom: 36px;
+  }
+
+  .play-again-btn {
+    font-family: 'VT323', monospace;
+    font-size: 28px;
+    background: transparent;
+    color: #555;
+    border: 1px solid #252525;
+    padding: 10px 28px;
+    cursor: pointer;
+    letter-spacing: 3px;
+    transition: all 0.2s;
+  }
+
+  .play-again-btn:hover {
+    color: var(--green);
+    border-color: var(--green);
+  }
+
+  /* Backroom screen */
+  #backroom-screen {
+    display: none;
+    width: 100%;
+    max-width: 760px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 90vh;
+    text-align: center;
+  }
+
+  .backroom-title {
+    font-size: 52px;
+    color: #ff2222;
+    text-shadow: 0 0 20px rgba(255,0,0,0.6);
+    letter-spacing: 4px;
+    margin-bottom: 20px;
+    animation: redpulse 1s ease-in-out infinite;
+  }
+
+  @keyframes redpulse {
+    0%, 100% { text-shadow: 0 0 20px rgba(255,0,0,0.6); }
+    50% { text-shadow: 0 0 40px rgba(255,0,0,1), 0 0 80px rgba(255,0,0,0.3); }
+  }
+
+  .backroom-text {
+    font-size: 22px;
+    color: #888;
+    max-width: 560px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  .backroom-stars {
+    font-size: 60px;
+    margin-bottom: 12px;
+  }
+
+  .backroom-note {
+    font-size: 16px;
+    color: #2a0000;
+    letter-spacing: 1px;
+    margin-bottom: 36px;
+  }
+
+  /* Scanline overlay */
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0,0,0,0.03) 0px,
+      rgba(0,0,0,0.03) 1px,
+      transparent 1px,
+      transparent 2px
+    );
+    pointer-events: none;
+    z-index: 999;
+  }
+</style>
+</head>
+<body>
+
+<!-- TITLE SCREEN -->
+<div id="title-screen">
+  <pre class="noam-zoom-face">
+    .-------.
+   /  _   _  \
+  |  (o) (o)  |
+  |     ^     |
+  |  \~~~~~/ |
+   \  -----  /
+    '--._.--'
+   [CHOMSKY]
+  </pre>
+  <div class="title-art">
+    ████╗░██╗░█████╗░░█████╗░███╗░░░███╗
+    ████║░██║██╔══██╗██╔══██╗████╗░████║
+    ██╔██╗██║██║░░██║███████║██╔████╔██║
+    ██║╚████║██║░░██║██╔══██║██║╚██╔╝██║
+    ██║░╚███║╚█████╔╝██║░░██║██║░╚═╝░██║
+    ╚═╝░░╚══╝░╚════╝░╚═╝░░╚═╝╚═╝░░░░╚═╝
+  </div>
+  <div class="game-title">NOAM ZONE</div>
+  <div class="game-subtitle">A POLITICAL ALIGNMENT EXPERIENCE</div>
+  <button class="start-btn" onclick="startGame()">[ ENTER ZONE ]</button>
+  <div class="start-note">sponsored by the Degeneracy Tribunal</div>
+</div>
+
+<!-- GAME SCREEN -->
+<div id="game-screen">
+  <div class="game-header">
+    <div class="q-counter" id="q-counter">QUESTION 1 / 10</div>
+    <button class="backroom-btn" onclick="enterBackroom()">🚪 ENTER BACKROOM</button>
+  </div>
+
+  <div class="noam-area">
+    <div class="noam-portrait">
+      <div class="noam-face" id="noam-face">
+  .---.
+ /     \
+| ◕   ◕ |
+|   ▾   |
+|  ___  |
+ \_____/
+ |  |  |
+ | /|\ |
+ |/ | \|
+  .   .
+ /|   |\
+      </div>
+      <div class="noam-nameplate">N. CHOMSKY<br>MIT (RET.)</div>
+    </div>
+
+    <div style="flex:1;display:flex;flex-direction:column;gap:12px">
+      <div class="speech-bubble">
+        <div class="quote-tag" id="q-type-tag">NOAM SAYS:</div>
+        <div class="speech-text" id="q-text">Loading...</div>
+      </div>
+      <div class="noam-reaction" id="noam-reaction"></div>
+    </div>
+  </div>
+
+  <div class="answers" id="answers"></div>
+
+  <button class="next-btn" id="next-btn" onclick="nextQuestion()">NEXT →</button>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div id="results-screen">
+  <div class="results-title">NOAM HAS SPOKEN</div>
+  <div class="results-name" id="results-name"></div>
+  <div class="stars-display" id="stars-display"></div>
+  <div class="stars-label" id="stars-label">EPSTEIN STARS</div>
+  <div class="results-quote" id="results-quote"></div>
+  <div class="results-verdict" id="results-verdict"></div>
+  <button class="play-again-btn" onclick="resetGame()">[ PLAY AGAIN ]</button>
+</div>
+
+<!-- BACKROOM SCREEN -->
+<div id="backroom-screen">
+  <div class="backroom-title">BACKROOM</div>
+  <div class="backroom-text" id="backroom-text">
+    You open the door.<br><br>
+    Noam is seated. He does not look up.<br><br>
+    "I see you've made your choice," he says.<br><br>
+    He slides a folder across the desk. You don't read what's inside.<br><br>
+    You don't need to.
+  </div>
+  <div class="backroom-stars">⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐</div>
+  <div style="font-size:52px;color:#cc0000;margin-bottom:8px">10 / 10</div>
+  <div style="font-size:22px;color:#550000;letter-spacing:2px;margin-bottom:8px">EPSTEIN STARS</div>
+  <div class="backroom-note">Maximum alignment achieved.<br>The tribunal notes this outcome without comment.</div>
+  <button class="play-again-btn" style="margin-top:32px" onclick="resetGame()">[ LEAVE ]</button>
+</div>
+
+<script>
+// ─── AUDIO ───────────────────────────────────────────
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let ctx;
+
+function getCtx() {
+  if (!ctx) ctx = new AudioCtx();
+  return ctx;
+}
+
+function beep(freq, duration, type = 'square', vol = 0.15) {
+  try {
+    const c = getCtx();
+    const osc = c.createOscillator();
+    const gain = c.createGain();
+    osc.connect(gain);
+    gain.connect(c.destination);
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, c.currentTime);
+    gain.gain.setValueAtTime(vol, c.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, c.currentTime + duration);
+    osc.start(c.currentTime);
+    osc.stop(c.currentTime + duration);
+  } catch(e) {}
+}
+
+function playSelect() {
+  beep(440, 0.06, 'square', 0.1);
+  setTimeout(() => beep(660, 0.08, 'square', 0.08), 60);
+}
+
+function playGood() {
+  beep(523, 0.1, 'sine', 0.12);
+  setTimeout(() => beep(659, 0.1, 'sine', 0.1), 100);
+  setTimeout(() => beep(784, 0.2, 'sine', 0.12), 200);
+}
+
+function playBad() {
+  beep(220, 0.15, 'sawtooth', 0.12);
+  setTimeout(() => beep(180, 0.2, 'sawtooth', 0.1), 120);
+}
+
+function playNext() {
+  beep(330, 0.05, 'square', 0.08);
+}
+
+function playBackroom() {
+  beep(110, 0.3, 'sawtooth', 0.15);
+  setTimeout(() => beep(90, 0.4, 'sawtooth', 0.15), 250);
+  setTimeout(() => beep(70, 0.6, 'sawtooth', 0.15), 550);
+  setTimeout(() => beep(55, 1.0, 'sawtooth', 0.2), 1000);
+}
+
+function playResult(stars) {
+  const notes = [196, 247, 294, 370, 440, 523, 659, 784, 988, 1047];
+  const n = Math.min(stars, notes.length);
+  for (let i = 0; i < n; i++) {
+    setTimeout(() => beep(notes[i], 0.15, 'sine', 0.12), i * 80);
+  }
+}
+
+function playTyping() {
+  beep(800 + Math.random() * 200, 0.02, 'square', 0.04);
+}
+
+// ─── QUESTIONS ───────────────────────────────────────
+const questions = [
+  {
+    type: "NOAM ASKS:",
+    text: "Who do you believe manufactures public opinion in Western democracies?",
+    a: { text: "Corporate media and state power — it's a consent factory.", score: 2 },
+    b: { text: "People form opinions independently. The market of ideas works.", score: -1 },
+    reactions: [
+      "Mmm. You've been paying attention.",
+      "Ah. You may want to read more carefully."
+    ]
+  },
+  {
+    type: "NOAM ASKS:",
+    text: "Is the United States the greatest threat to world peace?",
+    a: { text: "Historically, yes. The evidence is overwhelming.", score: 2 },
+    b: { text: "That seems one-sided. There are other actors.", score: -1 },
+    reactions: [
+      "That is the conclusion any honest person reaches.",
+      "I understand the discomfort. Look at the record."
+    ]
+  },
+  {
+    type: "NOAM SAYS: \"The smart way to keep people passive and obedient is to strictly limit the spectrum of acceptable opinion, but allow very lively debate within that spectrum.\"",
+    type_tag: "QUOTE — DO YOU AGREE?",
+    text: "\"The smart way to keep people passive and obedient is to strictly limit the spectrum of acceptable opinion, but allow very lively debate within that spectrum.\"",
+    a: { text: "Yes — this is exactly how mainstream discourse is controlled.", score: 2 },
+    b: { text: "That sounds unfalsifiable. Any debate disproves it.", score: -1 },
+    reactions: [
+      "Good. You can see the walls of the cage.",
+      "Think about which opinions are simply... not discussed."
+    ]
+  },
+  {
+    type: "NOAM ASKS:",
+    text: "A neo-Nazi applies for a permit to publish a pamphlet. Do you defend their right?",
+    a: { text: "Yes. Free speech means defending speech you despise.", score: 2 },
+    b: { text: "No. Some speech causes direct harm and should be restricted.", score: -1 },
+    reactions: [
+      "Correct. Rights are not granted only to the agreeable.",
+      "Then you do not believe in free speech. You believe in speech you approve of."
+    ]
+  },
+  {
+    type: "NOAM ASKS:",
+    text: "What is anarchism, in your view?",
+    a: { text: "The elimination of illegitimate hierarchies — a reasonable political goal.", score: 2 },
+    b: { text: "Chaos. We need government and institutional authority.", score: -1 },
+    reactions: [
+      "Yes. The burden of proof lies on those who claim authority is justified.",
+      "Authority must justify itself. It rarely does."
+    ]
+  },
+  {
+    type: "NOAM SAYS:",
+    type_tag: "QUOTE — DO YOU AGREE?",
+    text: "\"Propaganda is to a democracy what the bludgeon is to a totalitarian state.\"",
+    a: { text: "Agreed. Soft power is still power.", score: 2 },
+    b: { text: "That's an unfair comparison to actual violence.", score: -1 },
+    reactions: [
+      "You understand the mechanism.",
+      "The effects on populations may be compared, even if the methods differ."
+    ]
+  },
+  {
+    type: "NOAM ASKS:",
+    text: "You read breaking news about a U.S. military operation. What is your first instinct?",
+    a: { text: "Ask who benefits and what they aren't telling you.", score: 2 },
+    b: { text: "Read the report and form an opinion from there.", score: -1 },
+    reactions: [
+      "Good. Never forget that the first casualty of war is truth.",
+      "The frame of the report is itself a form of editorialising."
+    ]
+  },
+  {
+    type: "NOAM ASKS:",
+    text: "Corporate capitalism: engine of prosperity or systemic threat?",
+    a: { text: "A systemic threat — ecological and democratic collapse confirms this.", score: 2 },
+    b: { text: "Flawed but functional — it has lifted billions from poverty.", score: -1 },
+    reactions: [
+      "Yes. And we are running out of time to address it.",
+      "At what cost? And by whose measure?"
+    ]
+  },
+  {
+    type: "NOAM ASKS:",
+    text: "Is electoral politics a meaningful vehicle for change?",
+    a: { text: "Limited. Grassroots organising matters far more.", score: 2 },
+    b: { text: "Yes. Voting is the cornerstone of democratic participation.", score: -1 },
+    reactions: [
+      "You can vote and organise. But do not mistake the vote for the movement.",
+      "I understand. But the change you want will not come from a ballot box."
+    ]
+  },
+  {
+    type: "NOAM ASKS:",
+    text: "Who shapes foreign policy in liberal democracies?",
+    a: { text: "Concentrated economic interests and the national security state.", score: 2 },
+    b: { text: "Elected officials responding to voter preferences.", score: -1 },
+    reactions: [
+      "Yes. Follow the money and the institutional incentives.",
+      "Does the evidence support that? Look at where policy consistently lands."
+    ]
+  },
+  {
+    type: "NOAM SAYS:",
+    type_tag: "QUOTE — DO YOU AGREE?",
+    text: "\"Optimism is a strategy for making a better future. If you don't believe that, you won't stand up and try to make it better.\"",
+    a: { text: "Yes — despair is a luxury we can't afford.", score: 2 },
+    b: { text: "Naive. The structural forces are too entrenched.", score: -1 },
+    reactions: [
+      "Good. That is all I ask.",
+      "Then there is nothing more to discuss."
+    ]
+  },
+  {
+    type: "NOAM ASKS:",
+    text: "Final question. What defines a good intellectual?",
+    a: { text: "Someone who tells truth to power regardless of personal cost.", score: 2 },
+    b: { text: "Someone who advances knowledge within established institutions.", score: -1 },
+    reactions: [
+      "Yes. Though it is rarely rewarded.",
+      "Institutions have their own agendas. Never forget that."
+    ]
+  }
+];
+
+// ─── RESULTS ─────────────────────────────────────────
+const resultData = [
+  { min: 1, max: 2, name: "CENTRIST DRONE", verdict: "You are exactly what the propaganda machine produced. Not malicious — just profoundly uncritical. Noam pities you in an academic sense.", quote: "\"The general population doesn't know what's happening, and it doesn't even know that it doesn't know.\"", stars: 1 },
+  { min: 3, max: 3, name: "LIBERAL REFORMIST", verdict: "You believe the system can fix itself. Noam finds this touching, in the way one finds a child's drawing of a house touching.", quote: "\"Colorless green ideas sleep furiously.\" He said this about linguistics. He's saying it about you now.", stars: 3 },
+  { min: 4, max: 5, name: "CONCERNED CITIZEN", verdict: "You are aware something is wrong. You have not yet committed to finding out what. Noam respects the instinct. Barely.", quote: "\"The truth is, most of us discover where we are headed when we arrive.\"", stars: 4 },
+  { min: 6, max: 6, name: "CRITICAL THINKER", verdict: "You question authority, read between the lines, and occasionally make people uncomfortable at dinner parties. This is progress.", quote: "\"If we don't believe in freedom of expression for people we despise, we don't believe in it at all.\"", stars: 6 },
+  { min: 7, max: 7, name: "STRUCTURAL ANALYST", verdict: "You can see the machinery behind the curtain. You understand power, institutions, and the manufacturing of consent. Noam is impressed.", quote: "\"The more you can increase fear of drugs and crime, welfare mothers, immigrants and aliens, the more you control all the people.\"", stars: 7 },
+  { min: 8, max: 8, name: "LIBERTARIAN SOCIALIST", verdict: "You have read the right books, drawn the right conclusions, and are insufferable at dinner parties in the correct ways. Welcome.", quote: "\"I'm a libertarian socialist, and I think that's the traditional meaning of the term 'libertarian.'\"", stars: 8 },
+  { min: 9, max: 9, name: "FELLOW TRAVELLER", verdict: "You are ideologically aligned with Noam Chomsky at approximately 90%. The remaining 10% is probably about linguistics. Don't worry about it.", quote: "\"Anarchism is, in my view, basically a kind of tendency in human thought which shows up in different forms in different circumstances.\"", stars: 9 },
+  { min: 10, max: 10, name: "NOAM HIMSELF", verdict: "Perfect alignment. Either you are Noam Chomsky, you have memorised his body of work, or you guessed very well. All three outcomes are acceptable.", quote: "\"I have spent my entire professional life trying to analyse and understand. I believe I have succeeded.\" — N. Chomsky, about you specifically.", stars: 10 }
+];
+
+// ─── STATE ───────────────────────────────────────────
+let currentQ = 0;
+let score = 0;
+let answered = false;
+let shuffled = [];
+
+function shuffleQuestions() {
+  shuffled = [...questions].sort(() => Math.random() - 0.5).slice(0, 10);
+}
+
+// ─── GAME LOGIC ──────────────────────────────────────
+function startGame() {
+  playSelect();
+  shuffleQuestions();
+  currentQ = 0;
+  score = 0;
+  document.getElementById('title-screen').style.display = 'none';
+  document.getElementById('game-screen').style.display = 'flex';
+  document.getElementById('game-screen').style.flexDirection = 'column';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = shuffled[currentQ];
+  answered = false;
+
+  document.getElementById('q-counter').textContent = `QUESTION ${currentQ + 1} / ${shuffled.length}`;
+  document.getElementById('q-type-tag').textContent = q.type_tag || q.type || 'NOAM SAYS:';
+  document.getElementById('noam-reaction').textContent = '';
+
+  // Typewriter effect for question text
+  const el = document.getElementById('q-text');
+  el.textContent = '';
+  let i = 0;
+  const full = q.text;
+  const typeInterval = setInterval(() => {
+    if (i < full.length) {
+      el.textContent += full[i];
+      if (Math.random() > 0.7) playTyping();
+      i++;
+    } else {
+      clearInterval(typeInterval);
+    }
+  }, 18);
+
+  const answersEl = document.getElementById('answers');
+  answersEl.innerHTML = '';
+
+  [{ text: q.a.text, score: q.a.score, label: 'A' }, { text: q.b.text, score: q.b.score, label: 'B' }].forEach((opt, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn';
+    btn.setAttribute('data-label', opt.label + ')');
+    btn.textContent = opt.text;
+    btn.onclick = () => selectAnswer(idx, opt.score, q.reactions[idx], opt.score > 0);
+    answersEl.appendChild(btn);
+  });
+
+  document.getElementById('next-btn').style.display = 'none';
+}
+
+function selectAnswer(idx, pts, reaction, isGood) {
+  if (answered) return;
+  answered = true;
+  playSelect();
+  score += pts;
+
+  const btns = document.querySelectorAll('.answer-btn');
+  btns.forEach((b, i) => {
+    b.disabled = true;
+    if (i === idx) {
+      b.classList.add(isGood ? 'selected-good' : 'selected-bad');
+    }
+  });
+
+  const reactionEl = document.getElementById('noam-reaction');
+  reactionEl.textContent = '"' + reaction + '"';
+  reactionEl.style.color = isGood ? '#4caf50' : '#888';
+
+  if (isGood) playGood(); else playBad();
+
+  setTimeout(() => {
+    document.getElementById('next-btn').style.display = 'block';
+  }, 300);
+}
+
+function nextQuestion() {
+  playNext();
+  currentQ++;
+  if (currentQ >= shuffled.length) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResults() {
+  document.getElementById('game-screen').style.display = 'none';
+  const res = document.getElementById('results-screen');
+  res.style.display = 'flex';
+  res.style.flexDirection = 'column';
+
+  // Calculate stars: score ranges from -10 to +20; normalize to 1-10
+  const minPossible = shuffled.length * -1;
+  const maxPossible = shuffled.length * 2;
+  const normalised = (score - minPossible) / (maxPossible - minPossible);
+  const stars = Math.max(1, Math.min(10, Math.round(normalised * 9) + 1));
+
+  const data = resultData.find(r => stars >= r.min && stars <= r.max) || resultData[resultData.length - 1];
+
+  document.getElementById('results-name').textContent = data.name;
+  document.getElementById('results-quote').textContent = data.quote;
+  document.getElementById('results-verdict').textContent = data.verdict;
+  document.getElementById('stars-label').textContent = `${stars} / 10 EPSTEIN STARS`;
+
+  // Animate stars
+  const starsEl = document.getElementById('stars-display');
+  starsEl.textContent = '';
+  let s = 0;
+  const starInterval = setInterval(() => {
+    if (s < stars) {
+      starsEl.textContent += '⭐';
+      beep(300 + s * 60, 0.08, 'sine', 0.1);
+      s++;
+    } else {
+      clearInterval(starInterval);
+      setTimeout(() => playResult(stars), 200);
+    }
+  }, 120);
+}
+
+function enterBackroom() {
+  playBackroom();
+  document.getElementById('title-screen').style.display = 'none';
+  document.getElementById('game-screen').style.display = 'none';
+  const br = document.getElementById('backroom-screen');
+  br.style.display = 'flex';
+  br.style.flexDirection = 'column';
+}
+
+function resetGame() {
+  playSelect();
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('backroom-screen').style.display = 'none';
+  const ts = document.getElementById('title-screen');
+  ts.style.display = 'flex';
+  ts.style.flexDirection = 'column';
+  ts.style.alignItems = 'center';
+  ts.style.justifyContent = 'center';
+}
+</script>
+</body>
+</html>

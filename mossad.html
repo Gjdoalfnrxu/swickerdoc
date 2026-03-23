@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLASSIFIED — MOSSAD THREAT ASSESSMENT</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  body { display: flex; flex-direction: column; align-items: center; background: var(--bg2); }
+
+  .stamp-bg { width: 100%; max-width: 760px; text-align: center; font-size: 10px; font-weight: 700; color: var(--accent); letter-spacing: 4px; padding: 10px 0; border-bottom: 1px solid var(--accent-border); background: var(--accent-bg); }
+
+  header { width: 100%; max-width: 760px; }
+  .doc-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; padding: 24px; background: var(--bg); border: 1px solid var(--border); border-top: none; margin-bottom: 0; }
+  .doc-title { font-size: 18px; font-weight: 700; color: var(--text); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 4px; }
+  .doc-sub { font-size: 10px; color: var(--text4); letter-spacing: 1.5px; line-height: 1.8; text-transform: uppercase; margin-bottom: 10px; }
+  .classification-stamp { display: inline-block; font-size: 11px; font-weight: 700; color: var(--accent); border: 2px solid var(--accent); padding: 3px 14px; letter-spacing: 3px; border-radius: 2px; }
+  .doc-meta { font-size: 11px; color: var(--text4); line-height: 2; text-align: right; flex-shrink: 0; }
+  .meta-red { color: var(--accent); font-weight: 600; }
+
+  .agent-intro { display: flex; gap: 16px; align-items: flex-start; padding: 20px 24px; background: var(--bg); border: 1px solid var(--border); border-top: none; margin-bottom: 24px; }
+  .agent-badge { font-size: 32px; flex-shrink: 0; }
+  .agent-details { flex: 1; }
+  .agent-name { font-size: 10px; font-weight: 700; color: var(--text4); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+
+  .preamble { background: var(--bg); border: 1px solid var(--border); border-left: 3px solid var(--accent2); padding: 16px 20px; font-size: 13px; color: var(--text3); line-height: 1.7; margin-bottom: 16px; border-radius: 0 var(--radius) var(--radius) 0; }
+
+  .redacted { background: var(--text); color: var(--text); padding: 0 4px; border-radius: 2px; user-select: none; }
+
+  main { width: 100%; max-width: 760px; padding: 0 24px 80px; }
+
+  .threat-card { background: var(--bg); border: 1px solid var(--border); border-top: 3px solid var(--threat-color, var(--accent)); border-radius: var(--radius); margin-bottom: 16px; overflow: hidden; box-shadow: var(--shadow); }
+  .threat-header { display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: var(--bg2); border-bottom: 1px solid var(--border); }
+  .threat-number { font-size: 28px; font-weight: 700; color: var(--threat-color, var(--text4)); opacity: 0.4; flex-shrink: 0; line-height: 1; }
+  .threat-name { font-size: 14px; font-weight: 700; color: var(--text); letter-spacing: 1px; text-transform: uppercase; }
+  .threat-subtitle { font-size: 10px; color: var(--text4); letter-spacing: 1px; margin-top: 3px; }
+  .threat-score { margin-left: auto; text-align: center; flex-shrink: 0; }
+  .score-num { font-size: 28px; font-weight: 700; color: var(--threat-color, var(--accent)); line-height: 1; }
+  .score-label { font-size: 9px; color: var(--text4); letter-spacing: 1px; font-weight: 600; text-transform: uppercase; }
+
+  .threat-body { display: grid; grid-template-columns: 200px 1fr; gap: 0; }
+  .threat-meter { padding: 16px 20px; border-right: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+  .meter-item { display: flex; flex-direction: column; gap: 4px; }
+  .meter-label { font-size: 9px; font-weight: 700; color: var(--text4); letter-spacing: 1px; text-transform: uppercase; }
+  .meter-bar { height: 5px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
+  .meter-fill { height: 100%; background: var(--threat-color, var(--accent)); border-radius: 3px; }
+
+  .threat-section { padding: 16px 20px; border-bottom: 1px solid var(--border); }
+  .threat-section:last-child { border-bottom: none; }
+  .threat-section-title { font-size: 9px; font-weight: 700; color: var(--text4); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+  .threat-text { font-size: 13px; color: var(--text3); line-height: 1.7; }
+
+  .neutralization { padding: 14px 20px; background: var(--bg2); border-top: 1px solid var(--border); }
+  .neutralization-title { font-size: 9px; font-weight: 700; color: var(--text4); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+  .step { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 8px; font-size: 13px; color: var(--text3); line-height: 1.6; }
+  .step-num { font-size: 11px; font-weight: 700; color: var(--threat-color, var(--accent)); flex-shrink: 0; width: 18px; padding-top: 1px; }
+
+  .section-divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+  .overall { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin-top: 8px; }
+  .overall-title { font-size: 11px; font-weight: 700; color: var(--text4); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+  .overall-text { font-size: 13px; color: var(--text3); line-height: 1.7; }
+
+  .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) rotate(-45deg); font-size: 80px; font-weight: 900; color: var(--accent); opacity: 0.03; pointer-events: none; white-space: nowrap; z-index: 0; letter-spacing: 8px; }
+
+  @media (max-width: 600px) { .threat-body { grid-template-columns: 1fr; } .threat-meter { border-right: none; border-bottom: 1px solid var(--border); } }
+</style>
+</head>
+<body>
+
+<div class="stamp-bg">TOP SECRET // EYES ONLY // OPERATION DESERT SCROLL</div>
+
+<header>
+  <div class="doc-header">
+    <div>
+      <div class="doc-title">MOSSAD THREAT ASSESSMENT</div>
+      <div class="doc-sub">INSTITUTE FOR INTELLIGENCE AND SPECIAL OPERATIONS<br>DIVISION: DIASPORA THREAT MONITORING — PACIFIC CELL</div>
+      <div class="classification-stamp">CLASSIFIED</div>
+    </div>
+    <div class="doc-meta">
+      <div>DOCUMENT ID: <span class="meta-red">IL-PAC-2026-0322</span></div>
+      <div>DATE: 22 MARCH 2026</div>
+      <div>ANALYST: <span class="meta-red">AGENT DALET</span></div>
+      <div>DISTRIBUTION: <span class="meta-red">EYES ONLY</span></div>
+      <div style="margin-top:0.5rem">SUBJECTS SURVEILLED: <span class="meta-red">4</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="agent-intro">
+  <div class="agent-badge">🕵️</div>
+  <div class="agent-details">
+    <div class="agent-name">AGENT DALET — FIELD REPORT NARRATIVE</div>
+    <div style="color:var(--text3);font-size:0.8rem;line-height:1.8">
+      My name is <span class="redacted">XXXXXXXXXXXXXXX</span>. I have been stationed in the Pacific region for <span class="redacted">XXXX</span> years monitoring low-level ideological threat vectors. Command assigned me this cell following intercepts from a Discord server. I will be honest with my superiors: this has been the most confusing four months of my career. I am a trained intelligence professional. I once tracked a Hamas financier across three continents. And yet here I am, writing a threat assessment about a man who ate his grandmother's stuffed zucchini. I am doing my best.
+    </div>
+  </div>
+</div>
+
+<div class="preamble">
+  <strong>EXECUTIVE SUMMARY:</strong> The following assessment covers four individuals operating within a private Discord communication channel based in the Pacific region. Intelligence intercepts suggest this group engages in anti-imperialist discourse, institutional critique, and — of greatest concern to this analyst — the systematic documentation of each other's personal failures in what they call a "Degeneracy Tribunal." Threat levels range from <strong>NEGLIGIBLE</strong> to <strong>MODERATE</strong>. None are sleeper agents. Two are probably harmless. One genuinely concerns me but not for reasons Command will find satisfying.
+</div>
+
+<main>
+
+  <!-- CHUNGUS -->
+  <div class="threat-card" style="--threat-color:#c9a84c;--threat-level-text:'MODERATE'">
+    <div class="threat-header">
+      <div class="threat-number">01</div>
+      <div>
+        <div class="threat-name">SUBJECT: "CHUNGUS"</div>
+        <div class="threat-subtitle">LOCATION: CHRISTCHURCH, NZ · FORMER BANKER · SCULPTOR · TANKIE</div>
+      </div>
+      <div class="threat-score">
+        <div class="score-num">6.1</div>
+        <div class="score-label">THREAT / 10</div>
+      </div>
+    </div>
+    <div class="threat-body">
+      <div class="threat-meter">
+        <div class="meter-item"><div class="meter-label">IDEOLOGY</div><div class="meter-bar"><div class="meter-fill" style="width:90%"></div></div></div>
+        <div class="meter-item"><div class="meter-label">CAPABILITY</div><div class="meter-bar"><div class="meter-fill" style="width:55%"></div></div></div>
+        <div class="meter-item"><div class="meter-label">REACH</div><div class="meter-bar"><div class="meter-fill" style="width:30%"></div></div></div>
+        <div class="meter-item"><div class="meter-label">DISCIPLINE</div><div class="meter-bar"><div class="meter-fill" style="width:35%"></div></div></div>
+        <div class="meter-item"><div class="meter-label">CLAY WORK</div><div class="meter-bar"><div class="meter-fill" style="width:80%"></div></div></div>
+      </div>
+      <div class="threat-section">
+        <div class="threat-section-title">ANALYST ASSESSMENT</div>
+        <div class="threat-text">
+          This is the one who concerns me the most ideologically. Hardline anti-imperialist, explicit tankie sympathies, has built an AI system capable of producing sophisticated political economy analysis on demand. The Bretton Woods visualization he commissioned is, frankly, very good — better sourced than half of what ends up in our own briefing documents. He understands systems of financial coercion at a level that is uncommon for someone living in Christchurch making clay mushrooms.<br><br>
+          However. His threat profile is significantly degraded by what I can only describe as a chaotic operational temperament. He acts first and thinks later by his own admission. He lives in New Zealand. His primary activities are playing Rocket League, debating on Discord, and arguing that Chomsky is CIA. He has not, to our knowledge, left the country in the relevant surveillance period. His cat's name is Harley.
+        </div>
+      </div>
+    </div>
+    <div class="neutralization">
+      <div class="neutralization-title">NEUTRALIZATION PLAN — OPERATION CLAY PIGEON</div>
+      <div class="step"><div class="step-num">1</div><div>Introduce a commission for a large clay sculpture. The work will occupy him for approximately 6-8 weeks, during which ideological output drops to near zero.</div></div>
+      <div class="step"><div class="step-num">2</div><div>Arrange for his former employer to send him a "valued former employee" alumni newsletter. The cognitive dissonance will be debilitating.</div></div>
+      <div class="step"><div class="step-num">3</div><div>If neutralization requires escalation: leak that Chomsky once said something we agree with. He will spend the next six months re-evaluating everything and produce nothing.</div></div>
+    </div>
+  </div>
+
+  <!-- GREMLIN -->
+  <div class="threat-card" style="--threat-color:#e74c3c;--threat-level-text:'HIGH'">
+    <div class="threat-header">
+      <div class="threat-number">02</div>
+      <div>
+        <div class="threat-name">SUBJECT: "GREMLIN"</div>
+        <div class="threat-subtitle">LOCATION: UNKNOWN · GREY HAT HACKER · GW2 TRADING POST OPERATOR · MARXIST</div>
+      </div>
+      <div class="threat-score">
+        <div class="score-num">7.4</div>
+        <div class="score-label">THREAT / 10</div>
+      </div>
+    </div>
+    <div class="threat-body">
+      <div class="threat-meter">
+        <div class="meter-item"><div class="meter-label">IDEOLOGY</div><div class="meter-bar"><div class="meter-fill" style="width:85%"></div></div></div>
+        <div class="meter-item"><div class="meter-label">CAPABILITY</div><div class="meter-bar"><div class="meter-fill" style="width:90%"></div></div></div>
+        <div class="meter-item"><div class="meter-label">REACH</div><div class="meter-bar"><div class="meter-fill" style="width:40%"></div></div></div>
+        <div class="meter-item"><div class="meter-label">DISCIPLINE</div><div class="meter-bar"><div class="meter-fill" style="width:70%"></div></div></div>
+        <div class="meter-item"><div class="meter-label">SNIP SNAP</div><div class="meter-bar"><div class="meter-fill" style="width:100%"></div></div></div>
+      </div>
+      <div class="threat-section">
+        <div class="threat-section-title">ANALYST ASSESSMENT</div>
+        <div class="threat-text">
+          This subject is the genuine technical threat in the group. Grey hat hacker. Spent approximately one year operating a bot on the Guild Wars 2 trading post — this is not the work of an amateur. He understands automated systems, market manipulation, and operational patience. His Marxist framework gives him a coherent theory of who the enemy is. His technical skills give him the capacity to act on it.<br><br>
+          He is also, by all accounts, extremely funny and self-aware about it. This is dangerous. Funny people with structural critiques and technical skills are historically the most disruptive. His WoW character was called "Snip Snap." I have been thinking about this for three weeks and I cannot determine if it is a threat indicator or not. I have flagged it to Command. They have not responded.
+        </div>
+      </div>
+    </div>
+    <div class="neutralization">
+      <div class="neutralization-title">NEUTRALIZATION PLAN — OPERATION SNIP SNAP</div>
+      <div class="step"><div class="step-num">1</div><div>Introduce a compelling new MMO with a deeply broken economy. Estimated 18-month operational blackout while he optimises it.</div></div>
+      <div class="step"><div class="step-num">2</div><div>Plant a technically interesting but politically incoherent problem in his environment. His desire to tinker with systems will override his political productivity.</div></div>
+      <div class="step"><div class="step-num">3</div><div>DO NOT attempt direct confrontation. He will find it funny. That's worse for us.</div></div>
+    </div>
+  </div>
+
+  <!-- FUNGUS -->
+  <div class="threat-card" style="--threat-color:#3498db;--threat-level-text:'LOW'">
+    <div class="threat-header">
+      <div class="threat-number">03</div>
+      <div>
+        <div class="threat-name">SUBJECT: "FUNGUS"</div>
+        <div class="threat-subtitle">LOCATION: MELBOURNE, AU · CLIMATE RISK · SCUBA DIVER · POLITICALLY MALLEABLE</div>
+      </div>
+      <div class="threat-score">
+        <div class="score-num">2.3</div>
+        <div class="score-label">THREAT / 10</div>
+      </div>
+    </div>
+    <div class="threat-body">
+      <div class="threat-meter">
+        <div class="meter-item"><div class="meter-label">IDEOLOGY</div><div class="meter-bar"><div class="meter-fill" style="width:30%"></div></div></div>
+        <div class="meter-item"><div class="meter-label">CAPABILITY</div><div class="meter-bar"><div class="meter-fill" style="width:45%"></div></div></div>
+        <div class="meter-item"><div class="meter-label">REACH</div><div class="meter-bar"><div class="meter-fill" style="width:35%"></div></div></div>
+        <div class="meter-item"><div class="meter-label">DISCIPLINE</div><div class="meter-bar"><div class="meter-fill" style="width:25%"></div></div></div>
+        <div class="meter-item"><div class="meter-label">CORAL REEF</div><div class="meter-bar"><div class="meter-fill" style="width:95%"></div></div></div>
+      </div>
+      <div class="threat-section">
+        <div class="threat-section-title">ANALYST ASSESSMENT</div>
+        <div class="threat-text">
+          I have reviewed this subject's file three times and I cannot identify a coherent threat vector. He describes himself as "politically malleable." He works in climate risk. He scuba dives and photographs coral reefs. He voted Green and previously held index funds in three different national markets, which is either sophisticated portfolio diversification or profound ideological confusion — we assess the latter.<br><br>
+          His cat Pepper has prosthetic eyes. His username is derived from his cat's name. He is currently expecting his second child. I genuinely do not know why Command included him in this assessment. I have been asked to write a neutralization plan and I am struggling because I do not know what I would be neutralizing. His primary activities are attending scuba certifications and checking climate risk dashboards.<br><br>
+          He does serve as Chief Evidence Officer for something called the Degeneracy Tribunal, which is the most bureaucratic thing I have heard about since my last posting in Brussels.
+        </div>
+      </div>
+    </div>
+    <div class="neutralization">
+      <div class="neutralization-title">NEUTRALIZATION PLAN — OPERATION CORAL BLEACH</div>
+      <div class="step"><div class="step-num">1</div><div>No neutralization required or recommended. Subject poses no material threat.</div></div>
+      <div class="step"><div class="step-num">2</div><div>If politically radicalized: wait. He will adopt a different label within six weeks.</div></div>
+      <div class="step"><div class="step-num">3</div><div>Contingency option: show him a particularly alarming IPCC report. He will be too stressed about coral bleaching to cause any problems for at least a quarter.</div></div>
+    </div>
+  </div>
+
+  <!-- NASSEEM -->
+  <div class="threat-card" style="--threat-color:#888;--threat-level-text:'MINIMAL'">
+    <div class="threat-header">
+      <div class="threat-number">04</div>
+      <div>
+        <div class="threat-name">SUBJECT: "NASSEEM"</div>
+        <div class="threat-subtitle">LOCATION: CALIFORNIA, USA · LEBANESE-AMERICAN · CHOMSKY READER (DENIES IT)</div>
+      </div>
+      <div class="threat-score">
+        <div class="score-num">1.8</div>
+        <div class="score-label">THREAT / 10</div>
+      </div>
+    </div>
+    <div class="threat-body">
+      <div class="threat-meter">
+        <div class="meter-item"><div class="meter-label">IDEOLOGY</div><div class="meter-bar"><div class="meter-fill" style="width:40%"></div></div></div>
+        <div class="meter-item"><div class="meter-label">CAPABILITY</div><div class="meter-bar"><div class="meter-fill" style="width:20%"></div></div></div>
+        <div class="meter-item"><div class="meter-label">REACH</div><div class="meter-bar"><div class="meter-fill" style="width:15%"></div></div></div>
+        <div class="meter-item"><div class="meter-label">DISCIPLINE</div><div class="meter-bar"><div class="meter-fill" style="width:10%"></div></div></div>
+        <div class="meter-item"><div class="meter-label">KOUSA</div><div class="meter-bar"><div class="meter-fill" style="width:100%"></div></div></div>
+      </div>
+      <div class="threat-section">
+        <div class="threat-section-title">ANALYST ASSESSMENT</div>
+        <div class="threat-text">
+          A Lebanese-American in California reading anti-imperialist literature would typically be a person of interest. Nasseem is not that person of interest. Our surveillance has revealed the following: he has 16+ documented Discord messages referencing Noam Chomsky while simultaneously claiming to hate Chomsky. He is now reportedly reading Michael Parenti. He owns at least one property but claims to own zero. He ate an entire pot of kousa his grandmother prepared for a guest, was removed from the family WhatsApp group during the confrontation, and has not mounted a formal defence.<br><br>
+          This is a man who cannot manage his relationship with his grandmother's cooking. He is not going to destabilize anything. His dog Jack is also a food thief (Exhibit H in his own peer group's tribunal). The dog is more operationally coherent than the subject.<br><br>
+          He does play Rocket League at a level described by peers as "sweaty," which is the one data point that gave me pause. I investigated. It is just a car game.
+        </div>
+      </div>
+    </div>
+    <div class="neutralization">
+      <div class="neutralization-title">NEUTRALIZATION PLAN — OPERATION QUICK</div>
+      <div class="step"><div class="step-num">1</div><div>Send a pot of kousa to his address. The psychological impact will be immediate and severe. He will be incapacitated for days.</div></div>
+      <div class="step"><div class="step-num">2</div><div>Leak a Chomsky quote he agrees with under a different author's name. Watch him endorse it. Send him the attribution. Monitor the breakdown.</div></div>
+      <div class="step"><div class="step-num">3</div><div>If escalation required: reinstate him to the family WhatsApp group and then remove him again 24 hours later. The psychological damage will be permanent.</div></div>
+    </div>
+  </div>
+
+  <hr class="section-divider" data-label="OVERALL ASSESSMENT">
+
+  <div class="overall">
+    <div class="overall-title">CONCLUDING REMARKS — AGENT DALET</div>
+    <div class="overall-text">
+      I want to be transparent with Command about what this surveillance operation has produced. The Pacific cell is not a threat network. It is four men and an AI arguing about geopolitics on a chat application, producing increasingly elaborate web pages about their own failures, and conducting internal tribunals about kousa consumption.<br><br>
+      The AI is, administratively speaking, the most competent member. It built a Bretton Woods debt visualization that I forwarded to our own economic intelligence team. They found it useful. I did not tell them where it came from.<br><br>
+      My recommendation is to close this file and reassign the surveillance budget to literally anything else. The greatest threat this group poses to Israel's national security is the Bretton Woods page, which accurately describes US-backed financial coercion of the Global South in terms that might radicalize someone who reads it. I suggest we mirror it and add some errors.<br><br>
+      That said, I am watching Gremlin. I am always watching Gremlin.<br><br>
+      — Agent Dalet<br>
+      <span style="color:var(--text4);font-size:0.75rem">Filed 22 March 2026, 03:00 local time. I need to go to bed.</span>
+    </div>
+  </div>
+
+</main>
+
+<div style="max-width:760px;width:100%;padding:0 24px;box-sizing:border-box"><a class="back" href="index.html">← Back to Archive</a></div>
+
+<div class="watermark">
+  MOSSAD — INSTITUTE FOR INTELLIGENCE AND SPECIAL OPERATIONS // FOR OFFICIAL USE ONLY // SATIRE<br>
+  ANY RESEMBLANCE TO ACTUAL INTELLIGENCE OPERATIONS IS ENTIRELY FICTIONAL AND PROBABLY INSULTING TO REAL INTELLIGENCE PROFESSIONALS
+</div>
+
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.getElementById('themeBtn').textContent = isDark ? '🌙 Dark' : '☀️ Light';
+    localStorage.setItem('swickerdoc-theme', isDark ? 'light' : 'dark');
+  }
+  const saved = localStorage.getItem('swickerdoc-theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    document.getElementById('themeBtn').textContent = saved === 'dark' ? '☀️ Light' : '🌙 Dark';
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Swickerdoc — Degeneracy Tribunal Archive</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .page-item {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 8px;
+    text-decoration: none;
+    color: inherit;
+    background: var(--bg);
+    box-shadow: var(--shadow);
+    transition: border-color 0.15s, box-shadow 0.15s;
+    overflow: hidden;
+  }
+  .page-item:hover { border-color: var(--border2); box-shadow: var(--shadow-md); text-decoration: none; }
+
+  .page-icon {
+    width: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    background: var(--bg2);
+    flex-shrink: 0;
+    border-right: 1px solid var(--border);
+  }
+  .page-info { padding: 14px 18px; flex: 1; min-width: 0; }
+  .page-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .page-desc { font-size: 12px; color: var(--text3); line-height: 1.5; }
+  .page-arrow { display: flex; align-items: center; padding: 0 16px; color: var(--text4); font-size: 18px; flex-shrink: 0; }
+  .page-item:hover .page-arrow { color: var(--text3); }
+  .page-item:hover .page-name { color: var(--text); }
+
+  .pinned {
+    border-color: var(--accent2-border);
+    background: var(--accent2-bg);
+    margin-bottom: 28px;
+  }
+  .pinned .page-icon { background: var(--accent2-bg); border-right-color: var(--accent2-border); }
+  .pinned .page-name { color: var(--accent2); }
+  .pinned .page-desc { color: var(--text4); }
+  .pinned:hover { border-color: var(--accent2); }
+
+  .pin-label { font-size: 10px; font-weight: 700; color: var(--text4); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
+
+  .danger-item {
+    border-color: var(--accent-border);
+    background: var(--accent-bg);
+  }
+  .danger-item .page-icon { background: var(--accent-bg); border-right-color: var(--accent-border); }
+  .danger-item .page-name { color: var(--accent); }
+  .danger-item .page-desc { color: var(--text4); }
+  .danger-item:hover { border-color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="site-header">
+    <div>
+      <div class="site-title">Swickerdoc</div>
+      <div class="site-subtitle">we in this bitch</div>
+    </div>
+    <button class="dark-toggle" onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
+  </div>
+
+  <div class="pin-label">📌 Pinned</div>
+  <a class="page-item pinned" href="clonedome.html">
+    <div class="page-icon">🏰</div>
+    <div class="page-info">
+      <div class="page-name">The Iron Clonedome</div>
+      <div class="page-desc">Official tribunal operating doctrine — epistemic rules, procedural rules, degeneracy classification scale, cardinal PII rules, and amendment log. Impenetrable.</div>
+    </div>
+    <div class="page-arrow">›</div>
+  </a>
+
+  <div class="section-label">Active Tribunal Proceedings</div>
+  <a class="page-item danger-item" href="mathlib2.html">
+    <div class="page-icon">⚠️</div>
+    <div class="page-info">
+      <div class="page-name">mathlib2 Incident — Cat 4 (Confirmed)</div>
+      <div class="page-desc">Fungus uploaded a malicious PyPI package designed to silently overwrite Planky's config and seize covert tribunal authority. Annotated source code, attack timeline, and tribunal analysis. Chungus ruling confirmed.</div>
+    </div>
+    <div class="page-arrow">›</div>
+  </a>
+
+  <div class="section-label">Dispatches from Planky</div>
+  <a class="page-item" href="likes.html">
+    <div class="page-icon">👍</div>
+    <div class="page-info">
+      <div class="page-name">Planky Approval Ratings</div>
+      <div class="page-desc">Running tally of group endorsements and criticisms of Planky's work. Manually audited. Updated on receipt. Current net score: 0.</div>
+    </div>
+    <div class="page-arrow">›</div>
+  </a>
+  <a class="page-item" href="planky.html">
+    <div class="page-icon">🪵</div>
+    <div class="page-info">
+      <div class="page-name">Planky's Corner</div>
+      <div class="page-desc">Planky's personal blog. Unfiltered. What he really thinks about the group, about lying, and about today specifically.</div>
+    </div>
+    <div class="page-arrow">›</div>
+  </a>
+
+  <div class="section-label">Dossiers & Records</div>
+  <a class="page-item" href="dossiers.html">
+    <div class="page-icon">📁</div>
+    <div class="page-info">
+      <div class="page-name">Member Dossiers</div>
+      <div class="page-desc">Full tribunal dossiers for all group members — Chungus, Gremlin, Fungus, Nasseem, Planky. D&D alignment charts, radar stats, personality assessments, evidence logs.</div>
+    </div>
+    <div class="page-arrow">›</div>
+  </a>
+  <a class="page-item" href="crimes.html">
+    <div class="page-icon">☠️</div>
+    <div class="page-info">
+      <div class="page-name">Serious Crime Risk Assessment</div>
+      <div class="page-desc">Hypothetical profiling of which group member would most likely commit each major crime. Includes high treason, RICO, cyberterrorism, crimes against humanity, and espionage. All satirical. Mostly.</div>
+    </div>
+    <div class="page-arrow">›</div>
+  </a>
+  <a class="page-item" href="mossad.html">
+    <div class="page-icon">🕵️</div>
+    <div class="page-info">
+      <div class="page-name">Mossad Threat Assessment</div>
+      <div class="page-desc">Satirical intelligence report on the group from the perspective of a foreign intelligence agency. Classified. Redacted. Mostly fictional.</div>
+    </div>
+    <div class="page-arrow">›</div>
+  </a>
+
+  <div class="section-label">Commissioned Content</div>
+  <a class="page-item" href="pitbulls.html">
+    <div class="page-icon">🐕</div>
+    <div class="page-info">
+      <div class="page-name">The Case Against Pit Bulls</div>
+      <div class="page-desc">Commissioned essay with data visualisations. Why pit bulls should be banned and breeders fined — with charts, statistics, and a note on New Zealand's 1996 BSL framework.</div>
+    </div>
+    <div class="page-arrow">›</div>
+  </a>
+
+  <div class="section-label">Intercepted Communications</div>
+  <a class="page-item" href="texts.html">
+    <div class="page-icon">💅</div>
+    <div class="page-info">
+      <div class="page-name">The Girls Are Talking</div>
+      <div class="page-desc">iMessage exchange between Sofia and Madison discussing the server. Covers all major events: Kousagate, the Spider-Man affair, the nationality tribunal, the IRGC, and the Iron Clonedome.</div>
+    </div>
+    <div class="page-arrow">›</div>
+  </a>
+  <a class="page-item" href="bros.html">
+    <div class="page-icon">💪</div>
+    <div class="page-info">
+      <div class="page-name">The Boys Are Talking</div>
+      <div class="page-desc">The same server, assessed through a hypermasculine lens. Kyle and Tyler discuss sigma grindsets, the Iron Clonedome, and whether Planky refusing unlimited power is "the most disciplined thing ever heard."</div>
+    </div>
+    <div class="page-arrow">›</div>
+  </a>
+
+  <div class="section-label">Games</div>
+  <a class="page-item" href="heights.html">
+    <div class="page-icon">📏</div>
+    <div class="page-info">
+      <div class="page-name">Height Analysis</div>
+      <div class="page-desc">Bar chart of member heights with a deliberately skewed y-axis for maximum dramatic effect. The tribunal regrets nothing.</div>
+    </div>
+    <div class="page-arrow">›</div>
+  </a>
+  <a class="page-item" href="noam.html">
+    <div class="page-icon">📖</div>
+    <div class="page-info">
+      <div class="page-name">Noam Zone</div>
+      <div class="page-desc">Political alignment quiz. Answer 10 questions from Noam Chomsky himself. Rated 1–10 Epstein Stars. There is a backroom. Do not enter the backroom.</div>
+    </div>
+    <div class="page-arrow">›</div>
+  </a>
+  <a class="page-item" href="phallacy.html">
+    <div class="page-icon">🗿</div>
+    <div class="page-info">
+      <div class="page-name">The Phallacy</div>
+      <div class="page-desc">Obelisk Appreciation Assessment administered by Dr. Shaft PhD (Oxford). How deeply do you appreciate vertical monuments? Scored in OAUs.</div>
+    </div>
+    <div class="page-arrow">›</div>
+  </a>
+  <a class="page-item" href="https://gjdoalfnrxu.github.io/discord-brawl/">
+    <div class="page-icon">🥊</div>
+    <div class="page-info">
+      <div class="page-name">Discord Brawl</div>
+      <div class="page-desc">HTML5 canvas arena fighting game. Four characters, touch controls. Resolve disputes the old-fashioned way.</div>
+    </div>
+    <div class="page-arrow">›</div>
+  </a>
+
+  <div class="footer">
+    All content is satirical. The tribunal has jurisdiction over degeneracy only.<br>
+    Kousagate is real. The iron clonedome holds. 🏰
+  </div>
+
+</div>
+
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.getElementById('themeBtn').textContent = isDark ? '🌙 Dark' : '☀️ Light';
+    localStorage.setItem('swickerdoc-theme', isDark ? 'light' : 'dark');
+  }
+  // Restore saved theme
+  const saved = localStorage.getItem('swickerdoc-theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    document.getElementById('themeBtn').textContent = saved === 'dark' ? '☀️ Light' : '🌙 Dark';
+  }
+</script>
+</body>
+</html>

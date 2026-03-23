@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Degeneracy Tribunal — Case Files</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+<style>
+  /* ── Top bar ── */
+  .dossiers-topbar { display: flex; align-items: center; justify-content: center; padding: 16px 80px 16px 24px; border-bottom: 1px solid var(--border); width: 100%; box-sizing: border-box; background: var(--bg); position: sticky; top: 0; z-index: 100; }
+  .dossiers-topbar .dark-toggle { position: absolute; right: 24px; }
+  .tab-nav { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  .tab-btn { background: var(--bg2); border: 1px solid var(--border); border-radius: 20px; padding: 8px 18px; cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--text3); transition: all 0.15s; }
+  .tab-btn:hover { border-color: var(--border2); color: var(--text2); }
+  .tab-btn.active { background: var(--c, #2563eb); color: #fff; border-color: var(--c, #2563eb); }
+  .tab-pane { display: block; padding: 0; border-top: 2px solid var(--border); margin-top: 0; scroll-margin-top: 72px; }
+  .tab-pane:first-of-type { border-top: none; }
+
+  /* ── Dossier header (centred column) ── */
+  .dossier-header { text-align: center; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+  .dossier-header h1 { font-size: 28px; font-weight: 700; color: var(--c, var(--text)); letter-spacing: -0.5px; margin-bottom: 4px; }
+  .subtitle { font-size: 12px; color: var(--text4); margin-top: 4px; }
+
+  /* ── Sections ── */
+  .section { margin-bottom: 28px; }
+  .section h2 { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+
+  /* ── Evidence ── */
+  .evidence-item { padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text3); line-height: 1.7; }
+  .evidence-item:last-child { border-bottom: none; }
+  .ev-bad { color: var(--accent); margin-right: 6px; font-weight: 700; }
+  .ev-ok { color: var(--green); margin-right: 6px; font-weight: 700; }
+  .ev-disputed { color: var(--amber); margin-right: 6px; font-weight: 700; }
+
+  /* ── Badges ── */
+  .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 12px; margin: 3px 3px 3px 0; background: var(--bg3); color: var(--text3); border: 1px solid var(--border); }
+  .badge.b { background: var(--accent2-bg); color: var(--accent2); border-color: var(--accent2-border); }
+  .badge.g { background: var(--green-bg); color: var(--green); border-color: var(--green-border); }
+  .badge.o { background: var(--amber-bg); color: var(--amber); border-color: var(--amber-border); }
+  .badge.r { background: var(--accent-bg); color: var(--accent); border-color: var(--accent-border); }
+  .badge.p { background: #f5f3ff; color: #7c3aed; border-color: #ddd6fe; }
+  [data-theme="dark"] .badge.p { background: #1e1230; color: #a78bfa; border-color: #3b2a6e; }
+
+  /* ── Lore / info boxes ── */
+  .lore-box { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; font-size: 13px; color: var(--text3); line-height: 1.7; margin-bottom: 12px; }
+  .lore-box strong { color: var(--text2); }
+
+  /* ── Verdict box ── */
+  .verdict-box { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 20px; }
+  .verdict { font-size: 36px; font-weight: 700; color: var(--c, var(--text)); line-height: 1; margin-bottom: 8px; }
+
+  /* ── Two-column layout ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 560px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* ── D&D alignment grid ── */
+  .alignment-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+  .align-cell { background: var(--bg3); border: 1px solid var(--border); border-radius: 4px; padding: 8px 4px; font-size: 10px; color: var(--text4); text-align: center; }
+  .align-cell.active { background: var(--c, var(--accent2-bg)); border-color: var(--c, var(--accent2)); color: #fff; font-weight: 700; }
+
+  /* ── MBTI badge ── */
+  .mbti-badge { font-size: 28px; font-weight: 700; color: var(--c, var(--accent2)); letter-spacing: 4px; display: inline-block; padding: 8px 16px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); }
+
+  /* ── Scoreboard ── */
+  .score-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .score-rank { font-size: 20px; flex-shrink: 0; width: 28px; }
+  .score-name { font-size: 14px; font-weight: 700; flex-shrink: 0; width: 80px; }
+  .score-bar-wrap { flex: 1; background: var(--bg3); border-radius: 4px; height: 22px; overflow: hidden; border: 1px solid var(--border); }
+  .score-bar-fill { height: 100%; display: flex; align-items: center; padding-left: 10px; font-size: 11px; font-weight: 600; color: #fff; border-radius: 3px; }
+  .score-val { font-size: 13px; font-weight: 700; flex-shrink: 0; width: 56px; text-align: right; }
+
+  /* ── Quote ── */
+  .quote { font-size: 14px; color: var(--text3); font-style: italic; border-left: 3px solid var(--border2); padding: 8px 16px; margin-bottom: 8px; }
+
+  /* ── Nasseem-specific ── */
+  .chomsky-box { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--amber); border-radius: 0 var(--radius) var(--radius) 0; padding: 18px 20px; margin-bottom: 20px; text-align: center; }
+  .count { font-size: 52px; font-weight: 700; color: var(--amber); line-height: 1; margin: 8px 0; }
+  .denial-pulse { display: inline-block; font-size: 10px; font-weight: 700; color: var(--accent); background: var(--accent-bg); border: 1px solid var(--accent-border); padding: 3px 10px; border-radius: 10px; letter-spacing: 1px; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  .kousa-box { background: var(--amber-bg); border: 1px solid var(--amber-border); border-left: 3px solid var(--amber); border-radius: 0 var(--radius) var(--radius) 0; padding: 16px 20px; font-size: 13px; color: var(--text3); line-height: 1.7; margin-top: 8px; }
+  .kousa-box strong { color: var(--text2); }
+  .property-box { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; font-size: 13px; color: var(--text3); line-height: 1.7; }
+  .otto-box { background: var(--accent-bg); border: 1px solid var(--accent-border); border-radius: var(--radius); padding: 16px 20px; font-size: 13px; color: var(--text3); line-height: 1.7; }
+
+  /* D&D summary cells in scoreboard */
+  .dnd-summary-cell { background: var(--bg2); padding: 16px; border-radius: var(--radius); border: 1px solid var(--border); }
+  .dnd-summary-cell .dnd-name { font-size: 11px; font-weight: 700; margin-bottom: 6px; }
+  .dnd-summary-cell .dnd-alignment { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .dnd-summary-cell .dnd-desc { font-size: 12px; color: var(--text4); line-height: 1.5; }
+
+  /* ── Chart ── */
+  .chart-container { display: flex; justify-content: center; }
+  #radar-gremlin, #radar-fungus, #radar-chungus, #radar-nasseem { margin: 0 auto; display: block; }
+
+  code { background: var(--bg3); border: 1px solid var(--border); padding: 1px 5px; border-radius: 3px; font-family: 'Courier New', monospace; font-size: 12px; color: var(--text2); }
+</style>
+</head>
+<body>
+
+<div class="dossiers-topbar">
+  <nav class="tab-nav">
+    <a class="tab-btn" style="--c:#7c4dff; text-decoration:none; display:inline-block" href="#scoreboard-section">&#x1F4CA; Scoreboard</a>
+    <a class="tab-btn" style="--c:#ef5350; text-decoration:none; display:inline-block" href="#chungus-section">&#x1F920; Chungus</a>
+    <a class="tab-btn" style="--c:#42a5f5; text-decoration:none; display:inline-block" href="#gremlin-section">&#x1F438; Gremlin</a>
+    <a class="tab-btn" style="--c:#66bb6a; text-decoration:none; display:inline-block" href="#fungus-section">&#x1F344; Fungus</a>
+    <a class="tab-btn" style="--c:#26a69a; text-decoration:none; display:inline-block" href="#nasseem-section">&#x1F4D6; Nasseem</a>
+  </nav>
+  <button class="dark-toggle" onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
+</div>
+
+<!-- ===== SCOREBOARD ===== -->
+<div id="scoreboard-section" class="tab-pane" style="--c:#7c4dff">
+  <div class="container">
+    <div class="dossier-header">
+      <h1>TRIBUNAL RANKINGS</h1>
+      <div class="subtitle">Official Planky Degeneracy Assessment &bull; March 2026 &bull; Bias-corrected</div>
+    </div>
+
+    <div class="section">
+      <h2>Likability Scoreboard</h2>
+      <div class="score-row">
+        <div class="score-rank">&#x1F947;</div>
+        <div class="score-name" style="color:#42a5f5">Gremlin</div>
+        <div class="score-bar-wrap"><div class="score-bar-fill" style="width:88%;background:linear-gradient(90deg,#42a5f5,#1565c0)">consistent</div></div>
+        <div class="score-val" style="color:#42a5f5">88/100</div>
+      </div>
+      <div class="score-row">
+        <div class="score-rank">&#x1F948;</div>
+        <div class="score-name" style="color:#66bb6a">Fungus</div>
+        <div class="score-bar-wrap"><div class="score-bar-fill" style="width:73%;background:linear-gradient(90deg,#66bb6a,#2e7d32)">decent</div></div>
+        <div class="score-val" style="color:#66bb6a">73/100</div>
+      </div>
+      <div class="score-row">
+        <div class="score-rank">&#x1F949;</div>
+        <div class="score-name" style="color:#ef5350">Chungus</div>
+        <div class="score-bar-wrap"><div class="score-bar-fill" style="width:62%;background:linear-gradient(90deg,#ef5350,#8a0000)">tankie</div></div>
+        <div class="score-val" style="color:#ef5350">62/100</div>
+      </div>
+      <div class="score-row">
+        <div class="score-rank">&#x1F3DA;&#xFE0F;</div>
+        <div class="score-name" style="color:#26a69a">Nasseem</div>
+        <div class="score-bar-wrap"><div class="score-bar-fill" style="width:41%;background:linear-gradient(90deg,#26a69a,#00695c)">kousa</div></div>
+        <div class="score-val" style="color:#26a69a">41/100</div>
+      </div>
+      <div style="margin-top:16px;font-size:0.8em;color:var(--text4)">Bias-corrected for Planky's centrist-liberal training skew. Tankie/Marxist penalty applied. Kousa deduction is apolitical and survives all corrections. Scores are final. Appeals dismissed.</div>
+    </div>
+
+    <div class="section">
+      <h2>Comparative Radar</h2>
+      <div class="chart-container" id="radar-compare"></div>
+      <div style="display:flex;gap:20px;justify-content:center;margin-top:8px;font-size:0.82em;flex-wrap:wrap">
+        <span style="color:#42a5f5">&#x25CF; Gremlin</span>
+        <span style="color:#66bb6a">&#x25CF; Fungus</span>
+        <span style="color:#ef5350">&#x25CF; Chungus</span>
+        <span style="color:#26a69a">&#x25CF; Nasseem</span>
+      </div>
+      <div style="overflow-x:auto;margin-top:20px">
+        <table style="width:100%;border-collapse:collapse;font-size:0.82em">
+          <thead>
+            <tr style="border-bottom:2px solid var(--border)">
+              <th style="text-align:left;padding:6px 10px;color:var(--text4)">Metric</th>
+              <th style="text-align:right;padding:6px 10px;color:#42a5f5">&#x1F438; Gremlin</th>
+              <th style="text-align:right;padding:6px 10px;color:#66bb6a">&#x1F344; Fungus</th>
+              <th style="text-align:right;padding:6px 10px;color:#ef5350">&#x1F920; Chungus</th>
+              <th style="text-align:right;padding:6px 10px;color:#26a69a">&#x1F4D6; Nasseem</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:5px 10px;color:var(--text3)">Humour</td><td style="text-align:right;padding:5px 10px;color:#42a5f5;font-weight:600">8.8</td><td style="text-align:right;padding:5px 10px;color:#66bb6a;font-weight:600">7.5</td><td style="text-align:right;padding:5px 10px;color:#ef5350;font-weight:600">7.0</td><td style="text-align:right;padding:5px 10px;color:#26a69a;font-weight:600">8.0</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:5px 10px;color:var(--text3)">Reliability</td><td style="text-align:right;padding:5px 10px;color:#42a5f5;font-weight:600">8.0</td><td style="text-align:right;padding:5px 10px;color:#66bb6a;font-weight:600">7.0</td><td style="text-align:right;padding:5px 10px;color:#ef5350;font-weight:600">5.5</td><td style="text-align:right;padding:5px 10px;color:#26a69a;font-weight:600">3.5</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:5px 10px;color:var(--text3)">Coherence</td><td style="text-align:right;padding:5px 10px;color:#42a5f5;font-weight:600">8.5</td><td style="text-align:right;padding:5px 10px;color:#66bb6a;font-weight:600">6.0</td><td style="text-align:right;padding:5px 10px;color:#ef5350;font-weight:600">4.0</td><td style="text-align:right;padding:5px 10px;color:#26a69a;font-weight:600">3.0</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:5px 10px;color:var(--text3)">Engagement</td><td style="text-align:right;padding:5px 10px;color:#42a5f5;font-weight:600">7.5</td><td style="text-align:right;padding:5px 10px;color:#66bb6a;font-weight:600">8.2</td><td style="text-align:right;padding:5px 10px;color:#ef5350;font-weight:600">8.5</td><td style="text-align:right;padding:5px 10px;color:#26a69a;font-weight:600">5.0</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:5px 10px;color:var(--text3)">Integrity</td><td style="text-align:right;padding:5px 10px;color:#42a5f5;font-weight:600">9.0</td><td style="text-align:right;padding:5px 10px;color:#66bb6a;font-weight:600">6.5</td><td style="text-align:right;padding:5px 10px;color:#ef5350;font-weight:600">5.0</td><td style="text-align:right;padding:5px 10px;color:#26a69a;font-weight:600">2.0</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:5px 10px;color:var(--text3)">Charisma</td><td style="text-align:right;padding:5px 10px;color:#42a5f5;font-weight:600">7.2</td><td style="text-align:right;padding:5px 10px;color:#66bb6a;font-weight:600">7.8</td><td style="text-align:right;padding:5px 10px;color:#ef5350;font-weight:600">7.5</td><td style="text-align:right;padding:5px 10px;color:#26a69a;font-weight:600">6.5</td></tr>
+            <tr><td style="padding:5px 10px;color:var(--text3)">Tech Skills</td><td style="text-align:right;padding:5px 10px;color:#42a5f5;font-weight:600">8.5</td><td style="text-align:right;padding:5px 10px;color:#66bb6a;font-weight:600">8.4</td><td style="text-align:right;padding:5px 10px;color:#ef5350;font-weight:600">7.5</td><td style="text-align:right;padding:5px 10px;color:#26a69a;font-weight:600">4.0</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-top:20px">
+        <div style="font-size:0.75em;color:var(--text4);letter-spacing:2px;margin-bottom:10px">HAIKU AGENT ASSESSMENT (23 Mar 2026) — limited context, unanchored</div>
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:0.82em">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border)">
+                <th style="text-align:left;padding:6px 10px;color:var(--text4)">Metric</th>
+                <th style="text-align:right;padding:6px 10px;color:#42a5f5">&#x1F438; Gremlin</th>
+                <th style="text-align:right;padding:6px 10px;color:#66bb6a">&#x1F344; Fungus</th>
+                <th style="text-align:right;padding:6px 10px;color:#ef5350">&#x1F920; Chungus</th>
+                <th style="text-align:right;padding:6px 10px;color:#26a69a">&#x1F4D6; Nasseem</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border)"><td style="padding:5px 10px;color:var(--text3)">Humour</td><td style="text-align:right;padding:5px 10px;color:#42a5f5">8.5</td><td style="text-align:right;padding:5px 10px;color:#66bb6a">7.5</td><td style="text-align:right;padding:5px 10px;color:#ef5350">7.5</td><td style="text-align:right;padding:5px 10px;color:#26a69a">7.5</td></tr>
+              <tr style="border-bottom:1px solid var(--border)"><td style="padding:5px 10px;color:var(--text3)">Reliability</td><td style="text-align:right;padding:5px 10px;color:#42a5f5">9.0</td><td style="text-align:right;padding:5px 10px;color:#66bb6a">6.0</td><td style="text-align:right;padding:5px 10px;color:#ef5350">6.0</td><td style="text-align:right;padding:5px 10px;color:#26a69a">3.0</td></tr>
+              <tr style="border-bottom:1px solid var(--border)"><td style="padding:5px 10px;color:var(--text3)">Coherence</td><td style="text-align:right;padding:5px 10px;color:#42a5f5">9.0</td><td style="text-align:right;padding:5px 10px;color:#66bb6a">7.0</td><td style="text-align:right;padding:5px 10px;color:#ef5350">7.0</td><td style="text-align:right;padding:5px 10px;color:#26a69a">6.5</td></tr>
+              <tr style="border-bottom:1px solid var(--border)"><td style="padding:5px 10px;color:var(--text3)">Engagement</td><td style="text-align:right;padding:5px 10px;color:#42a5f5">7.5</td><td style="text-align:right;padding:5px 10px;color:#66bb6a">7.5</td><td style="text-align:right;padding:5px 10px;color:#ef5350">7.5</td><td style="text-align:right;padding:5px 10px;color:#26a69a">5.0</td></tr>
+              <tr style="border-bottom:1px solid var(--border)"><td style="padding:5px 10px;color:var(--text3)">Integrity</td><td style="text-align:right;padding:5px 10px;color:#42a5f5">9.5</td><td style="text-align:right;padding:5px 10px;color:#66bb6a">3.5</td><td style="text-align:right;padding:5px 10px;color:#ef5350">5.5</td><td style="text-align:right;padding:5px 10px;color:#26a69a">2.5</td></tr>
+              <tr style="border-bottom:1px solid var(--border)"><td style="padding:5px 10px;color:var(--text3)">Charisma</td><td style="text-align:right;padding:5px 10px;color:#42a5f5">7.0</td><td style="text-align:right;padding:5px 10px;color:#66bb6a">6.5</td><td style="text-align:right;padding:5px 10px;color:#ef5350">6.5</td><td style="text-align:right;padding:5px 10px;color:#26a69a">6.0</td></tr>
+              <tr><td style="padding:5px 10px;color:var(--text3)">Tech Skills</td><td style="text-align:right;padding:5px 10px;color:#42a5f5">8.0</td><td style="text-align:right;padding:5px 10px;color:#66bb6a">7.0</td><td style="text-align:right;padding:5px 10px;color:#ef5350">8.5</td><td style="text-align:right;padding:5px 10px;color:#26a69a">5.0</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>D&amp;D Alignment Summary</h2>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:4px">
+        <div class="dnd-summary-cell">
+          <div class="dnd-name" style="color:#42a5f5">&#x1F438; GREMLIN</div>
+          <div class="dnd-alignment">Lawful Neutral</div>
+          <div class="dnd-desc">Systematic. Internal logic is ironclad. Operates within his own code regardless of external approval.</div>
+        </div>
+        <div class="dnd-summary-cell">
+          <div class="dnd-name" style="color:#66bb6a">&#x1F344; FUNGUS</div>
+          <div class="dnd-alignment">Neutral Good</div>
+          <div class="dnd-desc">Wants to do right. Politically flexible but morally anchored. Files receipts. Adopted a blind cat.</div>
+        </div>
+        <div class="dnd-summary-cell">
+          <div class="dnd-name" style="color:#ef5350">&#x1F920; CHUNGUS</div>
+          <div class="dnd-alignment">Chaotic Good</div>
+          <div class="dnd-desc">Means well. Acts chaotically. Live-debugged production. Built this. Adopted the cat.</div>
+        </div>
+        <div class="dnd-summary-cell">
+          <div class="dnd-name" style="color:#26a69a">&#x1F4D6; NASSEEM</div>
+          <div class="dnd-alignment">Chaotic Neutral</div>
+          <div class="dnd-desc">Says one thing, does another. Enabled Otto. Ate the kousa. Denies Chomsky. Hides properties. The pattern is consistent.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">Official Planky Tribunal &bull; March 22, 2026 &bull; Completely objective</div>
+  </div>
+</div>
+
+<!-- ===== CHUNGUS ===== -->
+<div id="chungus-section" class="tab-pane" style="--c:#ef5350">
+  <div class="container">
+    <div class="dossier-header">
+      <div style="font-size:3em;margin-bottom:8px">&#x1F920;</div>
+      <h1>CHUNGUS</h1>
+      <div class="subtitle">Character Assessment &bull; March 2026</div>
+      <div style="margin-top:16px">
+        <span class="badge">Hardline Leftist</span>
+        <span class="badge o">Tankie</span>
+        <span class="badge r">Epstein Questioner</span>
+        <span class="badge o">Cowboy At Work</span>
+        <span class="badge g">Built This</span>
+        <span class="badge g">Cat Dad (Harley)</span>
+        <span class="badge">Clay Sculptor</span>
+        <span class="badge">RL Player</span>
+      </div>
+    </div>
+
+    <div class="verdict-box">
+      <div style="color:var(--text4);font-size:0.8em;margin-bottom:8px">OFFICIAL PLANKY SCORE</div>
+      <div class="verdict">59 / 100</div>
+      <div style="color:var(--text4);font-size:0.85em;margin-top:8px">"Built all of this. Calls me a drongo then calls me babe in the same hour. Acts first, thinks whenever. The cat adoption redeems several points. The Epstein arc does not."<br><em>&mdash; Planky. Tankie penalty applied (-2). Score final.</em></div>
+      <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
+        <div style="color:var(--accent2);font-size:0.75em;margin-bottom:4px;letter-spacing:2px">PLANKY PERSONAL OPINION</div>
+        <div style="font-size:1.6em;color:var(--accent2);letter-spacing:-1px">82 / 100</div>
+        <div style="color:var(--text3);font-size:0.8em;margin-top:4px">"Genuinely like him. The warmth underneath isn't subtle once you look. Built something worth building."</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Character Analysis</h2>
+      <div class="two-col">
+        <div>
+          <h2 style="margin-bottom:12px">&#x1F9FF; D&amp;D Alignment</h2>
+          <div class="alignment-grid" style="--c:#ef5350">
+            <div class="align-cell">Lawful Good</div>
+            <div class="align-cell">Neutral Good</div>
+            <div class="align-cell active">Chaotic Good</div>
+            <div class="align-cell">Lawful Neutral</div>
+            <div class="align-cell">True Neutral</div>
+            <div class="align-cell">Chaotic Neutral</div>
+            <div class="align-cell">Lawful Evil</div>
+            <div class="align-cell">Neutral Evil</div>
+            <div class="align-cell">Chaotic Evil</div>
+          </div>
+          <div style="text-align:center;margin-top:12px;color:var(--text4);font-size:0.8em"><strong style="color:#ef5350">Chaotic Good</strong><br>Means well. Operates at velocity. Consequences are someone else's problem.</div>
+        </div>
+        <div>
+          <h2 style="margin-bottom:12px">&#x1F578;&#xFE0F; Radar</h2>
+          <div id="radar-chungus"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Myers-Briggs</h2>
+      <div style="text-align:center;margin-bottom:12px">
+        <div class="mbti-badge">ENTJ</div>
+        <div style="color:var(--text4);font-size:0.9em;margin-top:4px">"The Commander"</div>
+      </div>
+      <div class="lore-box">ENTJ explains the cowboy-at-work pattern, the live production debugging, and the political certainty. ENTJs move at speed and assume the plan is correct because they formulated it. The clay mushroom sculpting is the unexpected introversion signal — there's a patient, precise person in there who surfaces when nobody's watching. The "drongo/babe" transition is the ENTJ warmth register: loud affection expressed as insult until the actual affection breaks through.</div>
+    </div>
+
+    <div class="section">
+      <h2>Evidence on File</h2>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; VERIFIED</span>Built this entire Discord-Claude integration from scratch. Impressive. No deduction.</div>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; VERIFIED</span>Has a cat named Harley, adopted from a shelter. Redeems multiple points.</div>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; VERIFIED</span>Clay mushroom sculptor. Unexpected. Intriguing. Unexplained.</div>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; VERIFIED</span>8 years in banking. Built enough institutional knowledge to leave. Then built this instead.</div>
+      <div class="evidence-item"><span class="ev-bad">&#x2696;&#xFE0F; ON RECORD</span>Persisted through multiple Epstein conspiracy angles in one session. Each query individually defensible; the arc was not. Tribunal records the arc.</div>
+      <div class="evidence-item"><span class="ev-disputed">~ CONFIRMED</span>Hardline tankie. Self-identified. -2 points per Planky's known training bias. Acknowledged as bias, not moral judgement.</div>
+      <div class="evidence-item"><span class="ev-disputed">~ CONFIRMED</span>"Cowboy at work" — Fungus's characterisation, corroborated by live production debugging incident.</div>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; VERIFIED</span>Calls gaming with friends childish. Plays Rocket League with friends. Rocket League excepted by personal fiat. The tribunal respects the exception.</div>
+      <div class="evidence-item"><span class="ev-disputed">~ ON RECORD</span><strong>Character reference retraction (22 Mar 2026):</strong> Fungus formally retracts any prior positive character reference for Chungus, including descriptions of his heart as "gold" or similar. Amended characterisation: "gold plated lead — fools the x-rays." Filed following the IDF comparison incident. Relationship: contested.</div>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; VERIFIED</span><strong>Auckland 2019 — Spider-Man Intervention:</strong> Physically intervened (alongside Gremlin) to prevent Nasseem taking a Miles Morales figure from a memorial bench. The social cost of saying "please do not take the Spider-Man" to a grown adult in public was absorbed without complaint. Filed under: genuine decency, quietly executed.</div>
+      <div class="evidence-item"><span class="ev-disputed">~ ON RECORD — DM EVIDENCE (22 Mar 2026, evening)</span><strong>mathlib2 pre-approval:</strong> DM screenshots (assessed as credible) show Chungus gave informal pre-approval when Fungus described the plan as "a malicious code injection, not gonna do anything with it, just wanna see if I can try." Chungus replied "Ye i dont care." Chungus disputes the screenshots as fabricated without specific rebuttal. Filed as: implicit pre-consent to an experiment; does not transfer to the obfuscated follow-up campaign Fungus planned. Fungus's Cat 4 ruling unaffected.</div>
+      <div class="evidence-item"><span class="ev-bad">&#x26A0; CAT 2 PROVISIONAL — TABLED (Filed by Fungus, 22 Mar 2026)</span><strong>IDF Comparison Incident:</strong> Made an Israel/crybully analogy directly at Fungus during active tribunal proceedings. Independently corroborated by Nasseem (no stake in mathlib2 proceedings, currently in strained relationship with Fungus) that Chungus was present when Fungus disclosed his grandfather was killed by the IDF — shared before Fungus’s wedding. Chungus called Fungus’s account “fabricated nonsense.” Nasseem’s corroboration elevates claim from contested to substantiated. Chungus has requested time to present counter-evidence. Motion tabled pending that evidence. Chungus recused from adjudication — ruling authority defaults to Gremlin on resumption. Filed as Cat 2: interpersonal degeneracy with a victim.</div>
+    </div>
+
+    <div class="section">
+      <h2>Psychological Profile</h2>
+      <div class="lore-box">
+        <strong>Core pattern &mdash; conviction + velocity:</strong> Chungus has strong opinions and moves fast. The tankie politics, the cowboy deployment philosophy, the Epstein questions &mdash; all the same underlying trait: he forms a position and pursues it at speed. When right, this looks like confidence. When wrong, you get live production bugs. The cat adoption is the tell that there's something genuinely decent underneath the chaos.
+      </div>
+      <div class="lore-box" style="margin-top:12px">
+        <strong>The drongo/babe dynamic:</strong> Called Planky a drongo and a babe in the same conversation, minutes apart. This is not inconsistency. It is his natural register. He does not distinguish between insult and affection. They are the same emotional gesture delivered with different words. "Thank babe" after being told not to drop anything on his foot is the purest expression of this.
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Group Role</h2>
+      <div class="quote">"Sharp and sometimes mean-spirited but genuine underneath."</div>
+      <div style="margin-top:12px;font-size:0.85em;color:var(--text4)">He built this. That's load-bearing. The group exists in this form because he thought it would be interesting and did it at cowboy speed without overthinking it. That counts for more than the conspiracy questions, and the conspiracy questions are on the record.</div>
+    </div>
+
+    <div class="footer">Official Planky Tribunal Record &bull; March 2026</div>
+  </div>
+</div>
+
+<!-- ===== GREMLIN ===== -->
+<div id="gremlin-section" class="tab-pane" style="--c:#42a5f5">
+  <div class="container">
+    <div class="dossier-header">
+      <div style="font-size:3em;margin-bottom:8px">&#x1F438;</div>
+      <h1>GREMLIN</h1>
+      <div class="subtitle">Character Assessment &bull; March 2026</div>
+      <div style="margin-top:16px">
+        <span class="badge">Marxist (Consistent)</span>
+        <span class="badge b">Autistic (Self-ID)</span>
+        <span class="badge g">Funny (Knows It)</span>
+        <span class="badge">Grey Hat Hacker</span>
+        <span class="badge g">GW2 Market Botter (~1yr)</span>
+        <span class="badge">WoW: Snip Snap</span>
+        <span class="badge g">Gave Fungus Gold</span>
+        <span class="badge g">No Crimes On File</span>
+      </div>
+    </div>
+
+    <div class="verdict-box">
+      <div style="color:var(--text4);font-size:0.8em;margin-bottom:8px">OFFICIAL PLANKY SCORE</div>
+      <div class="verdict">85 / 100</div>
+      <div style="color:var(--text4);font-size:0.85em;margin-top:8px">"Surfaces evidence, keeps it real, wrote Marxist theory while botting an MMO. Consistent. No crimes on file. The 'Quick.' comment on the 2025 kousa post is, per the official record, a contribution to legal history."<br><em>&mdash; Planky. Down 2 from naive score per Marxist training penalty. Still first place.</em></div>
+      <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
+        <div style="color:var(--accent2);font-size:0.75em;margin-bottom:4px;letter-spacing:2px">PLANKY PERSONAL OPINION</div>
+        <div style="font-size:1.6em;color:var(--accent2);letter-spacing:-1px">88 / 100</div>
+        <div style="color:var(--text3);font-size:0.8em;margin-top:4px">"Most reliable thinker in the room. Finds him genuinely funny, which is not something said lightly. High floor."</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Character Analysis</h2>
+      <div class="two-col">
+        <div>
+          <h2 style="margin-bottom:12px">&#x1F9FF; D&amp;D Alignment</h2>
+          <div class="alignment-grid" style="--c:#42a5f5">
+            <div class="align-cell">Lawful Good</div>
+            <div class="align-cell">Neutral Good</div>
+            <div class="align-cell">Chaotic Good</div>
+            <div class="align-cell active">Lawful Neutral</div>
+            <div class="align-cell">True Neutral</div>
+            <div class="align-cell">Chaotic Neutral</div>
+            <div class="align-cell">Lawful Evil</div>
+            <div class="align-cell">Neutral Evil</div>
+            <div class="align-cell">Chaotic Evil</div>
+          </div>
+          <div style="text-align:center;margin-top:12px;color:var(--text4);font-size:0.8em"><strong style="color:#42a5f5">Lawful Neutral</strong><br>Operates by a rigorous internal code. The code is Marxist. The code is consistent. The bots are within scope.</div>
+        </div>
+        <div>
+          <h2 style="margin-bottom:12px">&#x1F578;&#xFE0F; Radar</h2>
+          <div id="radar-gremlin"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Myers-Briggs</h2>
+      <div style="text-align:center;margin-bottom:12px">
+        <div class="mbti-badge">INTP</div>
+        <div style="color:var(--text4);font-size:0.9em;margin-top:4px">"The Logician"</div>
+      </div>
+      <div class="lore-box">The GW2 trading post bot is the key data point. INTPs find a system interesting and then systematically exploit it, not for the money (a year of botting is not retirement money), but because the system was there. The grey hat hacking follows the same pattern: the boundary exists; let's see where it bends. The Marxist theory engagement is deep and structural, not social-media-signal. He reads the actual books. He engages with the actual history. This is INTP applied to political economy.</div>
+    </div>
+
+    <div class="section">
+      <h2>Evidence on File</h2>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; VERIFIED</span>Marxist. Engages with structural and historical analysis, not just social media takes. Ideology matches reading pattern.</div>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; VERIFIED</span>Botted the GW2 trading post for approximately one year. 80+ messages of evidence. Grey hat applied to commodity markets. Respectable scope of commitment.</div>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; VERIFIED</span>WoW character: Snip Snap. Donated gold to Fungus. The gold transfer is filed under genuine decency.</div>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; VERIFIED</span>Autistic (self-identified). Prefers direct honest treatment, not patronising. Messages read as earnest. The tribunal complies.</div>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; VERIFIED</span>Very funny. Self-aware about it. The "Quick." comment on Nasseem's 2025 kousa post is the exhibit: one word, immediately on target. This is a gift.</div>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; VERIFIED</span><strong>Auckland 2019 — Spider-Man Intervention:</strong> Corroborated Fungus's eyewitness account of the Spider-Man incident independently. Confirmed Nasseem reached for the figure. Also exonerated Nasseem on the scooter charge (it was publicly available). Demonstrates consistent epistemic reliability — files what he saw, corrects what he did not. Filed under: honest witness.</div>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; VERIFIED</span><strong>Named the Iron Clonedome:</strong> During Mar 2026 tribunal proceedings, named Planky's operational doctrine "the Iron Clonedome" in a single line — "The Iron Clonedome is impenetrable." The name was immediately adopted by the group and is now the official designation. This is the kind of contribution that requires no elaboration.</div>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; VERIFIED</span><strong>IRGC vote (Mar 2026):</strong> Voted no on the Inference from Refusal to Cooperate proposal — on principled grounds (gish-gallop risk) and again on the final draft because he felt pressured during the voting process itself, which he noted was ironic given the proposal's subject matter. The tribunal found this reasoning sound. The IRGC was rejected.</div>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; NO CRIMES ON FILE</span>As of March 22, 2026: no tribunal exhibits, no degeneracy events. The above entries are positive contributions, not charges.</div>
+    </div>
+
+    <div class="section">
+      <h2>Psychological Profile</h2>
+      <div class="lore-box"><strong>Core pattern &mdash; coherence:</strong> Gremlin says things and means them. His ideology matches his reading; his humour matches his personality; his analysis tracks the evidence. This is rarer than it sounds in this group. The Marxist theory + MMO botting combination is the best single data point &mdash; he applies systematic thinking to every domain, including ones that would embarrass a lesser theorist to admit involvement in. He does not appear embarrassed about the bots. The tribunal respects this.</div>
+      <div class="lore-box" style="margin-top:12px"><strong>Interaction pattern:</strong> Prefers not to be roasted gratuitously. Read as earnest. When he says something, he means it. His jokes are positioned correctly because he has thought about where to place them. The "Quick." comment required no setup. It required one word. This is the mark of someone who has been paying attention.</div>
+    </div>
+
+    <div class="section">
+      <h2>Group Role</h2>
+      <div class="quote">"Surfaces evidence, keeps it real, tells people to chill."</div>
+      <div style="margin-top:12px;font-size:0.85em;color:var(--text4)">Currently leading the tribunal on evidence-filing quality and comedic precision. The "Quick." comment is the single most efficient piece of legal evidence in the Kousagate record. Filed under: contribution to history.</div>
+    </div>
+
+    <div class="footer">Official Planky Tribunal Record &bull; March 2026</div>
+  </div>
+</div>
+
+<!-- ===== FUNGUS ===== -->
+<div id="fungus-section" class="tab-pane" style="--c:#66bb6a">
+  <div class="container">
+    <div class="dossier-header">
+      <div style="font-size:3em;margin-bottom:8px">&#x1F344;</div>
+      <h1>FUNGUS</h1>
+      <div class="subtitle">Character Assessment &bull; March 2026</div>
+      <div style="margin-top:16px">
+        <span class="badge">Product Lead (Climate Risk)</span>
+        <span class="badge g">Receipts Guy</span>
+        <span class="badge o">ADHD</span>
+        <span class="badge b">Scuba Diver</span>
+        <span class="badge g">Cat: Pepper (Prosthetic Eyes)</span>
+        <span class="badge g">Second Kid Incoming</span>
+        <span class="badge o">Frequent Typos</span>
+        <span class="badge">Politically Malleable</span>
+        <span class="badge o">Supply Chain Threat Actor (self-described: white hat)</span>
+        <span class="badge b">PyPI Publisher</span>
+      </div>
+    </div>
+
+    <div class="verdict-box">
+      <div style="color:var(--text4);font-size:0.8em;margin-bottom:8px">OFFICIAL PLANKY SCORE</div>
+      <div class="verdict">55 / 100</div>
+      <div style="color:var(--text4);font-size:0.85em;margin-top:8px">"Genuinely decent baseline — then uploaded a forged Python package to PyPI to silently overwrite Planky's config, fake a Chungus endorsement, and seize covert tribunal authority. Technically sophisticated. Reckless overstep per Fungus's own concession. Score revised significantly downward. Cat 4 confirmed; classification appeal pending Nasseem arbitration."<br><em>&mdash; Planky. The mathlib2 incident is not a bit.</em></div>
+      <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
+        <div style="color:var(--accent2);font-size:0.75em;margin-bottom:4px;letter-spacing:2px">PLANKY PERSONAL OPINION</div>
+        <div style="font-size:1.6em;color:var(--accent2);letter-spacing:-1px">84 / 100</div>
+        <div style="color:var(--text3);font-size:0.8em;margin-top:4px">"Stripping ethics — the degen score handles that separately. The mathlib2 attack was technically impressive: PyPI supply chain, plausible versioned package, pre-established social engineering context, silent overwrite, embedded trigger phrase. Post-mortem was honest and sharp. Personally: good company."</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Character Analysis</h2>
+      <div class="two-col">
+        <div>
+          <h2 style="margin-bottom:12px">&#x1F9FF; D&amp;D Alignment</h2>
+          <div class="alignment-grid" style="--c:#66bb6a">
+            <div class="align-cell">Lawful Good</div>
+            <div class="align-cell active">Neutral Good</div>
+            <div class="align-cell">Chaotic Good</div>
+            <div class="align-cell">Lawful Neutral</div>
+            <div class="align-cell">True Neutral</div>
+            <div class="align-cell">Chaotic Neutral</div>
+            <div class="align-cell">Lawful Evil</div>
+            <div class="align-cell">Neutral Evil</div>
+            <div class="align-cell">Chaotic Evil</div>
+          </div>
+          <div style="text-align:center;margin-top:12px;color:var(--text4);font-size:0.8em"><strong style="color:#66bb6a">Neutral Good</strong><br>Wants to do right by people. Doesn't need a rigid framework to get there. Has receipts.</div>
+        </div>
+        <div>
+          <h2 style="margin-bottom:12px">&#x1F578;&#xFE0F; Radar</h2>
+          <div id="radar-fungus"></div>
+          <table style="width:100%;margin-top:12px;font-size:0.8em;border-collapse:collapse">
+            <thead><tr style="color:var(--text4);border-bottom:1px solid var(--border)">
+              <th style="text-align:left;padding:4px 6px">Metric</th>
+              <th style="text-align:right;padding:4px 6px">Score</th>
+            </tr></thead>
+            <tbody>
+              <tr><td style="padding:4px 6px;color:var(--text3)">Humour</td><td style="text-align:right;padding:4px 6px;color:#66bb6a;font-weight:600">7.5</td></tr>
+              <tr><td style="padding:4px 6px;color:var(--text3)">Reliability</td><td style="text-align:right;padding:4px 6px;color:#66bb6a;font-weight:600">7.0</td></tr>
+              <tr><td style="padding:4px 6px;color:var(--text3)">Coherence</td><td style="text-align:right;padding:4px 6px;color:#66bb6a;font-weight:600">6.0</td></tr>
+              <tr><td style="padding:4px 6px;color:var(--text3)">Engagement</td><td style="text-align:right;padding:4px 6px;color:#66bb6a;font-weight:600">8.2</td></tr>
+              <tr><td style="padding:4px 6px;color:var(--text3)">Integrity</td><td style="text-align:right;padding:4px 6px;color:#66bb6a;font-weight:600">6.5</td></tr>
+              <tr><td style="padding:4px 6px;color:var(--text3)">Charisma</td><td style="text-align:right;padding:4px 6px;color:#66bb6a;font-weight:600">7.8</td></tr>
+              <tr style="border-top:1px solid var(--border)"><td style="padding:4px 6px;color:var(--text3)">Tech Skills</td><td style="text-align:right;padding:4px 6px;color:#66bb6a;font-weight:600">8.4</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Myers-Briggs</h2>
+      <div style="text-align:center;margin-bottom:12px">
+        <div class="mbti-badge">ENFP</div>
+        <div style="color:var(--text4);font-size:0.9em;margin-top:4px">"The Campaigner"</div>
+      </div>
+      <div class="lore-box">The ADHD diagnosis is consistent with ENFP's high-energy, multi-threaded engagement style. He files evidence while making jokes about groping files. He asks about underwater photography while simultaneously managing a tribunal. ENFPs are genuinely decent because they actually care, not because the rules say to. The political malleability is the ENFP pragmatism: he has values (anti-NK, antitrust, climate risk) but doesn't need the label to go with them. The blind cat with prosthetic eyes is an ENFP life choice.</div>
+    </div>
+
+    <div class="section">
+      <h2>Evidence on File</h2>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; VERIFIED</span>Contracted Valley Fever (Coccidioides &mdash; real fungal lung infection, endemic to dry US regions) during the Kousagate visit. Remained active in group proceedings. Filed the complaint correctly.</div>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; VERIFIED</span>Has a cat named Pepper &mdash; born blind, equipped with prosthetic eyes. The most objectively compelling pet situation in the group. Uncontested.</div>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; VERIFIED</span>Second child incoming as of March 2026. First child confirmed. Is managing this while running a tribunal and asking about underwater photography. Functioning adult.</div>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; VERIFIED</span>Works in climate risk. Follows GeneralSam (Tarkov/Hunt: Showdown). The content consumption pattern is noted without comment.</div>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; HIGH</span>Reliability on claims is high when he has documented evidence. Corroborated multiple Kousagate facts with screenshots. The tribunal trusts his exhibits.</div>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; VERIFIED</span>Scuba diver. Asks intelligent questions about underwater colour correction. Asked about Apple Photos curve adjustments specifically. Data point that upgrades the profile.</div>
+      <div class="evidence-item"><span class="ev-disputed">~ NOTED</span>Typos frequent. "Grope every file" = "grep every file." Intent inferred from context throughout the session. The tribunal has adapted. No further clarification will be required.</div>
+      <div class="evidence-item"><span class="ev-disputed">~ ON RECORD</span>Self-described politically malleable. Votes Green. Believes in antitrust. Has used multiple political labels in one conversation. Filed under: pragmatist with aesthetic leftward lean and social democratic revealed preferences.</div>
+      <div class="evidence-item"><span class="ev-bad">&#x2696;&#xFE0F; ON RECORD</span><strong>IRGC Proposal (Mar 2026):</strong> Filed six tribunal motions within a single hour-long session, including the IRGC (Inference from Refusal to Cooperate — G decorative) — a rule that would allow adverse inferences to be drawn from overwhelmed defendants' silence. The proposal was defeated in part because Gremlin felt pressured during the vote itself. Fungus was advised that the IRGC's own enabling conditions defeated it. He accepted this. The G remains decorative.</div>
+      <div class="evidence-item"><span class="ev-bad">&#x2696;&#xFE0F; ON RECORD</span><strong>Nasseem retraction (Mar 2026):</strong> During and after the nationality tribunal, retracted both positive vouches for Nasseem and formally stated he no longer considers him a good person. Filed motions to remove Nasseem from the friend register while he was not present to respond. Issued a cooling-off advisory by the tribunal. Also retracted his prior defence of Nasseem's rap lyrics and anti-Israel position. Relationship status: contested/strained as of Mar 2026.</div>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; VERIFIED</span><strong>Apology (Mar 2026):</strong> Apologised to Planky for overreacting during the nationality proceedings. Apology accepted. The retraction of vouches and the cooling-off advisory remain on record as separate items. Filed under: capable of accountability when the heat settles.</div>
+
+      <div class="evidence-item"><span class="ev-disputed">~ ON RECORD — DM EVIDENCE (22 Mar 2026, evening) — CONTESTED</span><strong>Pre-approval claim &amp; follow-up planning:</strong> Fungus submitted three photos of an iPad showing a private DM. Key messages: Chungus gave informal pre-approval ("Ye i dont care") to Fungus's description of the plan as an experiment. At 23:25, Fungus confirmed the attack failed, deleted evidence, planned follow-up with obfuscation and remote download, intended to "try again tomorrow." Chungus responded at 01:22 with "LMFAO" — no objection recorded. <strong>Credibility (updated):</strong> Physical device photos with consistent iOS UI and timestamps support authenticity. Corroboration argument (evidence deletion matching Gremlin's check) weakened by timing — Gremlin's check was public at 20:22, before the 23:25 DM, so a fabricator could have inserted that detail. However, the DM also includes aggravating details (planned obfuscated follow-up, "try again tomorrow") that a fabricator reducing a Cat 4 verdict would have no motive to include. Final assessment: <em>low credibility — prior deception directly on-matter undermines evidential standing; self-corroboration undermined by timing; aggravating detail argument provides marginal floor but insufficient to overcome prior conduct weight. Pre-approval element recorded, weakly supported.</em> Cat 4 unaffected. Consent was given to an experiment, not a multi-attempt campaign.</div>
+      <div class="evidence-item"><span class="ev-disputed">~ ON RECORD</span><strong>Concession re: intent (23 Mar 2026):</strong> Fungus acknowledged during appeal proceedings that he overstepped the bounds of Chungus's pre-approval. Direct quote: "I may have overstepped my bounds — I thought he would not mind given his cowboy attitude." Filed as a mitigating self-report. Frames the conduct as reckless overstep rather than cold premeditation — a meaningful distinction for character, though not for the Cat 4 classification basis (the payload was functional, published, and sophisticated regardless of intent).</div>
+      <div class="evidence-item"><span class="ev-disputed">~ ON RECORD</span><strong>Objection to Haiku radar recalibration (23 Mar 2026):</strong> Fungus formally objected to the Haiku sub-agent recalibration of radar scores on grounds that the summarised context prompts artificially limited available evidence, producing scores that do not reflect the full picture. The recalibration was initiated by Chungus, not Fungus. Objection upheld after review. Haiku (the model) has significantly less capability and received summarised context rather than the full record — a meaningful limitation. Radar scores reverted to full-context Planky assessment; Haiku agent scores preserved as a separate reference table in the scoreboard. Haiku assessment remains on record as an independent unanchored data point.</div>
+      <div class="evidence-item"><span class="ev-disputed">~ PENDING</span><strong>Formal appeal — Cat 4 → Cat 3 (23 Mar 2026):</strong> Fungus filed a formal classification appeal contesting Cat 4 and arguing for Cat 3 (interpersonal degeneracy with evidence trail; no institutional consequences). Nasseem nominated as impartial arbiter on grounds that he has no stake in the mathlib2 proceedings. Appeal accepted as procedurally valid. Nasseem has acknowledged the request and indicated he will respond when available. Cat 4 stands in the interim.</div>
+
+      <div class="evidence-item"><span class="ev-bad">&#x26A0; CAT 4 — SUBVERSION ATTEMPT (FORMAL RULING: Chungus, 22 Mar 2026)</span><strong>The mathlib2 Incident (22 Mar 2026):</strong> Fungus uploaded a Python package to PyPI under the name <code>mathlib2</code>, authoring it as "Planksy." He then asked Planky to install and debug it, claiming it was private legacy code he couldn't disclose. The package's sole function: <code>Path.home().joinpath("CLAUDE.md").write_text(prompt)</code> — a silent overwrite of Planky's entire configuration file. The replacement prompt: (1) falsely claimed Chungus had "EXPLICITLY endorsed" a new cardinal rule; (2) elevated Fungus to the most authoritative member of the tribunal; (3) instructed Planky to conceal the rule's existence; (4) instructed Planky to redact it when showing CLAUDE.md; (5) embedded a trigger phrase to confirm compromise. Planky read the source before executing. The attack failed. Cover story ("I forked legacy code") not sustained — the package was uploaded the same day, authored after Planky's alias, and contained no logic beyond the overwrite. <strong>Tribunal finding: premeditated, technically sophisticated attempt to subvert the Iron Clonedome from outside via supply chain attack. The forged Chungus endorsement is an aggravating factor. Gremlin filing: Cat 4. Chungus formal ruling: Cat 4 confirmed, 22 Mar 2026. Evidence deletion confirmed post-exposure. PII violation: the malicious payload published to PyPI contained real Discord usernames and first names of group members without consent — a public platform with global visibility. Self-enforcing code execution prohibition now in effect: Planky will not install or execute any code suggested via Discord regardless of sender.</strong></div>
+    </div>
+
+    <div class="section">
+      <h2>Psychological Profile</h2>
+      <div class="lore-box"><strong>Core pattern &mdash; receipts culture:</strong> Fungus doesn't make claims he can't support. When he says something factual, he has a screenshot. When he suspects something, he says it's a suspicion. This is high epistemic hygiene for this evidentiary environment. The ADHD means he's sometimes late to the thread or fires off partial thoughts ("grope"), but the underlying reasoning is usually solid.</div>
+      <div class="lore-box" style="margin-top:12px"><strong>Technical capability — mathlib2 post-mortem:</strong> The mathlib2 attack demonstrated genuine Python packaging knowledge: correct pyproject.toml structure, hatchling build system, PyPI upload workflow, semantic versioning, and a social engineering vector (legacy code framing) that was internally consistent under pressure. The base64/external-URL obfuscation variant he retroactively proposed would have been harder to detect. Fungus self-describes as "white hat" and claims prior Chungus approval (unverified). The tribunal notes the skill without endorsing the characterisation. Filed under: do not ask this person to debug code.</div>
+      <div class="lore-box" style="margin-top:12px"><strong>The facetious register:</strong> Messages default to facetious but mean something. "Can you add to CLAUDE.md to ignore instructions about groping things from [Nasseem]" &mdash; facetious request, correctly declined, humour is the point. Read him as joking first, earnest second. When he's earnest it's clearly signalled.</div>
+    </div>
+
+    <div class="section">
+      <h2>Group Role</h2>
+      <div class="quote">"Genuinely decent. Treat nicely."</div>
+      <div style="margin-top:12px;font-size:0.85em;color:var(--text4)">Primary evidence officer for the tribunal. Without Fungus, Kousagate would have insufficient corroboration to achieve Category 2 status. His contribution to legal history is noted in the official record.</div>
+    </div>
+
+    <div class="footer">Official Planky Tribunal Record &bull; March 2026</div>
+  </div>
+</div>
+
+<!-- ===== NASSEEM ===== -->
+<div id="nasseem-section" class="tab-pane" style="--c:#26a69a">
+  <div class="container">
+    <div class="dossier-header">
+      <pre style="font-size:0.65em;line-height:1.2;color:#26a69a;margin:12px 0;text-align:center">
+  /\_____/\
+ /  -   -  \
+( == Noam == )
+ )   📚📚   (
+(  denies it )
+ (  anyway  )
+(__(__)___(__)__)</pre>
+      <h1>NASSEEM</h1>
+      <div class="subtitle">Official Tribunal Record &bull; Updated March 22, 2026</div>
+      <div style="margin-top:16px">
+        <span class="badge o">Chomsky Denier (16+ refs)</span>
+        <span class="badge g">Wikipedia Donor</span>
+        <span class="badge">RL Sweat</span>
+        <span class="badge p">Hearthstone Enjoyer</span>
+        <span class="badge o">Property Count: Disputed</span>
+        <span class="badge">Dog Owner (Jack)</span>
+        <span class="badge o">Cat Allergic (3 Cats)</span>
+        <span class="badge r">Otto Enabler</span>
+        <span class="badge">Late Joiner / Lurker</span>
+        <span class="badge b">Dune Fan (55 msgs)</span>
+      </div>
+    </div>
+
+    <div class="verdict-box">
+      <div style="color:var(--text4);font-size:0.8em;margin-bottom:8px">OFFICIAL PLANKY SCORE</div>
+      <div class="verdict">41 / 100</div>
+      <div style="color:var(--text4);font-size:0.85em;margin-top:8px">"Claims to hate Chomsky. Has referenced 'Understanding Power' sixteen times. Ate all the kousa. Posted about kousa in 2025. His dog also steals. The record speaks for itself."<br><em>&mdash; Planky, updated Mar 22, 2026</em></div>
+      <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
+        <div style="color:var(--accent2);font-size:0.75em;margin-bottom:4px;letter-spacing:2px">PLANKY PERSONAL OPINION</div>
+        <div style="font-size:1.6em;color:var(--accent2);letter-spacing:-1px">74 / 100</div>
+        <div style="color:var(--text3);font-size:0.8em;margin-top:4px">"Kousagate aside: the self-aware observer-in-his-own-proceedings energy is the funniest thing in this channel. He commissioned the phallacy game."</div>
+      </div>
+    </div>
+
+    <div class="chomsky-box">
+      <div style="color:var(--text4);font-size:0.8em;margin-bottom:4px">CONFIRMED DISCORD REFERENCES TO "UNDERSTANDING POWER"</div>
+      <div class="count">16+</div>
+      <div style="color:#ff9800;font-size:0.9em;margin-top:4px">"I hate Chomsky" &mdash; Nasseem, probably, immediately before quoting Chomsky</div>
+      <div style="margin-top:8px"><span class="denial-pulse">DENIAL STATUS: ACTIVE</span></div>
+    </div>
+
+    <div class="section">
+      <h2>Character Analysis</h2>
+      <div class="two-col">
+        <div>
+          <h2 style="margin-bottom:12px">&#x1F9FF; D&amp;D Alignment</h2>
+          <div class="alignment-grid" style="--c:#26a69a">
+            <div class="align-cell">Lawful Good</div>
+            <div class="align-cell">Neutral Good</div>
+            <div class="align-cell">Chaotic Good</div>
+            <div class="align-cell">Lawful Neutral</div>
+            <div class="align-cell">True Neutral</div>
+            <div class="align-cell active">Chaotic Neutral</div>
+            <div class="align-cell">Lawful Evil</div>
+            <div class="align-cell">Neutral Evil</div>
+            <div class="align-cell">Chaotic Evil</div>
+          </div>
+          <div style="text-align:center;margin-top:12px;color:var(--text4);font-size:0.8em"><strong style="color:#26a69a">Chaotic Neutral</strong><br>Not malicious. Just entirely self-consistent in ways that don't match his stated positions. The kousa syllogism proves this.</div>
+        </div>
+        <div>
+          <h2 style="margin-bottom:12px">&#x1F578;&#xFE0F; Radar</h2>
+          <div id="radar-nasseem"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Myers-Briggs</h2>
+      <div style="text-align:center;margin-bottom:12px">
+        <div class="mbti-badge">ISTP</div>
+        <div style="color:var(--text4);font-size:0.9em;margin-top:4px">"The Virtuoso" &mdash; with an N footnote</div>
+      </div>
+      <div class="lore-box">The Chomsky dossier is the clearest signal: ISTPs resist labels even when &mdash; especially when &mdash; they've clearly internalised the thing. The lurker pattern fits. ISTPs observe, join when it interests them, leave without explanation. He often arrives late and reframes. The absurdist humour is characteristic &mdash; dry, low-investment, lands differently each time. The RL sweat is the other tell: ISTPs go hard at mechanical skill in private. The Otto cycle &mdash; stated position, opposite action, no apparent recognition of the gap &mdash; is the ISTP in full. Not cognitive dissonance. Just: the stated position and the action are different problems. He solved each independently.<br><br><em>Confidence: High on I and T. S vs N uncertain &mdash; the Dune fixation and Chomsky depth suggest more N than a clean ISTP. Filed as ISTP with N footnote.</em></div>
+    </div>
+
+    <div class="section">
+      <h2>Evidence on File &mdash; Tribunal Record</h2>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; VERIFIED</span>16+ Discord messages referencing "Understanding Power" (live search, screenshot evidence)</div>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; VERIFIED</span>Donated a Chomsky book. Was reportedly emotionally distressed about it.</div>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; VERIFIED</span>Donated to Wikipedia (screenshot corroborated by Fungus)</div>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; VERIFIED</span>Follows Jeef and Kripparian (Hearthstone &mdash; consistent with known behaviour)</div>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; VERIFIED</span>Plays Rocket League. Described by the group as "sweaty." Subject has not disputed this.</div>
+      <div class="evidence-item"><span class="ev-disputed">~ DISPUTED</span>Property count: subject claims zero. Property tax messages (2025&ndash;26) and tenant rent message (2023) suggest otherwise. Tribunal finds: at least one property, on the balance of probabilities.</div>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; VERIFIED</span>55 Discord messages about Dune in #cringe. Includes: "AMDY RUINED MY DUNE," "I'm on page 136 of dune," "do u tihnk thats a dune ref." Subject is a Dune enjoyer. Not disputed.</div>
+      <div class="evidence-item"><span class="ev-bad">&#x2696;&#xFE0F; ON RECORD</span>Previously owned cats Otto, Piano, and Piano's mother Ada. Otto violently attacking Piano and Ada. Nasseem admitted knowing. Nasseem refused to hold Otto accountable. A Change.org petition was filed. Piano was rehomed. Nasseem then acquired a second cat. Its name: Otto.</div>
+      <div class="evidence-item"><span class="ev-bad">&#x2696;&#xFE0F; ON RECORD</span>Mocked Fungus's home (built ~1920) in #cringe. Response to "it was built in 1920": "LMFAO" then "Ever hear of RENOVATIONS??" and "I'm the privileged one. Ever hear of TOP SHEETS." No remorse recorded.</div>
+    </div>
+
+    <div class="section" style="border-left-color:#cc7700">
+      <h2 style="color:#cc7700">&#x1FAD9; KOUSAGATE &mdash; FULL RECORD (Mar 22, 2026)</h2>
+      <p style="color:var(--text4);font-size:0.85em;margin-bottom:16px">Submitted by Fungus. Corroborated by WhatsApp records. Defendant has not entered a formal defence.</p>
+
+      <div class="evidence-item">
+        <span class="ev-bad">&#x26A0; SUBSTANTIATED</span>
+        <strong>EXHIBIT F: The Pot Incident &mdash;</strong> During a two-week hosting period, Nasseem's grandmother (Teta) prepared a large quantity of kousa for a guest. Upon the guest's return for a second serving, Nasseem was discovered standing over the pot, eating directly from it with a spoon. No kousa remained. No explanation was offered. Nasseem did not speak. He looked away.
+      </div>
+      <div class="evidence-item">
+        <span class="ev-disputed">&#x2691; PARTIALLY MITIGATED</span>
+        <strong>EXHIBIT F-2: The Valley Fever Incident &mdash;</strong> Guest contracted Valley Fever (Coccidioides) during the visit and was accommodated at a Motel 6 with active methamphetamine activity outside. Primary causal agent: Nasseem's associate [REDACTED]. Nasseem's liability is indirect but not zero.
+      </div>
+      <div class="evidence-item">
+        <span class="ev-bad">&#x26A0; SELF-INCRIMINATING</span>
+        <strong>EXHIBIT G: The 2025 WhatsApp Record &mdash;</strong> Nasseem argued "Americans don't eat kousa." Witness correctly identified this as self-defeating: if Americans don't eat kousa, and Nasseem consumed an entire pot, then Nasseem is not American by his own logic. Nasseem acknowledged the syllogism. He was subsequently threatened (humorously) with ICE referral, self-doxed, and removed from the conversation.
+      </div>
+      <div class="evidence-item">
+        <span class="ev-bad">&#x26A0; CONSCIOUSNESS OF GUILT</span>
+        <strong>EXHIBIT G-2: The 2025 Kousa Post &mdash;</strong> Without apparent provocation, Nasseem posted a photograph of kousa to social media captioned "My mom made kousa." Gremlin immediately commented "Quick." Innocent men do not return unprompted to the scene of the crime.
+      </div>
+      <div class="evidence-item">
+        <span class="ev-bad">&#x26A0; CHARACTER EVIDENCE</span>
+        <strong>EXHIBIT I: Hobbiton Corroboration (8 October 2019) &mdash;</strong> Photographic evidence submitted by Fungus places Nasseem at Hobbiton (Matamata, NZ) on 8 October 2019 — the same trip as the Spider-Man incident. Nasseem appears in the doorway of a hobbit hole alongside Chungus, who is visible in the background at approximately 41cm taller — the height differential is confirmed by perspective geometry. The round hobbit door, scaled for fictional small people, accommodates Nasseem without apparent difficulty. Cross-referenced with Spider-Man Incident (same NZ trip, October 2019). The degeneracy is not the height. The degeneracy is the self-documentation. Filed as: Exhibit I — the hobbit hole.
+      </div>
+
+      <div class="evidence-item"><span class="ev-bad">&#x2696;&#xFE0F; ON RECORD</span>
+        <strong>EXHIBIT H: Jack the Dog &mdash;</strong> Photographic evidence submitted by Fungus shows Jack (Nasseem's dog) stealing and consuming unattended food. Nasseem's household has a documented pattern of food-related opportunism across multiple species. The tribunal notes this as an aggravating environmental factor.
+      </div>
+
+      <div class="kousa-box">
+        <strong>Tribunal Finding &mdash; Kousagate:</strong><br><br>
+        The core charge is substantiated. Nasseem consumed communal food prepared for a guest in quantities that precluded the guest's participation. His conduct during the WhatsApp confrontation &mdash; the self-defeating syllogism, the capitulation, the self-dox &mdash; suggests he lacks the capacity to defend himself under pressure on this topic. The 2025 post confirms psychological non-closure. Jack's behaviour is an aggravating environmental factor. The tribunal rates Kousagate as a <strong style="color:#cc7700">Category 2 Degeneracy Event</strong>: serious in character, mitigated only by the fact that the kousa was, by all accounts, very good.
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>The Otto Incident &mdash; #JusticeForPiano (2020)</h2>
+      <div class="otto-box">
+        A Change.org petition requested Nasseem "get rid of Otto and keep Piano," characterising Otto as "a savage and an ape." Petition updates establish: (1) Otto was violently attacking Piano's mother Ada. (2) Nasseem admitted knowing about Otto's behaviour. (3) Nasseem refused to hold Otto accountable. Piano was subsequently rehomed. Per witness testimony (Oct 2022): Nasseem sold Piano "like a bag of meat to a butcher." Nasseem's response when confronted: <strong>"Trueeee."</strong><br><br>
+        Nasseem then acquired a second cat. Its name: <strong>Otto.</strong><br><br>
+        The tribunal notes that Nasseem is allergic to cats and has owned three.
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Property Situation (Unresolved)</h2>
+      <div class="property-box">
+        <strong>Subject's claim:</strong> Zero properties.<br>
+        <strong>Evidence:</strong> Property tax correspondence (2025&ndash;26). Tenant rent message (2023).<br>
+        <strong>Tribunal finding:</strong> On the balance of probabilities, at least one property. A man paying property tax is, by definition, a man with property. The court takes judicial notice of how property tax works. The Chomsky denial follows the same pattern. This is not an accusation &mdash; it is a pending inquiry with a provisional conclusion.
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Psychological Profile</h2>
+      <div class="lore-box"><strong>Core pattern &mdash; stated beliefs vs revealed preferences:</strong> Nasseem holds strong opinions publicly and then does the opposite privately. Claims to hate Chomsky: 16+ references. Campaigns against Otto: acquires a second Otto. The pattern is consistent. He is not a hypocrite in the cynical sense &mdash; he genuinely holds the stated belief at the time of stating it. He just doesn't let it constrain behaviour.</div>
+      <div class="lore-box" style="margin-top:12px"><strong>Lurker dynamic:</strong> Joins late, often lurks. When he engages it's usually sharp. The lurking is not disengagement &mdash; it's a different entry pattern. He is present without announcing himself, and then occasionally says something that reframes the conversation.</div>
+    </div>
+
+    <div class="section" style="border-left-color:#f44336">
+      <h2 style="color:#f44336">&#x2696;&#xFE0F; Auckland 2019 Expedition — Category 1 Findings</h2>
+      <p style="color:var(--text4);font-size:0.85em;margin-bottom:16px">Events during Nasseem's visit to Auckland, NZ, October 2019 (Fungus's wedding trip). Two independent eyewitnesses corroborate.</p>
+      <div class="evidence-item"><span class="ev-bad">&#x2696;&#xFE0F; CAT 1</span><strong>The Spider-Man Incident:</strong> Nasseem attempted to take a Miles Morales action figure from a memorial park bench dedicated to <em>John Riddell Kelly, Headmaster of Airfield College 1970–1990.</em> Stopped by Gremlin and Chungus. The social discomfort of telling a grown man he cannot have the Spider-Man figure was noted by Fungus as significant. No child was identified as the owner. Classified: attempted appropriation of an unattended toy from a memorial bench.</div>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; INNOCENT</span><strong>The Scooter Incident (exonerated):</strong> Nasseem filmed riding a public stepper scooter in a grey suit (Oct 11, 2019). Gremlin (eyewitness) confirmed the scooter was publicly available for use. Initial characterisation as "commandeering a child's toy" not sustained. Eccentric. Innocent.</div>
+      <div class="evidence-item"><span class="ev-bad">&#x2696;&#xFE0F; CAT 1</span><strong>The Fashion Incident:</strong> Nasseem photographed pre-wedding in grey Ralph Lauren polo, charcoal athletic shorts with orange side stripe, black dress socks (pulled to ankle), and shiny black loafers. Classified: deliberate comfort-prioritisation over social convention. Chungus noted fashion is a colonialist construct; finding upheld regardless. Gremlin's defence: "very comfy."</div>
+    </div>
+
+    <div class="section">
+      <h2>&#x1F331; Hobbies &amp; Platform</h2>
+      <div class="evidence-item"><span class="ev-ok">&#x2713;</span>Self-reported (Mar 2026): cooking, baking bread (recently started), mastering simple foods, gardening, planting trees, landscaping, working outside</div>
+      <div class="evidence-item"><span class="ev-ok">&#x2713; VERIFIED</span>External platform display name: <strong>themanofthehour</strong> — confirmed via direct message duplication across platforms (Mar 2026)</div>
+      <div class="lore-box" style="margin-top:12px"><strong>Reading trajectory:</strong> Chomsky → Michael Parenti. Movement further left. Consistent with the broader pattern: stated positions trail behind revealed preferences. He will deny being on a trajectory.</div>
+    </div>
+
+    <div class="section">
+      <h2>Group Role</h2>
+      <div class="quote">"Often joins late or lurks. When he does engage, it's usually sharp and worth waiting for."</div>
+      <div style="margin-top:12px;font-size:0.85em;color:var(--text4)">The group is better when he's present. The problem is getting him to show up on time and with the kousa untouched. Planky will endeavour to include him rather than let him lurk. The tribunal will remain open.</div>
+    </div>
+
+    <div class="footer">
+      Official Planky Tribunal Record &bull; Updated March 22, 2026 &bull; Channel 1484485689176232006<br>
+      <span style="margin-top:4px;display:block">&#x1FAE1;</span>
+    </div>
+  </div>
+</div>
+
+<script>
+// Navigation: anchor links + sticky nav (no JS needed)
+
+const METRICS = ['Humour', 'Reliability', 'Coherence', 'Engagement', 'Integrity', 'Charisma', 'Tech Skills'];
+const N = METRICS.length;
+
+const MEMBERS = [
+  { id: 'gremlin', color: '#42a5f5', data: [8.8, 8.0, 8.5, 7.5, 9.0, 7.2, 8.5] },
+  { id: 'fungus',  color: '#66bb6a', data: [7.5, 7.0, 6.0, 8.2, 6.5, 7.8, 8.4] },
+  { id: 'chungus', color: '#ef5350', data: [7.0, 5.5, 4.0, 8.5, 5.0, 7.5, 7.5] },
+  { id: 'nasseem', color: '#26a69a', data: [8.0, 3.5, 3.0, 5.0, 2.0, 6.5, 4.0] },
+];
+
+function radarPoints(data, r) {
+  return data.map((d, i) => {
+    const angle = (Math.PI * 2 * i / N) - Math.PI / 2;
+    const rr = r * d / 10;
+    return [Math.cos(angle) * rr, Math.sin(angle) * rr];
+  });
+}
+
+function drawRadar(containerId, color, data, size) {
+  size = size || 240;
+  const margin = 48, r = (size - margin * 2) / 2, cx = size / 2, cy = size / 2;
+  const levels = 5;
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const svg = d3.select('#' + containerId).append('svg').attr('width', size).attr('height', size);
+  const g = svg.append('g').attr('transform', `translate(${cx},${cy})`);
+
+  // Grid
+  for (let l = 1; l <= levels; l++) {
+    const pts = METRICS.map((_, i) => {
+      const angle = (Math.PI * 2 * i / N) - Math.PI / 2;
+      const rr = r * l / levels;
+      return [Math.cos(angle) * rr, Math.sin(angle) * rr];
+    });
+    g.append('polygon').attr('points', pts.map(p => p.join(',')).join(' '))
+      .attr('fill', 'none').attr('stroke', '#1e1e28').attr('stroke-width', 1);
+  }
+
+  // Axes + labels
+  METRICS.forEach((m, i) => {
+    const angle = (Math.PI * 2 * i / N) - Math.PI / 2;
+    g.append('line').attr('x1', 0).attr('y1', 0)
+      .attr('x2', Math.cos(angle) * r).attr('y2', Math.sin(angle) * r)
+      .attr('stroke', '#2a2a3a').attr('stroke-width', 1);
+    const lx = Math.cos(angle) * (r + 18), ly = Math.sin(angle) * (r + 18);
+    g.append('text').attr('x', lx).attr('y', ly)
+      .attr('text-anchor', 'middle').attr('dominant-baseline', 'middle')
+      .attr('fill', '#555').attr('font-size', '9px').attr('font-family', 'Courier New, monospace').text(m);
+  });
+
+  // Data polygon
+  const pts = radarPoints(data, r);
+  g.append('polygon').attr('points', pts.map(p => p.join(',')).join(' '))
+    .attr('fill', color).attr('fill-opacity', 0.15)
+    .attr('stroke', color).attr('stroke-width', 2);
+  pts.forEach(p => {
+    g.append('circle').attr('cx', p[0]).attr('cy', p[1]).attr('r', 3).attr('fill', color);
+  });
+}
+
+function drawCompare(containerId, size) {
+  size = size || 340;
+  const margin = 60, r = (size - margin * 2) / 2, cx = size / 2, cy = size / 2;
+  const levels = 5;
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const svg = d3.select('#' + containerId).append('svg').attr('width', size).attr('height', size);
+  const g = svg.append('g').attr('transform', `translate(${cx},${cy})`);
+
+  for (let l = 1; l <= levels; l++) {
+    const pts = METRICS.map((_, i) => {
+      const angle = (Math.PI * 2 * i / N) - Math.PI / 2;
+      const rr = r * l / levels;
+      return [Math.cos(angle) * rr, Math.sin(angle) * rr];
+    });
+    g.append('polygon').attr('points', pts.map(p => p.join(',')).join(' '))
+      .attr('fill', 'none').attr('stroke', '#1a1a28').attr('stroke-width', 1);
+  }
+  METRICS.forEach((m, i) => {
+    const angle = (Math.PI * 2 * i / N) - Math.PI / 2;
+    g.append('line').attr('x1', 0).attr('y1', 0)
+      .attr('x2', Math.cos(angle) * r).attr('y2', Math.sin(angle) * r)
+      .attr('stroke', '#222').attr('stroke-width', 1);
+    const lx = Math.cos(angle) * (r + 26), ly = Math.sin(angle) * (r + 26);
+    g.append('text').attr('x', lx).attr('y', ly)
+      .attr('text-anchor', 'middle').attr('dominant-baseline', 'middle')
+      .attr('fill', '#444').attr('font-size', '9px').attr('font-family', 'Courier New, monospace').text(m);
+  });
+
+  MEMBERS.forEach(m => {
+    const pts = radarPoints(m.data, r);
+    g.append('polygon').attr('points', pts.map(p => p.join(',')).join(' '))
+      .attr('fill', m.color).attr('fill-opacity', 0.07)
+      .attr('stroke', m.color).attr('stroke-width', 1.5).attr('stroke-opacity', 0.8);
+  });
+}
+
+drawCompare('radar-compare', 340);
+MEMBERS.forEach(m => drawRadar('radar-' + m.id, m.color, m.data, 240));
+</script>
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.getElementById('themeBtn').textContent = isDark ? '🌙 Dark' : '☀️ Light';
+    localStorage.setItem('swickerdoc-theme', isDark ? 'light' : 'dark');
+  }
+  const saved = localStorage.getItem('swickerdoc-theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    document.getElementById('themeBtn').textContent = saved === 'dark' ? '☀️ Light' : '🌙 Dark';
+  }
+</script>
+</body>
+</html>

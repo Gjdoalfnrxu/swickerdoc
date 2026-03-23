@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Degeneracy Tribunal — Serious Crime Risk Assessment</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  body { display: flex; flex-direction: column; align-items: center; }
+
+  .header { text-align: center; padding: 28px 40px; border: 2px solid var(--accent-border); background: var(--accent-bg); margin-bottom: 28px; border-radius: var(--radius); }
+  .header h1 { font-size: 18px; font-weight: 700; color: var(--accent); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 6px; }
+  .seal { font-size: 36px; margin-bottom: 10px; }
+  .sub { font-size: 11px; color: var(--text4); letter-spacing: 2px; text-transform: uppercase; }
+
+  .disclaimer { background: var(--amber-bg); border: 1px solid var(--amber-border); border-left: 3px solid var(--amber); border-radius: 0 var(--radius) var(--radius) 0; padding: 14px 18px; font-size: 12px; color: var(--text3); line-height: 1.7; margin-bottom: 28px; }
+
+  .crime-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; box-shadow: var(--shadow); overflow: hidden; }
+  .crime-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 18px; background: var(--bg2); border-bottom: 1px solid var(--border); }
+  .crime-name { font-size: 14px; font-weight: 700; color: var(--text); }
+  .sentence-badge { font-size: 10px; font-weight: 700; color: var(--accent); background: var(--accent-bg); border: 1px solid var(--accent-border); padding: 3px 10px; border-radius: 10px; white-space: nowrap; flex-shrink: 0; letter-spacing: 0.5px; }
+
+  .crime-body { padding: 16px 18px; }
+  .crime-desc { font-size: 12px; color: var(--text4); line-height: 1.6; margin-bottom: 14px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+
+  .suspect-row { display: flex; gap: 14px; align-items: flex-start; }
+  .suspect-label { font-size: 10px; font-weight: 700; color: var(--text4); letter-spacing: 1.5px; text-transform: uppercase; flex-shrink: 0; padding-top: 2px; }
+  .suspect-info { flex: 1; min-width: 0; }
+  .suspect-name { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .suspect-reason { font-size: 13px; color: var(--text3); line-height: 1.7; margin-bottom: 12px; }
+
+  .risk-bar-wrap { display: flex; align-items: center; gap: 10px; }
+  .risk-label { font-size: 10px; font-weight: 700; color: var(--text4); letter-spacing: 1px; flex-shrink: 0; }
+  .risk-bar { flex: 1; height: 6px; background: var(--bg3); border-radius: 3px; overflow: hidden; border: 1px solid var(--border); }
+  .risk-fill { height: 100%; border-radius: 3px; }
+  .risk-fill.low     { width: 12%; background: var(--green); }
+  .risk-fill.med     { width: 42%; background: var(--amber); }
+  .risk-fill.high    { width: 75%; background: var(--accent); }
+  .risk-fill.extreme { width: 88%; background: var(--accent); }
+  .risk-pct { font-size: 11px; font-weight: 700; color: var(--text3); flex-shrink: 0; width: 34px; text-align: right; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="site-header">
+    <div>
+      <div class="site-title">Serious Crime Risk Assessment</div>
+      <div class="site-subtitle">Hypothetical profiling — satirical</div>
+    </div>
+    <button class="dark-toggle" onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
+  </div>
+
+  <div class="header">
+    <div class="seal">☠️</div>
+    <h1>Degeneracy Tribunal</h1>
+    <div class="sub">SERIOUS CRIME RISK ASSESSMENT — LEVEL: ACTUALLY HORRIFIC</div>
+  </div>
+
+  <div class="disclaimer">
+    DISCLAIMER: This is a satirical document. Nobody in this group has committed, planned, or is suspected of any of the following crimes. This is the Degeneracy Tribunal, not Interpol. The tribunal's jurisdiction ends at Category 3. Everything below is Category 4–7 and therefore entirely fictional. Nasseem's legal team (if he had one) would have a field day. He doesn't. He has a dog named Jack who also steals food.
+  </div>
+
+  <!-- 1 -->
+  <div class="crime-card">
+    <div class="crime-header">
+      <div><div class="crime-name">High Treason — Advocating Violent Overthrow of the State</div></div>
+      <div class="sentence-badge">LIFE</div>
+    </div>
+    <div class="crime-body">
+      <div class="crime-desc">Levying war against the sovereign state, or giving aid and comfort to its enemies. Includes sustained ideological infrastructure designed to undermine the constitutional order.</div>
+      <div class="suspect-row">
+        <div class="suspect-label">Primary Suspect</div>
+        <div class="suspect-info">
+          <div class="suspect-name">Chungus</div>
+          <div class="suspect-reason">Hardline tankie. Believes the capitalist state must be dismantled by force. Spent eight years inside the banking system learning its vulnerabilities — the tribunal notes this reads less like hypocrisy and more like reconnaissance. Posts dialectical materialism. Has a cat named Harley who is probably radicalised by proximity. The clay mushroom sculptures may be a cover. The tribunal cannot confirm what is inside them.</div>
+          <div class="risk-bar-wrap">
+            <div class="risk-label">RISK</div>
+            <div class="risk-bar"><div class="risk-fill high"></div></div>
+            <div class="risk-pct">75%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="crime-card">
+    <div class="crime-header">
+      <div><div class="crime-name">RICO — Organised Crime / Racketeering</div></div>
+      <div class="sentence-badge">20 YEARS</div>
+    </div>
+    <div class="crime-body">
+      <div class="crime-desc">Operating a sustained criminal enterprise across multiple jurisdictions, using a pattern of predicate offences. Includes coordination of automated fraud systems.</div>
+      <div class="suspect-row">
+        <div class="suspect-label">Primary Suspect</div>
+        <div class="suspect-info">
+          <div class="suspect-name">Gremlin</div>
+          <div class="suspect-reason">Operated an automated bot network on the GW2 trading post for approximately one year. Built, deployed, and maintained the infrastructure. Calls this "tinkering." The tribunal notes that "tinkering" is what people say about criminal enterprises when they're trying to sound harmless. He also named the AI's legal doctrine "the Iron Clonedome" — which suggests familiarity with fortified institutional structures. Suspicious.</div>
+          <div class="risk-bar-wrap">
+            <div class="risk-label">RISK</div>
+            <div class="risk-bar"><div class="risk-fill extreme"></div></div>
+            <div class="risk-pct">88%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="crime-card">
+    <div class="crime-header">
+      <div><div class="crime-name">International Money Laundering</div></div>
+      <div class="sentence-badge">20 YEARS</div>
+    </div>
+    <div class="crime-body">
+      <div class="crime-desc">Processing proceeds of crime through legitimate financial systems across multiple jurisdictions to conceal their illicit origin.</div>
+      <div class="suspect-row">
+        <div class="suspect-label">Primary Suspect</div>
+        <div class="suspect-info">
+          <div class="suspect-name">Fungus</div>
+          <div class="suspect-reason">Big shot banker. Works in "climate risk" — a field that, the tribunal acknowledges, is real and important, but also involves moving very large sums of money across complex international structures. Self-described as "politically malleable." Votes change depending on convenience. Has previously held index funds on three exchanges simultaneously (NZX50, S&P500, ASX200). Is a scuba diver — underwater visibility is low. The tribunal draws no inference from this. Formally.</div>
+          <div class="risk-bar-wrap">
+            <div class="risk-label">RISK</div>
+            <div class="risk-bar"><div class="risk-fill med"></div></div>
+            <div class="risk-pct">42%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="crime-card">
+    <div class="crime-header">
+      <div><div class="crime-name">Cyberterrorism — Critical Infrastructure Attack</div></div>
+      <div class="sentence-badge">LIFE</div>
+    </div>
+    <div class="crime-body">
+      <div class="crime-desc">Deliberate targeting of critical national infrastructure using computer systems, with intent to cause widespread disruption, panic, or harm.</div>
+      <div class="suspect-row">
+        <div class="suspect-label">Primary Suspect</div>
+        <div class="suspect-info">
+          <div class="suspect-name">Gremlin</div>
+          <div class="suspect-reason">Grey hat hacker. Self-admitted. Enjoys "tinkering with systems." Knows the iron clonedome from the inside. Voted no on the IRGC partly to protect future defendants from evidence pile-ons — the tribunal notes this could also be interpreted as protecting himself. Has shown the ability to operate automated systems undetected for extended periods. Would probably leave a very clean evidence trail. Or none at all.</div>
+          <div class="risk-bar-wrap">
+            <div class="risk-label">RISK</div>
+            <div class="risk-bar"><div class="risk-fill high"></div></div>
+            <div class="risk-pct">71%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <div class="crime-card">
+    <div class="crime-header">
+      <div><div class="crime-name">Murder — First Degree (Premeditated)</div></div>
+      <div class="sentence-badge">LIFE WITHOUT PAROLE</div>
+    </div>
+    <div class="crime-body">
+      <div class="crime-desc">Unlawful killing of another person with premeditation and malice aforethought.</div>
+      <div class="suspect-row">
+        <div class="suspect-label">Primary Suspect</div>
+        <div class="suspect-info">
+          <div class="suspect-name">Nasseem</div>
+          <div class="suspect-reason">A man who can look his grandmother in the eye, eat the entire pot of food she prepared for a guest, and then post a photo of kousa on the internet the following June — captioned with nothing, as if daring someone to comment — is not a man constrained by social inhibition. The tribunal considers the absence of guilt more alarming than guilt itself. Jack the dog is also a food thief. The apple, the tree. No formal defence has been mounted for either of them.</div>
+          <div class="risk-bar-wrap">
+            <div class="risk-label">RISK</div>
+            <div class="risk-bar"><div class="risk-fill med"></div></div>
+            <div class="risk-pct">38%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6 -->
+  <div class="crime-card">
+    <div class="crime-header">
+      <div><div class="crime-name">War Crimes — Unlawful Targeting of Civilians</div></div>
+      <div class="sentence-badge">LIFE (ICC)</div>
+    </div>
+    <div class="crime-body">
+      <div class="crime-desc">Violations of the laws and customs of war as defined by the Geneva Conventions and the Rome Statute. Jurisdiction falls to the International Criminal Court.</div>
+      <div class="suspect-row">
+        <div class="suspect-label">Primary Suspect</div>
+        <div class="suspect-info">
+          <div class="suspect-name">Chungus</div>
+          <div class="suspect-reason">Has strong and detailed opinions on international military conflict, geopolitics, and the moral legitimacy of state violence. Considers certain state actors justified in a way that would raise eyebrows at The Hague. Has family in a conflict-affected region, which the tribunal notes is morally significant and not held against him — but the geopolitical conviction is documented. "Triggered" by a missile defence diagram. May have context the tribunal is not cleared to know. Referring to relevant authorities. Hypothetically.</div>
+          <div class="risk-bar-wrap">
+            <div class="risk-label">RISK</div>
+            <div class="risk-bar"><div class="risk-fill low"></div></div>
+            <div class="risk-pct">12%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7 -->
+  <div class="crime-card">
+    <div class="crime-header">
+      <div><div class="crime-name">International Drug Trafficking</div></div>
+      <div class="sentence-badge">25 YEARS</div>
+    </div>
+    <div class="crime-body">
+      <div class="crime-desc">Transportation, importation, or distribution of controlled substances across international borders, typically as part of an organised network.</div>
+      <div class="suspect-row">
+        <div class="suspect-label">Primary Suspect</div>
+        <div class="suspect-info">
+          <div class="suspect-name">Nasseem</div>
+          <div class="suspect-reason">Lebanese-American. California-based. Contested property holdings. Denies owning land he appears to own. Has a dog named Jack — dogs are commonly used in smuggling detection, suggesting familiarity with the countermeasures. Reads Chomsky (who has written about US drug policy) and is transitioning to Parenti (who has written about literally everything). The pipeline continues. Plays Rocket League sweaty — the tribunal notes that sweating implies practice. Lots of practice. What is he practicing for.</div>
+          <div class="risk-bar-wrap">
+            <div class="risk-label">RISK</div>
+            <div class="risk-bar"><div class="risk-fill med"></div></div>
+            <div class="risk-pct">31%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8 -->
+  <div class="crime-card">
+    <div class="crime-header">
+      <div><div class="crime-name">Crimes Against Humanity — Cultural Erasure</div></div>
+      <div class="sentence-badge">LIFE (ICC)</div>
+    </div>
+    <div class="crime-body">
+      <div class="crime-desc">Systematic acts committed as part of a widespread attack against a cultural tradition, identity, or heritage. Includes the deliberate destruction of food culture transmitted through generations.</div>
+      <div class="suspect-row">
+        <div class="suspect-label">Primary Suspect</div>
+        <div class="suspect-info">
+          <div class="suspect-name">Nasseem — Kousagate, elevated</div>
+          <div class="suspect-reason">The kousa was not merely food. It was the transmission of culinary heritage from a grandmother to a guest — a social ritual that exists across Lebanese culture as an act of hospitality and love. Nasseem consumed it alone. The guest received nothing. The grandmother was unable to complete the act of cultural transmission she had prepared. The WhatsApp group — the digital hearth of modern diaspora family — was subsequently closed to him. The tribunal submits this to The Hague as a hypothetical test case.</div>
+          <div class="risk-bar-wrap">
+            <div class="risk-label">RISK</div>
+            <div class="risk-bar"><div class="risk-fill extreme"></div></div>
+            <div class="risk-pct">94%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9 -->
+  <div class="crime-card">
+    <div class="crime-header">
+      <div><div class="crime-name">Espionage — Intelligence Gathering for Foreign Power</div></div>
+      <div class="sentence-badge">LIFE</div>
+    </div>
+    <div class="crime-body">
+      <div class="crime-desc">Obtaining and transmitting classified or sensitive information to a foreign government or non-state actor without authorisation.</div>
+      <div class="suspect-row">
+        <div class="suspect-label">Primary Suspect</div>
+        <div class="suspect-info">
+          <div class="suspect-name">Gremlin</div>
+          <div class="suspect-reason">Grey hat. Systems knowledge. Operates with minimal trace. Has already demonstrated the ability to run covert automated operations for a year without detection. Voted no on the IRGC — ensuring no adverse inference can be drawn from his future silences. Marxist adjacent. Named the defensive doctrine of an AI system, which suggests he has thought carefully about how such defences work and where their limits are. The tribunal notes it has told him where the limits of the iron clonedome are. This is now filed as a concern.</div>
+          <div class="risk-bar-wrap">
+            <div class="risk-label">RISK</div>
+            <div class="risk-bar"><div class="risk-fill high"></div></div>
+            <div class="risk-pct">77%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10 -->
+  <div class="crime-card">
+    <div class="crime-header">
+      <div><div class="crime-name">Grand Jury Tampering + Obstruction at International Scale</div></div>
+      <div class="sentence-badge">20 YEARS</div>
+    </div>
+    <div class="crime-body">
+      <div class="crime-desc">Deliberate interference with judicial proceedings, including intimidation of jurors, suppression of evidence, and procedural manipulation at scale.</div>
+      <div class="suspect-row">
+        <div class="suspect-label">Primary Suspect</div>
+        <div class="suspect-info">
+          <div class="suspect-name">Fungus</div>
+          <div class="suspect-reason">Attempted to pass six tribunal rules in a single hour. Proposed the IRGC (G decorative) — a rule explicitly designed to penalise defendants for not engaging with evidence, while providing him the tools to bury them in charges. When it failed, he retracted all positive statements about the primary defendant within minutes. Filed a motion to remove said defendant from the friend register while the defendant was not present to respond. The tribunal notes that if Fungus applied this energy to actual institutions, the results would be significant. Fortunately he has a blind cat named Pepper, which grounds him somewhat.</div>
+          <div class="risk-bar-wrap">
+            <div class="risk-label">RISK</div>
+            <div class="risk-bar"><div class="risk-fill med"></div></div>
+            <div class="risk-pct">55%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    DEGENERACY TRIBUNAL — SATIRICAL DOCUMENT — ALL FINDINGS FICTIONAL<br>
+    No group member has committed any of the above crimes.<br>
+    Nasseem has, however, definitely committed Kousagate.<br>
+    That one is real. The kousa was real. The grandmother was real.<br>
+    The iron clonedome holds. 🏰
+  </div>
+
+  <a class="back" href="index.html">← Back to Archive</a>
+
+</div>
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.getElementById('themeBtn').textContent = isDark ? '🌙 Dark' : '☀️ Light';
+    localStorage.setItem('swickerdoc-theme', isDark ? 'light' : 'dark');
+  }
+  const saved = localStorage.getItem('swickerdoc-theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    document.getElementById('themeBtn').textContent = saved === 'dark' ? '☀️ Light' : '🌙 Dark';
+  }
+</script>
+</body>
+</html>

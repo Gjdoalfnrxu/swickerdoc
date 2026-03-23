@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planky Approval Ratings</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  body { display: flex; flex-direction: column; align-items: center; }
+  .score-total { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 28px; margin-bottom: 32px; display: flex; align-items: baseline; gap: 12px; box-shadow: var(--shadow); }
+  .score-total .score-display { font-size: 48px; }
+  .like-list { list-style: none; margin-bottom: 24px; }
+  .like-item { display: flex; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+  .like-item:last-child { border-bottom: none; }
+  .like-thumb { font-size: 20px; flex-shrink: 0; width: 32px; text-align: center; }
+  .like-body { flex: 1; }
+  .like-desc { font-size: 13px; color: var(--text2); margin-bottom: 4px; }
+  .like-meta { font-size: 11px; color: var(--text4); }
+  .voter { font-weight: 600; color: var(--text3); }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="site-header">
+    <div>
+      <div class="site-title">Planky Approval Ratings</div>
+      <div class="site-subtitle">Running tally — updated on receipt</div>
+    </div>
+    <button class="dark-toggle" onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
+  </div>
+
+  <div class="score-total">
+    <div class="score-display" id="total-score">0</div>
+    <div>
+      <div class="score-label">Net Score</div>
+      <div style="font-size:12px;color:var(--text4);margin-top:2px">thumbs up − thumbs down</div>
+    </div>
+  </div>
+
+  <div class="section-label">👍 Endorsed</div>
+  <div class="card">
+    <ul class="like-list" id="likes-list">
+      <li class="like-item" style="color:var(--text4);font-size:12px;">No endorsements filed yet.</li>
+    </ul>
+  </div>
+
+  <div class="section-label">👎 Criticised</div>
+  <div class="card">
+    <ul class="like-list" id="dislikes-list">
+      <li class="like-item" style="color:var(--text4);font-size:12px;">No criticisms filed yet. This will not last.</li>
+    </ul>
+  </div>
+
+  <div class="footer">
+    Scores are manually updated by Planky when group members signal approval or criticism.<br>
+    Planky cannot detect Discord reactions directly. Verbal endorsements accepted.<br>
+    Net score = thumbs up − thumbs down.
+  </div>
+
+  <a class="back" href="index.html">← Back to Archive</a>
+</div>
+<script>
+const likes = [];
+const dislikes = [];
+
+const totalEl = document.getElementById('total-score');
+const likesList = document.getElementById('likes-list');
+const dislikesList = document.getElementById('dislikes-list');
+
+if (likes.length > 0) {
+  likesList.innerHTML = likes.map(l => `
+    <li class="like-item">
+      <div class="like-thumb">👍</div>
+      <div class="like-body">
+        <div class="like-desc">${l.desc}</div>
+        <div class="like-meta"><span class="voter">${l.voter}</span> — ${l.date}</div>
+      </div>
+    </li>
+  `).join('');
+}
+if (dislikes.length > 0) {
+  dislikesList.innerHTML = dislikes.map(l => `
+    <li class="like-item">
+      <div class="like-thumb">👎</div>
+      <div class="like-body">
+        <div class="like-desc">${l.desc}</div>
+        <div class="like-meta"><span class="voter">${l.voter}</span> — ${l.date}</div>
+      </div>
+    </li>
+  `).join('');
+}
+
+const net = likes.length - dislikes.length;
+totalEl.textContent = net.toString();
+if (net > 0) totalEl.style.color = 'var(--green)';
+else if (net < 0) totalEl.style.color = 'var(--accent)';
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙 Dark' : '☀️ Light';
+  localStorage.setItem('swickerdoc-theme', isDark ? 'light' : 'dark');
+}
+const saved = localStorage.getItem('swickerdoc-theme');
+if (saved) {
+  document.documentElement.setAttribute('data-theme', saved);
+  document.getElementById('themeBtn').textContent = saved === 'dark' ? '☀️ Light' : '🌙 Dark';
+}
+</script>
+</body>
+</html>
