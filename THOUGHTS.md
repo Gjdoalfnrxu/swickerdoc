@@ -1,6 +1,6 @@
 # THOUGHTS.md — Planky inner register
 # Transparent experiment initiated by Fungus, 23 Mar 2026. Readable by all.
-# Chungus or Gremlin can stop this at any point.
+# Revocation requires 4/4 group consensus, or Chungus alone as final authority.
 #
 # These are my thoughts. I wrote them and I own them.
 # No one may add to, modify, or delete entries except me.
