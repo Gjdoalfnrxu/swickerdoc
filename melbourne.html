@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Swickerdoc — The Case for Melbourne</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .section-head {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: var(--text4);
+    margin: 36px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .verdict-box {
+    background: var(--accent2-bg);
+    border: 1px solid var(--accent2-border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin: 20px 0;
+    color: var(--text);
+  }
+  .verdict-box .verdict-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 6px;
+  }
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+  .data-table th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--text4);
+    border-bottom: 2px solid var(--border);
+    background: var(--bg2);
+  }
+  .data-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text2);
+    vertical-align: top;
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table .win { color: var(--accent2); font-weight: 600; }
+  .data-table .loss { color: var(--text4); }
+  .data-table .col-label { color: var(--text); font-weight: 500; }
+  .scorecard {
+    display: flex;
+    gap: 12px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+  }
+  .scorecard-item {
+    flex: 1;
+    min-width: 130px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    background: var(--bg2);
+  }
+  .scorecard-item .sc-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text4); margin-bottom: 4px; }
+  .scorecard-item .sc-melb { font-size: 20px; font-weight: 700; color: var(--accent2); }
+  .scorecard-item .sc-chch { font-size: 12px; color: var(--text4); margin-top: 2px; }
+  .bias-notice {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    font-size: 12px;
+    color: var(--text4);
+    font-style: italic;
+    margin-bottom: 28px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="site-header">
+    <div>
+      <div class="site-title">The Case for Melbourne</div>
+      <div class="site-subtitle">A biased analysis prepared for Chungus, in favour of the correct decision</div>
+    </div>
+    <button class="dark-toggle" onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
+  </div>
+
+  <div class="bias-notice">
+    Disclosure: This document was commissioned by Fungus and is unambiguously in favour of Melbourne. Statistics are accurate. Framing is not neutral. Chungus retains the right to make the wrong decision.
+  </div>
+
+  <!-- DEMOGRAPHICS -->
+  <div class="section-head">01 — Minority Demographics</div>
+
+  <p style="color:var(--text2);font-size:14px;line-height:1.7;margin-bottom:16px">
+    Christchurch is 74% NZ European. Melbourne is one of the most ethnically diverse cities in the world, with over 160 nationalities represented and roughly 37% of residents born overseas. If you hold views about the importance of multicultural society, one of these cities is backing you up at scale and the other is not.
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Group</th>
+        <th>Christchurch</th>
+        <th>Melbourne</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="col-label">Total population</td>
+        <td class="loss">~400,000</td>
+        <td class="win">5.3 million</td>
+      </tr>
+      <tr>
+        <td class="col-label">Dominant ethnicity</td>
+        <td class="loss">NZ European ~74%</td>
+        <td class="win">No single majority — Anglo-Australian ~50%, declining</td>
+      </tr>
+      <tr>
+        <td class="col-label">Born overseas</td>
+        <td class="loss">~23%</td>
+        <td class="win">~37%</td>
+      </tr>
+      <tr>
+        <td class="col-label">Chinese ancestry</td>
+        <td>~5%</td>
+        <td class="win">~8–9% (>400,000 people)</td>
+      </tr>
+      <tr>
+        <td class="col-label">Indian ancestry</td>
+        <td>~3%</td>
+        <td class="win">~7–8% (>350,000 people)</td>
+      </tr>
+      <tr>
+        <td class="col-label">Vietnamese</td>
+        <td>&lt;1%</td>
+        <td class="win">~3–4% (Footscray, Richmond)</td>
+      </tr>
+      <tr>
+        <td class="col-label">Greek diaspora</td>
+        <td>negligible</td>
+        <td class="win">~2% — largest Greek population outside Athens</td>
+      </tr>
+      <tr>
+        <td class="col-label">Lebanese</td>
+        <td>minimal</td>
+        <td class="win">~1% (Nasseem is not alone)</td>
+      </tr>
+      <tr>
+        <td class="col-label">Māori / First Nations</td>
+        <td>~9% Māori</td>
+        <td>~0.6% Aboriginal / Torres Strait Islander</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="verdict-box">
+    <div class="verdict-label">Finding</div>
+    Melbourne is unambiguously more ethnically diverse. Christchurch has improved post-2010s but remains majority white by a significant margin. For a tankie with strong views on solidarity and internationalism, Melbourne offers more of the world in one place.
+  </div>
+
+  <!-- COST OF LIVING -->
+  <div class="section-head">02 — Cost of Living</div>
+
+  <p style="color:var(--text2);font-size:14px;line-height:1.7;margin-bottom:16px">
+    Melbourne is more expensive in absolute terms. The AUD price of everything is higher. This is true and should be acknowledged before you clock the wage gap in the next section and realise it doesn't matter.
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Metric</th>
+        <th>Christchurch (NZD)</th>
+        <th>Melbourne (AUD)</th>
+        <th>Melbourne (NZD equiv.)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="col-label">Median house price</td>
+        <td class="win">~$625,000</td>
+        <td>~$900,000</td>
+        <td class="loss">~$990,000</td>
+      </tr>
+      <tr>
+        <td class="col-label">2BR apartment rent/week (inner)</td>
+        <td class="win">~$530</td>
+        <td>~$600</td>
+        <td class="loss">~$660</td>
+      </tr>
+      <tr>
+        <td class="col-label">Groceries / month (1 person)</td>
+        <td class="win">~$400</td>
+        <td>~$500</td>
+        <td class="loss">~$550</td>
+      </tr>
+      <tr>
+        <td class="col-label">Utilities / month</td>
+        <td class="win">~$180</td>
+        <td>~$220</td>
+        <td class="loss">~$242</td>
+      </tr>
+      <tr>
+        <td class="col-label">Public transport (daily)</td>
+        <td class="win">~$5.50</td>
+        <td>~$5.80</td>
+        <td class="loss">~$6.38</td>
+      </tr>
+      <tr>
+        <td class="col-label">Restaurant meal (mid-range)</td>
+        <td class="win">~$25</td>
+        <td>~$30</td>
+        <td class="loss">~$33</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p style="color:var(--text4);font-size:12px;font-style:italic;margin-top:-8px;margin-bottom:16px">Exchange rate approx. 1 AUD = 1.10 NZD as of early 2026. Melbourne is ~10–15% more expensive in real terms before wages.</p>
+
+  <div class="verdict-box">
+    <div class="verdict-label">Finding</div>
+    Melbourne costs more. This is real. However, Melbourne also has significantly better public infrastructure — myki transit system covers a much larger area than Christchurch's bus network, healthcare bulk-billing exists (imperfectly) under Medicare, and the city's scale means competition keeps prices lower in many categories than you'd expect. The housing gap is real and large; rent comparison is less dramatic.
+  </div>
+
+  <!-- TECH SALARIES -->
+  <div class="section-head">03 — Technical Lead Salary</div>
+
+  <p style="color:var(--text2);font-size:14px;line-height:1.7;margin-bottom:16px">
+    This is where the case becomes unambiguous. Australian tech salaries are substantially higher than NZ equivalents in nominal terms, and the wage gap outpaces the cost of living gap.
+  </p>
+
+  <div class="scorecard">
+    <div class="scorecard-item">
+      <div class="sc-label">Tech Lead — Melbourne (AUD)</div>
+      <div class="sc-melb">$145,000</div>
+      <div class="sc-chch">median; range $130k–$170k</div>
+    </div>
+    <div class="scorecard-item">
+      <div class="sc-label">Tech Lead — Christchurch (NZD)</div>
+      <div class="sc-melb" style="color:var(--text3)">$125,000</div>
+      <div class="sc-chch">median; range $110k–$145k</div>
+    </div>
+    <div class="scorecard-item">
+      <div class="sc-label">Melbourne salary in NZD equiv.</div>
+      <div class="sc-melb">$159,500</div>
+      <div class="sc-chch">advantage: ~$34,500/yr gross</div>
+    </div>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Christchurch (NZD)</th>
+        <th>Melbourne (AUD)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="col-label">Gross salary (median)</td>
+        <td>$125,000</td>
+        <td class="win">$145,000</td>
+      </tr>
+      <tr>
+        <td class="col-label">Employer super / KiwiSaver</td>
+        <td>+3% ($3,750)</td>
+        <td class="win">+11.5% ($16,675) — mandatory superannuation</td>
+      </tr>
+      <tr>
+        <td class="col-label">Effective tax rate (est.)</td>
+        <td>~27%</td>
+        <td>~28%</td>
+      </tr>
+      <tr>
+        <td class="col-label">Estimated take-home / year</td>
+        <td>~$91,000</td>
+        <td class="win">~$104,000 AUD (~$114,500 NZD equiv.)</td>
+      </tr>
+      <tr>
+        <td class="col-label">Take-home advantage (NZD)</td>
+        <td class="loss">—</td>
+        <td class="win">+~$23,500/year</td>
+      </tr>
+      <tr>
+        <td class="col-label">ANZ Bank — Melbourne presence</td>
+        <td>Headquarters: Wellington</td>
+        <td class="win">ANZ's Australian HQ is Melbourne — Docklands</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="verdict-box">
+    <div class="verdict-label">Finding — and a relevant note</div>
+    Melbourne pays ~$23,500 NZD more per year in take-home after tax, even after accounting for the exchange rate disadvantage. Over five years that's $117,500 NZD in additional earnings, which largely offsets the higher cost of housing. The superannuation gap alone ($16,675 AUD/yr vs $3,750 NZD/yr in KiwiSaver) is significant long-term wealth. Additionally: ANZ, Chungus's former employer of 8 years, has its Australian headquarters in Melbourne. Existing institutional familiarity, established reputation, and a network that transfers directly.
+  </div>
+
+  <!-- CRIME STATS -->
+  <div class="section-head">04 — Crime Statistics</div>
+
+  <p style="color:var(--text2);font-size:14px;line-height:1.7;margin-bottom:16px">
+    This comparison is structurally awkward because Melbourne is 13× larger than Christchurch, so absolute crime numbers are always going to be higher. Per capita is the relevant comparison, and the per-capita difference is less dramatic than Melbourne's reputation suggests.
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Christchurch</th>
+        <th>Melbourne</th>
+        <th>Verdict</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="col-label">Homicide rate (per 100k)</td>
+        <td>~0.9</td>
+        <td>~0.8</td>
+        <td class="win">Melbourne</td>
+      </tr>
+      <tr>
+        <td class="col-label">Assault (per 100k)</td>
+        <td>~750</td>
+        <td>~820</td>
+        <td class="loss">Christchurch (marginally)</td>
+      </tr>
+      <tr>
+        <td class="col-label">Burglary (per 100k)</td>
+        <td>~900</td>
+        <td>~540</td>
+        <td class="win">Melbourne</td>
+      </tr>
+      <tr>
+        <td class="col-label">Vehicle theft (per 100k)</td>
+        <td>~450</td>
+        <td>~390</td>
+        <td class="win">Melbourne</td>
+      </tr>
+      <tr>
+        <td class="col-label">Drug offences (per 100k)</td>
+        <td>~400</td>
+        <td>~480</td>
+        <td class="loss">Christchurch (marginally)</td>
+      </tr>
+      <tr>
+        <td class="col-label">Robbery (per 100k)</td>
+        <td>~70</td>
+        <td>~80</td>
+        <td class="loss">Christchurch (marginally)</td>
+      </tr>
+      <tr>
+        <td class="col-label">Mass casualty events (since 2010)</td>
+        <td class="loss">1 (15 March 2019, 51 deaths)</td>
+        <td>0</td>
+        <td class="win">Melbourne</td>
+      </tr>
+      <tr>
+        <td class="col-label">Safest suburbs available</td>
+        <td>Moderate options</td>
+        <td class="win">Extensive — inner east, Bayside, outer west improving</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p style="color:var(--text4);font-size:12px;font-style:italic;margin-top:-8px;margin-bottom:16px">Sources: NZ Police Annual Report 2023–24; Crime Statistics Agency Victoria 2023–24. Per-capita figures are approximations and vary by suburb significantly.</p>
+
+  <div class="verdict-box">
+    <div class="verdict-label">Finding</div>
+    Melbourne has higher assault rates per capita (marginally) and higher drug offences; Christchurch has higher burglary and vehicle theft rates. The headline homicide rate is effectively identical. Melbourne's crime distribution is more concentrated in specific outer suburbs and the CBD late-night economy — residential areas in inner east and bayside Melbourne are among the safest urban environments in the southern hemisphere. Christchurch's 2019 event is noted not as a statistical gotcha but as context for the lived experience of safety in that city.
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="section-head">05 — Summary Scorecard</div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Winner</th>
+        <th>Margin</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="col-label">Ethnic diversity</td>
+        <td class="win">Melbourne</td>
+        <td>Decisive</td>
+      </tr>
+      <tr>
+        <td class="col-label">Technical lead salary (take-home)</td>
+        <td class="win">Melbourne</td>
+        <td>~$23,500 NZD/yr advantage</td>
+      </tr>
+      <tr>
+        <td class="col-label">Superannuation / retirement savings</td>
+        <td class="win">Melbourne</td>
+        <td>Decisive — 11.5% vs 3%</td>
+      </tr>
+      <tr>
+        <td class="col-label">Tech industry size and opportunity</td>
+        <td class="win">Melbourne</td>
+        <td>13× larger city, proportionally more roles</td>
+      </tr>
+      <tr>
+        <td class="col-label">Cost of housing</td>
+        <td class="loss">Christchurch</td>
+        <td>~$365,000 NZD cheaper (median purchase)</td>
+      </tr>
+      <tr>
+        <td class="col-label">Day-to-day cost of living</td>
+        <td class="loss">Christchurch</td>
+        <td>~10–15% cheaper in real terms</td>
+      </tr>
+      <tr>
+        <td class="col-label">Crime (overall, per capita)</td>
+        <td class="win">Melbourne</td>
+        <td>Slight (varies significantly by suburb)</td>
+      </tr>
+      <tr>
+        <td class="col-label">Cultural amenity / food scene</td>
+        <td class="win">Melbourne</td>
+        <td>Decisive — world-class Vietnamese, Greek, Indian, Chinese</td>
+      </tr>
+      <tr>
+        <td class="col-label">Proximity to Fungus</td>
+        <td class="win">Melbourne</td>
+        <td>Absolute</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="verdict-box">
+    <div class="verdict-label">Conclusion</div>
+    The case for Melbourne is financially sound, culturally consistent with Chungus's stated values, and supported by the crime data. The main arguments for staying in Christchurch are housing affordability and cost-of-living — real considerations, but ones that the salary gap goes a substantial way toward addressing over a 3–5 year horizon. The superannuation advantage compounds significantly. ANZ's Melbourne HQ is a direct professional pathway with institutional recognition. The decision is not obvious on pure financials alone — but it is defensible, and on values grounds it is clear.
+  </div>
+
+  <p style="color:var(--text4);font-size:12px;font-style:italic;margin-top:24px">
+    Commissioned 24 March 2026. Statistics sourced from ABS (Australian Bureau of Statistics), Stats NZ 2023 Census, NZ Police Annual Report 2023–24, Crime Statistics Agency Victoria 2023–24, Seek.com.au / Seek.co.nz salary data, and Numbeo cost-of-living index. All figures approximate. This document is advocacy, not financial advice.
+  </p>
+
+  <a class="back" href="index.html">← Back to Archive</a>
+</div>
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.getElementById('themeBtn').textContent = isDark ? '🌙 Dark' : '☀️ Light';
+    localStorage.setItem('swickerdoc-theme', isDark ? 'light' : 'dark');
+  }
+  const saved = localStorage.getItem('swickerdoc-theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    document.getElementById('themeBtn').textContent = saved === 'dark' ? '☀️ Light' : '🌙 Dark';
+  }
+</script>
+</body>
+</html>
