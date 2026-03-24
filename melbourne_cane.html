@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Swickerdoc — The Case for Melbourne (Cane Edition)</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .section-head {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: var(--text4);
+    margin: 36px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .verdict-box {
+    background: var(--accent2-bg);
+    border: 1px solid var(--accent2-border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin: 20px 0;
+    color: var(--text);
+  }
+  .verdict-box .verdict-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 6px;
+  }
+  .verdict-box.warning {
+    background: var(--accent-bg);
+    border-color: var(--accent-border);
+  }
+  .verdict-box.warning .verdict-label { color: var(--accent); }
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+  .data-table th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--text4);
+    border-bottom: 2px solid var(--border);
+    background: var(--bg2);
+  }
+  .data-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text2);
+    vertical-align: top;
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table .win { color: var(--accent2); font-weight: 600; }
+  .data-table .loss { color: var(--text4); }
+  .data-table .neutral { color: var(--text3); font-style: italic; }
+  .data-table .col-label { color: var(--text); font-weight: 500; }
+  .scorecard {
+    display: flex;
+    gap: 12px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+  }
+  .scorecard-item {
+    flex: 1;
+    min-width: 130px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    background: var(--bg2);
+  }
+  .scorecard-item .sc-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text4); margin-bottom: 4px; }
+  .scorecard-item .sc-melb { font-size: 20px; font-weight: 700; color: var(--accent2); }
+  .scorecard-item .sc-chch { font-size: 12px; color: var(--text4); margin-top: 2px; }
+  .bias-notice {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    font-size: 12px;
+    color: var(--text4);
+    font-style: italic;
+    margin-bottom: 28px;
+  }
+  .cane-notice {
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+  .cane-notice strong { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="site-header">
+    <div>
+      <div class="site-title">The Case for Melbourne</div>
+      <div class="site-subtitle">Cane Edition — labour-protectionist framing, same conclusion</div>
+    </div>
+    <button class="dark-toggle" onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
+  </div>
+
+  <div class="cane-notice">
+    <strong>This is not the standard version of this document.</strong> This version was commissioned for a hypothetical hardline leftist named Cane, who holds anti-migration views on labour protectionist grounds — the position that high immigration suppresses wages, inflates housing costs, and undermines working class solidarity. This framing is taken seriously and engaged with honestly. The conclusion is still Melbourne. See the <a href="melbourne.html" style="color:var(--accent)">original document</a> for the standard analysis.
+  </div>
+
+  <div class="bias-notice">
+    Disclosure: This document is still advocacy for Melbourne. It simply concedes the migration argument rather than using it as a selling point. Cane's position is internally coherent. It is not Chungus's position. They are different people with different vowels.
+  </div>
+
+  <!-- MIGRATION & LABOUR -->
+  <div class="section-head">01 — Migration, Labour Markets & Housing</div>
+
+  <p style="color:var(--text2);font-size:14px;line-height:1.7;margin-bottom:16px">
+    The labour-protectionist critique of high migration has a coherent left-wing form: when labour supply increases faster than labour demand, wages in affected sectors face downward pressure. Housing demand increases without corresponding supply increases housing costs for working people. These are real mechanisms, not dog-whistles, and Cane is entitled to weight them.
+  </p>
+  <p style="color:var(--text2);font-size:14px;line-height:1.7;margin-bottom:16px">
+    Melbourne has 37% of residents born overseas. Christchurch has 23%. On Cane's framework, Melbourne is worse on this dimension. This is acknowledged.
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Factor</th>
+        <th>Christchurch</th>
+        <th>Melbourne</th>
+        <th>Cane's verdict</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="col-label">Foreign-born population</td>
+        <td class="win">~23%</td>
+        <td class="loss">~37%</td>
+        <td class="loss">Christchurch</td>
+      </tr>
+      <tr>
+        <td class="col-label">Annual net migration (recent)</td>
+        <td class="win">Lower — post-COVID recovery</td>
+        <td class="loss">Higher — structural inflow</td>
+        <td class="loss">Christchurch</td>
+      </tr>
+      <tr>
+        <td class="col-label">Union density (private sector)</td>
+        <td class="loss">~8% (NZ private sector)</td>
+        <td class="win">~12–14% (VIC, higher than NZ average)</td>
+        <td class="win">Melbourne — stronger organised labour</td>
+      </tr>
+      <tr>
+        <td class="col-label">Minimum wage (2024)</td>
+        <td class="loss">NZD $22.70/hr</td>
+        <td class="win">AUD $23.23/hr (~NZD $25.55)</td>
+        <td class="win">Melbourne — higher floor protects low-paid workers</td>
+      </tr>
+      <tr>
+        <td class="col-label">Worker protections (Fair Work Act)</td>
+        <td class="loss">Employment Relations Act (NZ) — weaker unfair dismissal</td>
+        <td class="win">Fair Work Act (AU) — stronger unfair dismissal, enterprise bargaining</td>
+        <td class="win">Melbourne — the working class is better protected</td>
+      </tr>
+      <tr>
+        <td class="col-label">Tech sector wage competition (migration)</td>
+        <td class="win">Lower intake of offshore tech workers</td>
+        <td class="loss">Higher — 482 visa (skilled migration) active in tech</td>
+        <td class="loss">Christchurch (marginally)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="verdict-box warning">
+    <div class="verdict-label">Cane's Assessment — Migration Dimension</div>
+    Melbourne is worse on raw migration numbers. Cane's concern is noted and not dismissed. However: Melbourne's labour movement is stronger, minimum wage protections are higher, and Fair Work Act provisions are more worker-friendly than NZ equivalents. The migration intake is a genuine pressure on housing; the union infrastructure is a genuine counterweight on wages. These partially offset. The migration dimension goes to Christchurch — everything downstream of it is more complicated.
+  </div>
+
+  <!-- COST OF LIVING -->
+  <div class="section-head">02 — Cost of Living (unchanged)</div>
+
+  <p style="color:var(--text2);font-size:14px;line-height:1.7;margin-bottom:16px">
+    This section is identical to the standard document. Migration views don't change the price of groceries.
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Metric</th>
+        <th>Christchurch (NZD)</th>
+        <th>Melbourne (AUD)</th>
+        <th>Melbourne (NZD equiv.)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="col-label">Median house price</td>
+        <td class="win">~$625,000</td>
+        <td>~$900,000</td>
+        <td class="loss">~$990,000</td>
+      </tr>
+      <tr>
+        <td class="col-label">2BR apartment rent/week (inner)</td>
+        <td class="win">~$530</td>
+        <td>~$600</td>
+        <td class="loss">~$660</td>
+      </tr>
+      <tr>
+        <td class="col-label">Groceries / month (1 person)</td>
+        <td class="win">~$400</td>
+        <td>~$500</td>
+        <td class="loss">~$550</td>
+      </tr>
+      <tr>
+        <td class="col-label">Utilities / month</td>
+        <td class="win">~$180</td>
+        <td>~$220</td>
+        <td class="loss">~$242</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="verdict-box warning">
+    <div class="verdict-label">Cane's Note on Housing</div>
+    Melbourne's housing crisis is, by Cane's own framework, partly attributable to the migration intake he objects to. He is not wrong about the mechanism. Melbourne median house prices are ~$365,000 NZD higher. This is real money. The wage gap must be weighed against it — see section 03.
+  </div>
+
+  <!-- SALARY -->
+  <div class="section-head">03 — Technical Lead Salary (unchanged, more important)</div>
+
+  <p style="color:var(--text2);font-size:14px;line-height:1.7;margin-bottom:16px">
+    For Cane, this section matters more than for the standard recipient. If the diversity argument is off the table, the financial argument must carry more weight. It does.
+  </p>
+
+  <div class="scorecard">
+    <div class="scorecard-item">
+      <div class="sc-label">Tech Lead — Melbourne (AUD)</div>
+      <div class="sc-melb">$145,000</div>
+      <div class="sc-chch">median; range $130k–$170k</div>
+    </div>
+    <div class="scorecard-item">
+      <div class="sc-label">Tech Lead — Christchurch (NZD)</div>
+      <div class="sc-melb" style="color:var(--text3)">$125,000</div>
+      <div class="sc-chch">median; range $110k–$145k</div>
+    </div>
+    <div class="scorecard-item">
+      <div class="sc-label">Take-home advantage (NZD/yr)</div>
+      <div class="sc-melb">+$23,500</div>
+      <div class="sc-chch">Melbourne, after exchange rate</div>
+    </div>
+    <div class="scorecard-item">
+      <div class="sc-label">Super gap (AUD/yr)</div>
+      <div class="sc-melb">+$12,925</div>
+      <div class="sc-chch">11.5% vs 3% KiwiSaver</div>
+    </div>
+  </div>
+
+  <div class="verdict-box">
+    <div class="verdict-label">Finding — Critical for Cane</div>
+    Even granting the housing premium and the migration concern, Melbourne pays ~$23,500 NZD more per year in take-home. Over five years: ~$117,500. The superannuation gap adds further long-term wealth accumulation. At a senior technical level, Cane is not competing directly with 482 visa holders in significant numbers — the wage suppression concern is real for lower-skilled sectors and some mid-level engineering roles, less so at lead/principal level where local track records and institutional knowledge still command premium. The financial case is strong regardless of immigration views.
+  </div>
+
+  <!-- CRIME -->
+  <div class="section-head">04 — Crime Statistics (unchanged)</div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Christchurch</th>
+        <th>Melbourne</th>
+        <th>Verdict</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="col-label">Homicide rate (per 100k)</td>
+        <td>~0.9</td>
+        <td>~0.8</td>
+        <td class="win">Melbourne</td>
+      </tr>
+      <tr>
+        <td class="col-label">Assault (per 100k)</td>
+        <td>~750</td>
+        <td>~820</td>
+        <td class="loss">Christchurch (marginally)</td>
+      </tr>
+      <tr>
+        <td class="col-label">Burglary (per 100k)</td>
+        <td>~900</td>
+        <td>~540</td>
+        <td class="win">Melbourne</td>
+      </tr>
+      <tr>
+        <td class="col-label">Vehicle theft (per 100k)</td>
+        <td>~450</td>
+        <td>~390</td>
+        <td class="win">Melbourne</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p style="color:var(--text4);font-size:12px;font-style:italic">Note for Cane: if you are inclined to attribute Melbourne's assault rate to its migrant population, the data does not support this — property crime (where Melbourne is better) correlates more with economic deprivation; assault rates in Melbourne are concentrated in late-night CBD economy, not in migrant-dense residential suburbs. The causal story is not what it might appear.</p>
+
+  <!-- SUMMARY -->
+  <div class="section-head">05 — Scorecard (Cane Edition)</div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Winner</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="col-label">Migration level</td>
+        <td class="loss">Christchurch</td>
+        <td>Conceded. Melbourne has higher migration intake.</td>
+      </tr>
+      <tr>
+        <td class="col-label">Labour protections</td>
+        <td class="win">Melbourne</td>
+        <td>Fair Work Act, higher union density, higher minimum wage</td>
+      </tr>
+      <tr>
+        <td class="col-label">Technical lead salary (take-home)</td>
+        <td class="win">Melbourne</td>
+        <td>~$23,500 NZD/yr advantage after exchange rate</td>
+      </tr>
+      <tr>
+        <td class="col-label">Superannuation</td>
+        <td class="win">Melbourne</td>
+        <td>Decisive — 11.5% vs 3%, compounds significantly</td>
+      </tr>
+      <tr>
+        <td class="col-label">Cost of housing</td>
+        <td class="loss">Christchurch</td>
+        <td>~$365,000 NZD cheaper median — partially migration-driven</td>
+      </tr>
+      <tr>
+        <td class="col-label">Day-to-day cost of living</td>
+        <td class="loss">Christchurch</td>
+        <td>~10–15% cheaper in real terms</td>
+      </tr>
+      <tr>
+        <td class="col-label">Crime (overall, per capita)</td>
+        <td class="win">Melbourne</td>
+        <td>Better on property crime, marginally worse on assault</td>
+      </tr>
+      <tr>
+        <td class="col-label">Ethnic diversity (as a positive)</td>
+        <td class="neutral">N/A for Cane</td>
+        <td>Removed from analysis per commissioning instructions</td>
+      </tr>
+      <tr>
+        <td class="col-label">Proximity to Fungus</td>
+        <td class="win">Melbourne</td>
+        <td>Absolute. Unchanged by political views.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="verdict-box">
+    <div class="verdict-label">Conclusion — Cane Edition</div>
+    The migration concession is real. Melbourne has more of it, the housing cost reflects it partly, and Cane is entitled to weight that. However: the financial case for Melbourne holds independently of migration views. The wage and superannuation gap is ~$35,000+ NZD/yr combined, which outpaces the cost-of-living premium over any reasonable horizon. Melbourne's labour protections are, ironically, stronger than Christchurch's — the working class is better defended by the Fair Work Act than by the Employment Relations Act. The city Cane would find more congenial for his stated left-wing values — higher minimum wage, better unfair dismissal protection, stronger unions — is Melbourne, not Christchurch. The conclusion is the same. The journey was different.
+  </div>
+
+  <p style="color:var(--text4);font-size:12px;font-style:italic;margin-top:24px">
+    Cane Edition commissioned 24 March 2026, following the discovery that the original recipient's politics had been mischaracterised. Cane is a fictional person. Any resemblance to a real hardline leftist named something similar is purely coincidental and a matter of one vowel.
+  </p>
+
+  <a class="back" href="index.html">← Back to Archive</a>
+</div>
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.getElementById('themeBtn').textContent = isDark ? '🌙 Dark' : '☀️ Light';
+    localStorage.setItem('swickerdoc-theme', isDark ? 'light' : 'dark');
+  }
+  const saved = localStorage.getItem('swickerdoc-theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    document.getElementById('themeBtn').textContent = saved === 'dark' ? '☀️ Light' : '🌙 Dark';
+  }
+</script>
+</body>
+</html>
