@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blank</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+  <div class="site-header">
+    <div>
+      <div class="site-title">Blank</div>
+    </div>
+    <button class="dark-toggle" onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
+  </div>
+  <a class="back" href="index.html">← Back to Archive</a>
+</div>
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.getElementById('themeBtn').textContent = isDark ? '🌙 Dark' : '☀️ Light';
+    localStorage.setItem('swickerdoc-theme', isDark ? 'light' : 'dark');
+  }
+  const saved = localStorage.getItem('swickerdoc-theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    document.getElementById('themeBtn').textContent = saved === 'dark' ? '☀️ Light' : '🌙 Dark';
+  }
+</script>
+</body>
+</html>
