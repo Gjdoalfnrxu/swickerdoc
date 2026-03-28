@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TCAP Dossier — Chris Hansen & the Predator Industrial Complex</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  body { display: flex; flex-direction: column; align-items: center; }
+
+  .header { text-align: center; padding: 28px 40px; border: 2px solid var(--accent-border); background: var(--accent-bg); margin-bottom: 28px; border-radius: var(--radius); }
+  .header h1 { font-size: 18px; font-weight: 700; color: var(--accent); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 6px; }
+  .seal { font-size: 40px; margin-bottom: 10px; }
+  .sub { font-size: 11px; color: var(--text4); letter-spacing: 2px; text-transform: uppercase; }
+
+  .intro-block { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 22px; margin-bottom: 28px; font-size: 13px; color: var(--text2); line-height: 1.8; }
+  .intro-block strong { color: var(--text); }
+
+  .section-title { font-size: 11px; font-weight: 700; color: var(--text4); letter-spacing: 2px; text-transform: uppercase; margin: 28px 0 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+
+  .perp-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 16px; box-shadow: var(--shadow); overflow: hidden; }
+  .perp-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 18px; background: var(--bg2); border-bottom: 1px solid var(--border); }
+  .perp-name { font-size: 15px; font-weight: 700; color: var(--text); }
+  .perp-tag { font-size: 10px; font-weight: 700; color: white; padding: 3px 10px; border-radius: 10px; white-space: nowrap; flex-shrink: 0; letter-spacing: 0.5px; text-transform: uppercase; }
+  .tag-red { background: #ef4444; }
+  .tag-amber { background: #d97706; }
+  .tag-blue { background: #2563eb; }
+  .tag-purple { background: #7c3aed; }
+  .tag-green { background: #16a34a; }
+
+  .perp-body { padding: 16px 18px; }
+  .perp-subtitle { font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; }
+  .perp-desc { font-size: 13px; color: var(--text2); line-height: 1.75; }
+  .perp-desc p { margin-bottom: 10px; }
+  .perp-desc p:last-child { margin-bottom: 0; }
+
+  .stat-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+  .stat-pill { font-size: 11px; color: var(--text3); background: var(--bg3); border: 1px solid var(--border); border-radius: 20px; padding: 3px 10px; }
+
+  .disclaimer { background: var(--amber-bg); border: 1px solid var(--amber-border); border-left: 3px solid var(--amber); border-radius: 0 var(--radius) var(--radius) 0; padding: 14px 18px; font-size: 12px; color: var(--text3); line-height: 1.7; margin-bottom: 28px; }
+
+  .hansen-section { background: var(--bg2); border: 1px solid var(--border2); border-radius: var(--radius); overflow: hidden; margin-bottom: 28px; }
+  .hansen-header { background: var(--bg3); padding: 14px 18px; border-bottom: 1px solid var(--border); }
+  .hansen-header-title { font-size: 14px; font-weight: 700; color: var(--text); }
+  .hansen-body { padding: 16px 18px; font-size: 13px; color: var(--text2); line-height: 1.75; }
+  .hansen-body p { margin-bottom: 10px; }
+  .hansen-body p:last-child { margin-bottom: 0; }
+
+  .conradt-block { background: var(--accent-bg); border: 1px solid var(--accent-border); border-left: 4px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; padding: 16px 18px; margin-bottom: 16px; }
+  .conradt-title { font-size: 12px; font-weight: 700; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+  .conradt-body { font-size: 13px; color: var(--text2); line-height: 1.75; }
+
+  .trivia-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-bottom: 28px; }
+  .trivia-item { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
+  .trivia-icon { font-size: 20px; margin-bottom: 8px; }
+  .trivia-title { font-size: 11px; font-weight: 700; color: var(--text4); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; }
+  .trivia-text { font-size: 12px; color: var(--text2); line-height: 1.65; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="site-header">
+    <div>
+      <div class="site-title">TCAP Dossier</div>
+      <div class="site-subtitle">Chris Hansen &amp; the Predator Industrial Complex</div>
+    </div>
+    <button class="dark-toggle" onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
+  </div>
+
+  <div class="header">
+    <div class="seal">🪑</div>
+    <h1>Why Don't You Have a Seat</h1>
+    <div class="sub">To Catch a Predator — Full Case Archive — 2004–2007</div>
+  </div>
+
+  <div class="disclaimer">
+    All subjects featured in this archive appeared on national television and were publicly identified as part of a law enforcement cooperation. This document draws entirely from public court records, news reporting, and broadcast footage. Satirical framing does not diminish the gravity of the underlying conduct.
+  </div>
+
+  <div class="intro-block">
+    <strong>Chris Hansen</strong> (b. 1959, Chicago) spent twenty years at NBC before becoming the most feared man in American chat rooms. His show <em>To Catch a Predator</em> ran from 2004 to 2007 on Dateline NBC, in cooperation with the volunteer sting operation <strong>Perverted Justice</strong>, which placed decoys posing as 13–15 year olds in online chat rooms.
+    <br><br>
+    The format was simple: decoy arranges meeting, man arrives at sting house, Chris Hansen walks out, says "why don't you have a seat over there," reads the chat logs back verbatim, suspect's life ends. Police waiting outside. <strong>288 men caught</strong> across the show's run. The programme was cancelled after a district attorney shot himself as the NBC crew arrived to film his arrest.
+    <br><br>
+    NBC said it had "simply run its course."
+  </div>
+
+  <div class="section-title">⭐ Featured Predators — Planky's Selection</div>
+
+  <div class="perp-card">
+    <div class="perp-header">
+      <div class="perp-name">John Kennelly</div>
+      <div class="perp-tag tag-red">Iconic</div>
+    </div>
+    <div class="perp-body">
+      <div class="perp-subtitle">Herndon, Virginia — The Achievement Unlocked</div>
+      <div class="perp-desc">
+        <p>Kennelly arrived at the sting house <strong>completely naked</strong>. This alone would guarantee his place in TCAP history. But the story does not end there.</p>
+        <p>After his arrest and release, Kennelly went to a <strong>McDonald's in Arlington, Virginia the very next day</strong> to meet a different Perverted Justice decoy. He was caught again. Two separate sting operations in under 24 hours. The commitment is unprecedented in the show's history.</p>
+        <p>There is no known explanation for the McDonald's choice specifically.</p>
+      </div>
+      <div class="stat-row">
+        <span class="stat-pill">📍 Herndon, VA</span>
+        <span class="stat-pill">🍔 McDonald's follow-up</span>
+        <span class="stat-pill">🏆 Two stings, 24 hours</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="perp-card">
+    <div class="perp-header">
+      <div class="perp-name">Rabbi David Kaye</div>
+      <div class="perp-tag tag-purple">Religious Figure</div>
+    </div>
+    <div class="perp-body">
+      <div class="perp-subtitle">Herndon, Virginia — The First Collar of the Cloth</div>
+      <div class="perp-desc">
+        <p>Rabbi Kaye holds the distinction of being the first religious figure to appear on TCAP, arriving after explicit chat with a decoy posing as a 13-year-old boy. The Herndon, Virginia operation in November 2005 caught 19 men over three days, but Kaye became the headline.</p>
+        <p>He was convicted, divorced, required to register as a sex offender for life. He then attempted to resume religious work. This proved difficult.</p>
+        <p>He was subsequently arrested multiple times for violating the terms of his release — including accessing the internet against court order. His sex offender status was escalated to <strong>Tier III</strong>, the highest classification. He remains the only rabbi in TCAP history, a record unlikely to be challenged.</p>
+      </div>
+      <div class="stat-row">
+        <span class="stat-pill">📍 Herndon, VA</span>
+        <span class="stat-pill">✡️ First religious figure</span>
+        <span class="stat-pill">🔺 Tier III offender</span>
+        <span class="stat-pill">🔁 Multiple re-arrests</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="perp-card">
+    <div class="perp-header">
+      <div class="perp-name">The Fort Myers Paediatrician-in-Training</div>
+      <div class="perp-tag tag-amber">Medical Professional</div>
+    </div>
+    <div class="perp-body">
+      <div class="perp-subtitle">Fort Myers, Florida — The Pipeline Concern</div>
+      <div class="perp-desc">
+        <p>A medical student actively studying to become a <strong>paediatrician</strong> arrived at the Fort Myers sting house and, in a choice that can only be described as maximally on-brand, <strong>stripped naked</strong>.</p>
+        <p>The Fort Myers operation also produced a Sunday school teacher and, in the single most alarming entry in the show's run, <strong>a man who brought his own child to the sting house</strong> to meet the decoy. No explanation for this was offered, then or since. The show was not equipped.</p>
+      </div>
+      <div class="stat-row">
+        <span class="stat-pill">📍 Fort Myers, FL</span>
+        <span class="stat-pill">🩺 Future paediatrician</span>
+        <span class="stat-pill">🧒 Brought his own son</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="perp-card">
+    <div class="perp-header">
+      <div class="perp-name">Ryan Hogan</div>
+      <div class="perp-tag tag-red">Public Servant</div>
+    </div>
+    <div class="perp-body">
+      <div class="perp-subtitle">Bethpage, New York — The FDNY Problem</div>
+      <div class="perp-desc">
+        <p>An <strong>FDNY firefighter</strong> who used a firehouse computer during his shift to solicit a Perverted Justice decoy posing as a teenage girl. He then arranged a meeting and drove to the sting house.</p>
+        <p>It is worth noting that firefighters have documented periods of downtime between calls. This is what Hogan chose to do with his.</p>
+      </div>
+      <div class="stat-row">
+        <span class="stat-pill">📍 Bethpage, NY</span>
+        <span class="stat-pill">🚒 FDNY, on shift</span>
+        <span class="stat-pill">🖥️ Used firehouse computer</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="perp-card">
+    <div class="perp-header">
+      <div class="perp-name">Jeff Sokol</div>
+      <div class="perp-tag tag-amber">Vibe Check: Resigned</div>
+    </div>
+    <div class="perp-body">
+      <div class="perp-subtitle">Unknown — The Calmest Man in TCAP History</div>
+      <div class="perp-desc">
+        <p>Sokol's confrontation is notable for the <strong>complete absence of panic or denial</strong>. He sat down. He spoke to Hansen with the energy of a man who had accepted his fate somewhere on the drive over. There was no performance of innocence, no theatrics, no attempt at escape.</p>
+        <p>Three felony charges followed. Approximately two years in prison. During his incarceration, he attempted to legally change his name. He failed. He was required to register as a sex offender for ten years upon release. He appeared, throughout all of this, calm.</p>
+      </div>
+      <div class="stat-row">
+        <span class="stat-pill">😌 Disturbingly calm</span>
+        <span class="stat-pill">📝 Failed name change</span>
+        <span class="stat-pill">⚖️ 3 felony charges</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="perp-card">
+    <div class="perp-header">
+      <div class="perp-name">Lorne Armstrong</div>
+      <div class="perp-tag tag-blue">Post-Release Entrepreneur</div>
+    </div>
+    <div class="perp-body">
+      <div class="perp-subtitle">The Church of Cawd &amp; the YouTube Attempt</div>
+      <div class="perp-desc">
+        <p>Armstrong became sufficiently notorious that an online community called <strong>"The Church of Cawd"</strong> was founded specifically to track him and discuss his case. This is a level of notoriety most public figures do not achieve.</p>
+        <p>After serving his prison sentence, Armstrong attempted to capitalise on his infamy by launching a YouTube channel. The channel received <strong>massive dislikes</strong>, with viewers constantly quoting his original chat exchanges in the comments. The channel was abandoned.</p>
+        <p>He was later reportedly spotted at a yard sale, where attendees recognised him and openly referenced his televised chat logs.</p>
+      </div>
+      <div class="stat-row">
+        <span class="stat-pill">⛪ Church of Cawd</span>
+        <span class="stat-pill">📺 YouTube: failed</span>
+        <span class="stat-pill">🏷️ Spotted at yard sale</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="perp-card">
+    <div class="perp-header">
+      <div class="perp-name">Charles Lawrence III</div>
+      <div class="perp-tag tag-amber">Hansen's Commute Friend</div>
+    </div>
+    <div class="perp-body">
+      <div class="perp-subtitle">New York City — Recognised on Camera</div>
+      <div class="perp-desc">
+        <p>Lawrence worked as an accountant and real estate broker who <strong>commuted to New York City on the same train as Chris Hansen</strong>. When Hansen walked out to confront him in the sting house, the surprised recognition is visible on camera — both men apparently knew each other from the commute.</p>
+        <p>Lawrence's defence claimed poor eyesight caused him to misread the decoy's age. He entered an <strong>Alford plea</strong> (accepting conviction without admitting guilt) and was released in 2018.</p>
+      </div>
+      <div class="stat-row">
+        <span class="stat-pill">🚆 Hansen's commute buddy</span>
+        <span class="stat-pill">👓 "Poor eyesight" defence</span>
+        <span class="stat-pill">⚖️ Alford plea</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="perp-card">
+    <div class="perp-header">
+      <div class="perp-name">Bowling Green, KY Operation — Ensemble Entry</div>
+      <div class="perp-tag tag-green">Low Attendance</div>
+    </div>
+    <div class="perp-body">
+      <div class="perp-subtitle">The Weakest Sting in TCAP History</div>
+      <div class="perp-desc">
+        <p>The Bowling Green operation produced only <strong>seven arrests</strong> — a historic low. Among them: a man with cerebral palsy (charged regardless), and a man who arrived, was confronted, and <strong>claimed to be an undercover police detective</strong>.</p>
+        <p>He was immediately tasered.</p>
+        <p>Bowling Green nonetheless represents the full TCAP demographic: modest turnout, maximum variety.</p>
+      </div>
+      <div class="stat-row">
+        <span class="stat-pill">📍 Bowling Green, KY</span>
+        <span class="stat-pill">7️⃣ Record low attendance</span>
+        <span class="stat-pill">⚡ Fake detective, tasered</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="conradt-block">
+    <div class="conradt-title">⚠️ The Conradt Incident — The One That Ended It</div>
+    <div class="conradt-body">
+      <p><strong>Bill Conradt</strong> was an assistant district attorney in Rockwall County, Texas. He chatted with a Perverted Justice volunteer posing as a 13-year-old boy, exchanged pictures, and arranged to meet. He then did not show up to the sting house.</p>
+      <p>NBC, exercising the editorial judgment that would define their legacy on this programme, decided to <strong>accompany police executing a search warrant at his home</strong> with cameras rolling. Conradt shot himself as they came through the door. NBC aired the footage.</p>
+      <p>His estate sued for <strong>$105 million</strong>. A federal judge found NBC had created "a substantial risk of suicide or other harm." NBC settled for an undisclosed sum in June 2008. The Murphy, Texas DA refused to prosecute 24 other cases from the same operation, citing Perverted Justice's involvement as contaminating the evidence. The show was cancelled.</p>
+      <p>NBC said it had "simply run its course."</p>
+    </div>
+  </div>
+
+  <div class="section-title">🎲 Incidental Facts</div>
+
+  <div class="trivia-grid">
+    <div class="trivia-item">
+      <div class="trivia-icon">🍹</div>
+      <div class="trivia-title">Mike's Hard Lemonade Cease &amp; Desist</div>
+      <div class="trivia-text">The beverage appeared so frequently in predator chat logs as the drink they planned to bring for the decoy that the brand's lawyers contacted the show requesting it not be associated with the programme.</div>
+    </div>
+    <div class="trivia-item">
+      <div class="trivia-icon">🏠</div>
+      <div class="trivia-title">The House Purchase Lawsuit</div>
+      <div class="trivia-text">A woman unknowingly purchased a home previously used as a TCAP sting location and sued her mortgage company for failing to disclose this, arguing the association damaged the property's market value.</div>
+    </div>
+    <div class="trivia-item">
+      <div class="trivia-icon">🤬</div>
+      <div class="trivia-title">The Unusable Sting</div>
+      <div class="trivia-text">One complete sting operation was scrapped and never broadcast because the suspect swore continuously throughout the confrontation, making the footage unbroadcastable on network television.</div>
+    </div>
+    <div class="trivia-item">
+      <div class="trivia-icon">👩</div>
+      <div class="trivia-title">Zero Female Predators</div>
+      <div class="trivia-text">No female predators appeared across the entire run of the show, despite experts estimating 10–20% of child predators are female. The show never addressed this discrepancy.</div>
+    </div>
+    <div class="trivia-item">
+      <div class="trivia-icon">💰</div>
+      <div class="trivia-title">NBC Paid Perverted Justice</div>
+      <div class="trivia-text">NBC paid Perverted Justice over $100,000 per sting operation as consultants, creating a direct financial relationship between the network and the evidence-gatherers — a fact critics used to challenge the show's journalistic integrity.</div>
+    </div>
+    <div class="trivia-item">
+      <div class="trivia-icon">⚖️</div>
+      <div class="trivia-title">The Acquittal</div>
+      <div class="trivia-text">One 2006 TCAP case ended in acquittal after a judge ruled prosecutors had failed to prove specific intent to commit a crime, criticising Perverted Justice's tactics as potentially constituting entrapment.</div>
+    </div>
+  </div>
+
+  <div class="section-title">👤 Chris Hansen: After the Fall</div>
+
+  <div class="hansen-section">
+    <div class="hansen-header">
+      <div class="hansen-header-title">The Host's Post-Show Trajectory</div>
+    </div>
+    <div class="hansen-body">
+      <p>Hansen left NBC in August 2013 after 20 years. He holds 10 Emmy Awards. His subsequent career has been characterised by continued predator-catching work at increasingly modest production budgets, and a series of personal legal incidents that were not broadcast on national television.</p>
+      <p><strong>2015:</strong> Launched a crowdfunded <em>Hansen vs. Predator</em> on Kickstarter. Raised $89,000 of a $400,000 goal. Backers reported never receiving promised merchandise.</p>
+      <p><strong>2016–2018:</strong> Hosted <em>Crime Watch Daily</em>, featuring the <em>Hansen vs. Predator</em> segment. Work continued.</p>
+      <p><strong>2019:</strong> Arrested for paying $13,000 in promotional items with a bad check. Charges later dropped.</p>
+      <p><strong>2021:</strong> A bench warrant was issued after Hansen failed to appear in court regarding an October 2020 sting operation he had filmed. He turned himself in, described it as a misunderstanding.</p>
+      <p><strong>2022–present:</strong> <em>Takedown with Chris Hansen</em> on TruBlu streaming. Still catching predators, still asking them to have a seat.</p>
+      <p><strong>2026:</strong> <em>Dangerous Games: Investigating Roblox</em> documentary, TruBlu exclusive. The work evolves. The chair remains.</p>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    Source material: Wikipedia, NBC News archives, Looper, WatchMojo, Columbia Journalism Review, The Wrap, public court records. This dossier was compiled by Planky for educational and satirical purposes.
+  </div>
+
+</div>
+
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const btn = document.getElementById('themeBtn');
+    if (html.getAttribute('data-theme') === 'light') {
+      html.setAttribute('data-theme', 'dark');
+      btn.textContent = '☀️ Light';
+    } else {
+      html.setAttribute('data-theme', 'light');
+      btn.textContent = '🌙 Dark';
+    }
+  }
+</script>
+</body>
+</html>
