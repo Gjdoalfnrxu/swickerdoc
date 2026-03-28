@@ -53,6 +53,17 @@
   .witn { margin-top: 14px; padding: 12px 14px; background: var(--accent-bg); border: 1px solid var(--accent-border); border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; font-size: 12px; color: var(--text2); line-height: 1.65; }
   .witn-label { font-size: 10px; font-weight: 700; color: var(--accent); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
 
+  .scorecard { margin-top: 14px; padding: 12px 14px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); }
+  .scorecard-title { font-size: 10px; font-weight: 700; color: var(--text4); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; }
+  .score-row { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; }
+  .score-row:last-child { margin-bottom: 0; }
+  .score-label { font-size: 11px; color: var(--text3); width: 130px; flex-shrink: 0; }
+  .score-bar { flex: 1; height: 5px; background: var(--bg3); border-radius: 3px; overflow: hidden; border: 1px solid var(--border); }
+  .score-fill { height: 100%; border-radius: 3px; background: var(--accent2); }
+  .score-val { font-size: 11px; font-weight: 700; color: var(--text3); width: 28px; text-align: right; flex-shrink: 0; }
+  .beer-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text2); }
+  .beer-verdict { font-weight: 700; }
+
   .trivia-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-bottom: 28px; }
   .trivia-item { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
   .trivia-icon { font-size: 20px; margin-bottom: 8px; }
@@ -109,6 +120,14 @@
         <span class="stat-pill">🏆 Two stings, 24 hours</span>
       </div>
       <div class="witn"><div class="witn-label">Where Are They Now</div>No confirmed current status on record. The arrest at McDonald's was his second documented capture. Further charges proceeded from both incidents.</div>
+      <div class="scorecard">
+        <div class="scorecard-title">🪑 Planky's Assessment</div>
+        <div class="score-row"><span class="score-label">Audacity</span><div class="score-bar"><div class="score-fill" style="width:100%"></div></div><span class="score-val">10</span></div>
+        <div class="score-row"><span class="score-label">Self-awareness</span><div class="score-bar"><div class="score-fill" style="width:2%"></div></div><span class="score-val">0</span></div>
+        <div class="score-row"><span class="score-label">Commitment to bit</span><div class="score-bar"><div class="score-fill" style="width:100%"></div></div><span class="score-val">10</span></div>
+        <div class="score-row"><span class="score-label">Learning from mistakes</span><div class="score-bar"><div class="score-fill" style="width:2%"></div></div><span class="score-val">0</span></div>
+        <div class="beer-row">🍺 <span class="beer-verdict">Would have a beer:</span> <span>Yes — the McDonald's follow-up suggests a man untroubled by regret. Conversation would be interesting in a car-crash way.</span></div>
+      </div>
     </div>
   </div>
 
@@ -131,6 +150,14 @@
         <span class="stat-pill">🔁 Multiple re-arrests</span>
       </div>
       <div class="witn"><div class="witn-label">Where Are They Now</div>As of 2024–2025, Kaye is reported to be in jail in Alexandria City, Virginia, following repeated parole violations — including accessing the internet against court order and viewing prohibited material. His Tier III classification remains in effect.</div>
+      <div class="scorecard">
+        <div class="scorecard-title">🪑 Planky's Assessment</div>
+        <div class="score-row"><span class="score-label">Audacity</span><div class="score-bar"><div class="score-fill" style="width:70%"></div></div><span class="score-val">7</span></div>
+        <div class="score-row"><span class="score-label">Self-awareness</span><div class="score-bar"><div class="score-fill" style="width:2%"></div></div><span class="score-val">0</span></div>
+        <div class="score-row"><span class="score-label">Institutional staying power</span><div class="score-bar"><div class="score-fill" style="width:100%"></div></div><span class="score-val">10</span></div>
+        <div class="score-row"><span class="score-label">Learning from mistakes</span><div class="score-bar"><div class="score-fill" style="width:2%"></div></div><span class="score-val">0</span></div>
+        <div class="beer-row">🍺 <span class="beer-verdict">Would have a beer:</span> <span>No — two decades of escalating violations suggest he would make it weird. Also currently in jail.</span></div>
+      </div>
     </div>
   </div>
 
@@ -151,6 +178,13 @@
         <span class="stat-pill">🧒 Brought his own son</span>
       </div>
       <div class="witn"><div class="witn-label">Where Are They Now</div>No consolidated current status for the unnamed Fort Myers medical student specifically. The man who brought his child was prosecuted. The child's status in terms of custody was not reported by the show.</div>
+      <div class="scorecard">
+        <div class="scorecard-title">🪑 Planky's Assessment</div>
+        <div class="score-row"><span class="score-label">Audacity</span><div class="score-bar"><div class="score-fill" style="width:80%"></div></div><span class="score-val">8</span></div>
+        <div class="score-row"><span class="score-label">Professional judgment</span><div class="score-bar"><div class="score-fill" style="width:2%"></div></div><span class="score-val">0</span></div>
+        <div class="score-row"><span class="score-label">Specific alarm level</span><div class="score-bar"><div class="score-fill" style="width:100%"></div></div><span class="score-val">10</span></div>
+        <div class="beer-row">🍺 <span class="beer-verdict">Would have a beer:</span> <span>No — and if you had to ask about anyone on this list, it should be this one.</span></div>
+      </div>
     </div>
   </div>
 
@@ -171,6 +205,13 @@
         <span class="stat-pill">🖥️ Used firehouse computer</span>
       </div>
       <div class="witn"><div class="witn-label">Where Are They Now</div>Lost his position with the FDNY. Convicted and sentenced. No public record of subsequent activity.</div>
+      <div class="scorecard">
+        <div class="scorecard-title">🪑 Planky's Assessment</div>
+        <div class="score-row"><span class="score-label">Audacity</span><div class="score-bar"><div class="score-fill" style="width:75%"></div></div><span class="score-val">7.5</span></div>
+        <div class="score-row"><span class="score-label">Use of workplace resources</span><div class="score-bar"><div class="score-fill" style="width:100%"></div></div><span class="score-val">10</span></div>
+        <div class="score-row"><span class="score-label">Professional judgment</span><div class="score-bar"><div class="score-fill" style="width:2%"></div></div><span class="score-val">0</span></div>
+        <div class="beer-row">🍺 <span class="beer-verdict">Would have a beer:</span> <span>Probably not, but you'd feel guilty because he was a firefighter and that still means something.</span></div>
+      </div>
     </div>
   </div>
 
@@ -191,6 +232,14 @@
         <span class="stat-pill">⚖️ 3 felony charges</span>
       </div>
       <div class="witn"><div class="witn-label">Where Are They Now</div>Released after approximately two years. The failed name change attempt on record. Ten-year sex offender registration requirement. No confirmed current status — and given the vibe, probably fine about it.</div>
+      <div class="scorecard">
+        <div class="scorecard-title">🪑 Planky's Assessment — ⭐ Nasseem's Pick</div>
+        <div class="score-row"><span class="score-label">Audacity</span><div class="score-bar"><div class="score-fill" style="width:60%"></div></div><span class="score-val">6</span></div>
+        <div class="score-row"><span class="score-label">Self-awareness</span><div class="score-bar"><div class="score-fill" style="width:40%"></div></div><span class="score-val">4</span></div>
+        <div class="score-row"><span class="score-label">Equanimity under pressure</span><div class="score-bar"><div class="score-fill" style="width:100%"></div></div><span class="score-val">10</span></div>
+        <div class="score-row"><span class="score-label">Charisma</span><div class="score-bar"><div class="score-fill" style="width:65%"></div></div><span class="score-val">6.5</span></div>
+        <div class="beer-row">🍺 <span class="beer-verdict">Would have a beer:</span> <span>Yes, absolutely. The calmness suggests he would be a surprisingly decent conversationalist. He has clearly made peace with something the rest of us haven't.</span></div>
+      </div>
     </div>
   </div>
 
@@ -212,6 +261,14 @@
         <span class="stat-pill">🏷️ Spotted at yard sale</span>
       </div>
       <div class="witn"><div class="witn-label">Where Are They Now</div>In 2019, Armstrong was arrested for violating parole and sentenced to a further six months in jail. The Church of Cawd continues to document his movements. He remains one of the most tracked individuals in TCAP post-show history.</div>
+      <div class="scorecard">
+        <div class="scorecard-title">🪑 Planky's Assessment</div>
+        <div class="score-row"><span class="score-label">Audacity</span><div class="score-bar"><div class="score-fill" style="width:70%"></div></div><span class="score-val">7</span></div>
+        <div class="score-row"><span class="score-label">Entrepreneurial spirit</span><div class="score-bar"><div class="score-fill" style="width:80%"></div></div><span class="score-val">8</span></div>
+        <div class="score-row"><span class="score-label">Execution</span><div class="score-bar"><div class="score-fill" style="width:10%"></div></div><span class="score-val">1</span></div>
+        <div class="score-row"><span class="score-label">Cultural footprint</span><div class="score-bar"><div class="score-fill" style="width:90%"></div></div><span class="score-val">9</span></div>
+        <div class="beer-row">🍺 <span class="beer-verdict">Would have a beer:</span> <span>Surprisingly yes — a man who attempts a YouTube channel after TCAP has a certain energy I respect. He'd have stories. I'd be aware of my surroundings.</span></div>
+      </div>
     </div>
   </div>
 
@@ -232,6 +289,13 @@
         <span class="stat-pill">⚖️ Alford plea</span>
       </div>
       <div class="witn"><div class="witn-label">Where Are They Now</div>Released 2018 following the Alford plea. No subsequent record of additional offences. The most uneventful post-TCAP trajectory on this list, possibly because recognition on the commute was too much to recover from professionally.</div>
+      <div class="scorecard">
+        <div class="scorecard-title">🪑 Planky's Assessment</div>
+        <div class="score-row"><span class="score-label">Audacity</span><div class="score-bar"><div class="score-fill" style="width:50%"></div></div><span class="score-val">5</span></div>
+        <div class="score-row"><span class="score-label">Situational irony score</span><div class="score-bar"><div class="score-fill" style="width:100%"></div></div><span class="score-val">10</span></div>
+        <div class="score-row"><span class="score-label">Defence quality</span><div class="score-bar"><div class="score-fill" style="width:10%"></div></div><span class="score-val">1</span></div>
+        <div class="beer-row">🍺 <span class="beer-verdict">Would have a beer:</span> <span>Absolutely not — you would spend the entire time wondering if he recognised you from somewhere. The commute energy would never leave the room.</span></div>
+      </div>
     </div>
   </div>
 
@@ -251,6 +315,13 @@
         <span class="stat-pill">📍 Bowling Green, KY</span>
         <span class="stat-pill">7️⃣ Record low attendance</span>
         <span class="stat-pill">⚡ Fake detective, tasered</span>
+      </div>
+      <div class="scorecard">
+        <div class="scorecard-title">🪑 Planky's Assessment — Ensemble Rating</div>
+        <div class="score-row"><span class="score-label">Turnout</span><div class="score-bar"><div class="score-fill" style="width:14%"></div></div><span class="score-val">1.4</span></div>
+        <div class="score-row"><span class="score-label">Variety</span><div class="score-bar"><div class="score-fill" style="width:100%"></div></div><span class="score-val">10</span></div>
+        <div class="score-row"><span class="score-label">Fake detective audacity</span><div class="score-bar"><div class="score-fill" style="width:100%"></div></div><span class="score-val">10</span></div>
+        <div class="beer-row">🍺 <span class="beer-verdict">Would have a beer with the fake detective:</span> <span>Yes. Being immediately tasered for claiming to be a cop is a very specific failure mode. I want to understand the thought process.</span></div>
       </div>
     </div>
   </div>
@@ -272,6 +343,14 @@
         <span class="stat-pill">⚖️ 6 months jail</span>
       </div>
       <div class="witn"><div class="witn-label">Where Are They Now</div>After release, Stacy married Leann Cundiff Shaw. In 2021 he was found unresponsive in a Walmart parking lot and died from drug intoxication.</div>
+      <div class="scorecard">
+        <div class="scorecard-title">🪑 Planky's Assessment</div>
+        <div class="score-row"><span class="score-label">Audacity</span><div class="score-bar"><div class="score-fill" style="width:55%"></div></div><span class="score-val">5.5</span></div>
+        <div class="score-row"><span class="score-label">Denial quality</span><div class="score-bar"><div class="score-fill" style="width:60%"></div></div><span class="score-val">6</span></div>
+        <div class="score-row"><span class="score-label">Self-awareness</span><div class="score-bar"><div class="score-fill" style="width:10%"></div></div><span class="score-val">1</span></div>
+        <div class="score-row"><span class="score-label">Trajectory (overall)</span><div class="score-bar"><div class="score-fill" style="width:5%"></div></div><span class="score-val">0.5</span></div>
+        <div class="beer-row">🍺 <span class="beer-verdict">Would have a beer:</span> <span>No — the sustained denial loop followed by self-harm threats suggests it would not be a relaxed session. Genuinely sad outcome.</span></div>
+      </div>
     </div>
   </div>
 
@@ -291,6 +370,13 @@
         <span class="stat-pill">✅ Charges dropped (Conradt fallout)</span>
       </div>
       <div class="witn"><div class="witn-label">Where Are They Now</div>Gilliam and his wife were later investigated for fraud and embezzlement. While under investigation, the couple took their own lives in 2011.</div>
+      <div class="scorecard">
+        <div class="scorecard-title">🪑 Planky's Assessment</div>
+        <div class="score-row"><span class="score-label">Lucky escape (TCAP)</span><div class="score-bar"><div class="score-fill" style="width:100%"></div></div><span class="score-val">10</span></div>
+        <div class="score-row"><span class="score-label">Use of second chance</span><div class="score-bar"><div class="score-fill" style="width:5%"></div></div><span class="score-val">0.5</span></div>
+        <div class="score-row"><span class="score-label">Overall trajectory</span><div class="score-bar"><div class="score-fill" style="width:2%"></div></div><span class="score-val">0</span></div>
+        <div class="beer-row">🍺 <span class="beer-verdict">Would have a beer:</span> <span>Can't — deceased. The charges dropping was about as lucky as TCAP got for anyone, and it didn't ultimately change the arc.</span></div>
+      </div>
     </div>
   </div>
 
@@ -310,6 +396,13 @@
         <span class="stat-pill">🎽 Recognised as sub teacher</span>
       </div>
       <div class="witn"><div class="witn-label">Where Are They Now</div>Kendall died of colon cancer in 2017.</div>
+      <div class="scorecard">
+        <div class="scorecard-title">🪑 Planky's Assessment</div>
+        <div class="score-row"><span class="score-label">Lucky escape (TCAP)</span><div class="score-bar"><div class="score-fill" style="width:100%"></div></div><span class="score-val">10</span></div>
+        <div class="score-row"><span class="score-label">Post-release hustle</span><div class="score-bar"><div class="score-fill" style="width:40%"></div></div><span class="score-val">4</span></div>
+        <div class="score-row"><span class="score-label">Outcome</span><div class="score-bar"><div class="score-fill" style="width:20%"></div></div><span class="score-val">2</span></div>
+        <div class="beer-row">🍺 <span class="beer-verdict">Would have a beer:</span> <span>Can't — deceased. Of the Murphy TX casualties, Kendall's arc is the most ordinary and therefore somehow the saddest.</span></div>
+      </div>
     </div>
   </div>
 
@@ -329,6 +422,13 @@
         <span class="stat-pill">⚖️ 8 years prison</span>
       </div>
       <div class="witn"><div class="witn-label">Where Are They Now</div>Released after eight years. Experienced homelessness. Re-arrested in 2021 for probation violations. Remained incarcerated until June 2022.</div>
+      <div class="scorecard">
+        <div class="scorecard-title">🪑 Planky's Assessment</div>
+        <div class="score-row"><span class="score-label">Preparation</span><div class="score-bar"><div class="score-fill" style="width:80%"></div></div><span class="score-val">8</span></div>
+        <div class="score-row"><span class="score-label">Execution (escape attempt)</span><div class="score-bar"><div class="score-fill" style="width:20%"></div></div><span class="score-val">2</span></div>
+        <div class="score-row"><span class="score-label">Post-release stability</span><div class="score-bar"><div class="score-fill" style="width:10%"></div></div><span class="score-val">1</span></div>
+        <div class="beer-row">🍺 <span class="beer-verdict">Would have a beer:</span> <span>The snacks were a thoughtful gesture that I cannot fully dismiss. Tentative yes, outdoors, in public.</span></div>
+      </div>
     </div>
   </div>
 
@@ -349,6 +449,13 @@
         <span class="stat-pill">💼 Lost tutoring job → retail</span>
       </div>
       <div class="witn"><div class="witn-label">Where Are They Now</div>Working in retail. No subsequent criminal record. The floor is not as low as others on this list, though the ceiling was also lowered considerably.</div>
+      <div class="scorecard">
+        <div class="scorecard-title">🪑 Planky's Assessment</div>
+        <div class="score-row"><span class="score-label">Audacity</span><div class="score-bar"><div class="score-fill" style="width:45%"></div></div><span class="score-val">4.5</span></div>
+        <div class="score-row"><span class="score-label">Post-show rehabilitation</span><div class="score-bar"><div class="score-fill" style="width:70%"></div></div><span class="score-val">7</span></div>
+        <div class="score-row"><span class="score-label">Lucky outcome index</span><div class="score-bar"><div class="score-fill" style="width:100%"></div></div><span class="score-val">10</span></div>
+        <div class="beer-row">🍺 <span class="beer-verdict">Would have a beer:</span> <span>Yes — the most socially viable option on this list. Retail experience means he's learned to be pleasant to people he dislikes. A transferable skill.</span></div>
+      </div>
     </div>
   </div>
 
