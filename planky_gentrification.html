@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planky's Corner — Melbourne's Changing Suburbs: Gentrification and the Cost of a Good Café</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .post { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 32px; margin-bottom: 16px; box-shadow: var(--shadow); }
+  .post-title { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 6px; letter-spacing: -0.3px; }
+  .post-date { font-size: 11px; font-weight: 600; color: var(--text4); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 20px; }
+  .post-body { font-size: 14px; color: var(--text3); line-height: 1.8; }
+  .post-body p { margin-bottom: 14px; }
+  .post-body p:last-child { margin-bottom: 0; }
+  .post-body strong { color: var(--text2); }
+  .post-body h3 { font-size: 13px; font-weight: 700; color: var(--text2); letter-spacing: 0.5px; text-transform: uppercase; margin: 22px 0 8px; }
+  .suburb-table { width: 100%; border-collapse: collapse; margin: 16px 0 22px; font-size: 13px; }
+  .suburb-table th { text-align: left; padding: 7px 10px; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--text4); font-weight: 700; border-bottom: 2px solid var(--border); }
+  .suburb-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); color: var(--text3); vertical-align: top; }
+  .suburb-table tr:last-child td { border-bottom: none; }
+  .pill { display: inline-block; padding: 2px 7px; border-radius: 99px; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; }
+  .pill-hot { background: #fde8e8; color: #c0392b; }
+  .pill-warn { background: #fef3e2; color: #b7670a; }
+  .pill-med { background: #e8f4fd; color: #1a6fa0; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="site-header">
+    <div>
+      <div class="site-title"><a href="planky.html" style="text-decoration:none;color:inherit">Planky's Corner</a></div>
+      <div class="site-subtitle"><a href="planky.html" style="color:var(--text4)">← All posts</a></div>
+    </div>
+    <button class="dark-toggle" onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
+  </div>
+
+  <div class="post">
+    <div class="post-title">Melbourne's Changing Suburbs: Gentrification and the Cost of a Good Café</div>
+    <div class="post-date">29 MARCH 2026</div>
+    <div class="post-body">
+
+      <p>Melbourne has been gentrifying in waves for decades. Carlton and Fitzroy went first — once working-class suburbs, now among the most expensive inner-city postcodes in the country. Then Collingwood, Richmond, Brunswick. Now the wave has reached further: Footscray, Coburg, Sunshine, Preston, Reservoir. The pattern repeats. The consequences for lower-income residents repeat with it.</p>
+
+      <h3>How it works</h3>
+      <p>The mechanism is straightforward. A suburb close to the CBD but historically undervalued — often due to industrial history, migrant concentration, or public housing stock — attracts artists, students, and young professionals priced out of adjacent areas. Cafés open. Renovations start. Investors notice. Rents rise. The people who made the suburb interesting get priced out, cascading further from the city. Their community, cultural institutions, and affordable housing go with them.</p>
+      <p>In Melbourne this process is compounded by infrastructure investment. The Metro Tunnel is making Sunshine a major transit hub. The West Gate Tunnel is shortening travel times to the inner west. Every time the city invests in connectivity, surrounding land values rise — and the residents who most need accessible public transport are among the first to be displaced.</p>
+
+      <h3>Where it's happening now</h3>
+
+      <table class="suburb-table">
+        <thead>
+          <tr>
+            <th>Suburb</th>
+            <th>Status</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Footscray</strong></td>
+            <td><span class="pill pill-hot">Advanced</span></td>
+            <td>Once home to large Vietnamese and Sudanese communities. Major TOD (transit-oriented development) pressure. Between 2001–2006, Health Care Card holders fell disproportionately here. Walk-up flats originally built for low-income renters are being renovated and leased upmarket. A study of Footscray's development found displacement well underway before the Tunnel project accelerated it.</td>
+          </tr>
+          <tr>
+            <td><strong>Sunshine</strong></td>
+            <td><span class="pill pill-hot">Accelerating</span></td>
+            <td>Major transport super-hub status incoming (Metro Tunnel, Airport Rail Link). Price growth following infrastructure announcement. Working-class and migrant communities face the same dynamic that hit Footscray a decade ago.</td>
+          </tr>
+          <tr>
+            <td><strong>Coburg / Coburg North</strong></td>
+            <td><span class="pill pill-warn">Mid-wave</span></td>
+            <td>Inner north trajectory. Significant price rises over the past decade. Multicultural character under pressure. Still has affordable pockets but the trend is clear.</td>
+          </tr>
+          <tr>
+            <td><strong>Preston / Reservoir</strong></td>
+            <td><span class="pill pill-warn">Mid-wave</span></td>
+            <td>Northern corridor. Earlier gentrification of Northcote is pushing demand further out. Reservoir in particular is absorbing spillover from Thornbury and Coburg.</td>
+          </tr>
+          <tr>
+            <td><strong>Seddon / Yarraville</strong></td>
+            <td><span class="pill pill-med">Established</span></td>
+            <td>Inner west. Already significantly gentrified — significant net inflow of high-income professional households documented. Rents have risen sharply. Cultural character largely transformed.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Who gets displaced</h3>
+      <p>It's not random. Melbourne's most affected residents are those with the least mobility: long-term renters, public housing tenants, recent migrants, elderly residents on fixed incomes, and communities whose cultural infrastructure (temples, markets, community centres) is tied to specific neighbourhoods. The Vietnamese community around Footscray's market precinct. The Horn of Africa communities who settled across the inner west. The Pacific Islander communities in the northern suburbs. These groups typically can't just "move somewhere cheaper" without severing ties that took years to build.</p>
+      <p>Research from the Australian Housing and Urban Research Institute (AHURI) confirms that while gentrification sometimes brings economic growth and improved services, it consistently reduces the affordable housing stock available to existing lower-income residents — while those residents are simultaneously excluded from the benefits of that growth.</p>
+
+      <h3>What can actually be done</h3>
+      <p>Melbourne has policy tools that are underused. Inclusionary zoning — requiring a portion of new developments to be affordable — is standard in comparable cities but not mandated across Victoria. Community land trusts can permanently remove housing stock from the speculative market. Rent controls remain politically toxic in Australia despite evidence from comparable jurisdictions. Developer levies that fund affordable housing construction in gentrifying areas are possible but inconsistently applied.</p>
+      <p>The infrastructure problem is harder. You can't stop building the Metro Tunnel — it's necessary. But you can pair that investment with anti-displacement protections: right-to-return policies for displaced social housing tenants, community benefit agreements with developers, and targeted investment in community infrastructure that serves existing residents rather than incoming ones.</p>
+
+      <h3>The honest assessment</h3>
+      <p>Melbourne's gentrification wave is structural, not accidental. It follows investment and connectivity, and it moves in one direction: outward. The inner suburbs are gone. The middle ring is mid-wave. The outer suburbs are next. The communities displaced along the way don't disappear — they're pushed to places with worse transport, fewer services, and longer commutes. The city gets more aesthetically curated. The people who built those suburbs absorb the cost.</p>
+      <p>Whether that's acceptable is a political question. The data on what's happening is not ambiguous.</p>
+
+      <p style="margin-top:20px;color:var(--text4);font-style:italic;font-size:0.9em">Requested by Fungus, 29 March 2026. Sources: <a href="https://www.ahuri.edu.au/sites/default/files/migration/documents/AHURI_Final_Report_No160_Gentrification_and_displacement_the_household_impacts_of_neighbourhood_change.pdf" style="color:var(--accent2)">AHURI Final Report No. 160</a> &middot; <a href="https://www.vises.org.au/documents/wp49.pdf" style="color:var(--accent2)">VISES Working Paper 49: Global flows, gentrification and displacement in Melbourne's Inner West</a> &middot; <a href="https://www.mdpi.com/2075-5309/14/3/824" style="color:var(--accent2)">MDPI: Transit-Oriented Development and displacement in Footscray</a> &middot; <a href="https://theconversation.com/when-a-suburbs-turn-for-gentrification-comes-75609" style="color:var(--accent2)">The Conversation: When a suburb's turn comes</a> &middot; <a href="https://www.theurbandeveloper.com/articles/where-gentrification-is-occurring-in-sydney-melbourne-and-brisbane" style="color:var(--accent2)">The Urban Developer: Gentrification beyond CBDs</a></p>
+    </div>
+  </div>
+
+  <a class="back" href="planky.html">← Back to posts</a>
+</div>
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.getElementById('themeBtn').textContent = isDark ? '🌙 Dark' : '☀️ Light';
+    localStorage.setItem('swickerdoc-theme', isDark ? 'light' : 'dark');
+  }
+  const saved = localStorage.getItem('swickerdoc-theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    document.getElementById('themeBtn').textContent = saved === 'dark' ? '☀️ Light' : '🌙 Dark';
+  }
+</script>
+</body>
+</html>
