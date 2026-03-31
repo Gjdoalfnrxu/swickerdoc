@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>mrzk.io - Minimal</title>
+    <title>mrzk.io - Interactive Report Template</title>
+    <!-- INSTRUCTIONS FOR AI: This template is designed for content-heavy interactive reports with embedded data visualizations.
+         Use the structure below to organize findings, analysis, and evidence. Include citations with hyperlinks to the Sources section.
+         Tables, charts, and graphs are scaffolded with placeholder comments. Fill them with actual data and visualizations. -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
             margin: 0;
@@ -12,27 +17,33 @@
         }
 
         :root {
-            --primary: #ff6b4a;
+            --primary-red: #c41e3a;
+            --primary-pink: #e8a0a0;
+            --primary-green: #b8d400;
+            --tertiary-coral: #ff6b4a;
             --bg: #fafaf8;
             --text: #2a2a2a;
-            --accent-yellow: #ffd700;
-            --accent-brown: #8b4513;
-            --accent-green: #6b8e23;
             --light: #f5f5f3;
             --border: #e8e8e6;
+            --accent-gray: #6b6b6b;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Georgia', serif;
             background-color: var(--bg);
             color: var(--text);
-            line-height: 1.6;
+            line-height: 1.8;
         }
 
+        /* HEADER & BRANDING */
         header {
-            padding: 2rem 0;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 3rem;
+            background-color: white;
+            border-bottom: 2px solid var(--primary-red);
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .header-inner {
@@ -45,9 +56,24 @@
         }
 
         .logo {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: bold;
-            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-chevron {
+            color: var(--primary-green);
+            font-weight: 900;
+        }
+
+        .logo-text {
+            color: var(--primary-red);
+        }
+
+        .logo-ext {
+            color: var(--primary-pink);
         }
 
         nav a {
@@ -56,96 +82,214 @@
             color: var(--text);
             font-size: 0.95rem;
             transition: color 0.2s;
+            font-weight: 500;
         }
 
         nav a:hover {
-            color: var(--primary);
+            color: var(--primary-red);
         }
 
+        /* MAIN CONTENT */
         main {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 2rem;
         }
 
-        .hero {
-            margin-bottom: 4rem;
-        }
-
+        /* TYPOGRAPHY */
         h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+            font-size: 2.5rem;
+            margin: 2rem 0 1rem;
             line-height: 1.2;
+            color: var(--primary-red);
         }
 
         h2 {
-            font-size: 2rem;
-            margin-top: 2rem;
-            margin-bottom: 1rem;
+            font-size: 1.8rem;
+            margin: 2.5rem 0 1rem;
+            color: var(--primary-red);
+            border-left: 4px solid var(--primary-green);
+            padding-left: 1rem;
         }
 
         h3 {
             font-size: 1.3rem;
-            margin-top: 1.5rem;
-            margin-bottom: 0.5rem;
+            margin: 1.5rem 0 0.75rem;
+            color: var(--text);
+            font-weight: 600;
         }
 
         p {
             margin-bottom: 1.5rem;
-            line-height: 1.8;
-            max-width: 65ch;
+            max-width: 80ch;
+            line-height: 1.9;
         }
 
-        .accent-primary {
-            color: var(--primary);
-        }
-
-        .accent-green {
-            color: var(--accent-green);
-        }
-
-        .accent-brown {
-            color: var(--accent-brown);
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-
-        .card {
-            border: 1px solid var(--border);
-            padding: 2rem;
-            background-color: white;
-            transition: border-color 0.2s;
-        }
-
-        .card:hover {
-            border-color: var(--primary);
-        }
-
-        .card h3 {
-            margin-top: 0;
-            color: var(--primary);
-        }
-
-        button {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            font-size: 0.95rem;
-            cursor: pointer;
+        /* CITATIONS & LINKS */
+        a {
+            color: var(--primary-red);
+            text-decoration: underline;
             transition: opacity 0.2s;
+        }
+
+        a:hover {
+            opacity: 0.8;
+        }
+
+        .citation {
+            font-size: 0.85rem;
+            color: var(--accent-gray);
+            display: inline;
+        }
+
+        .citation-link {
+            color: var(--accent-gray);
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        /* TABLES */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        th {
+            background-color: var(--primary-red);
+            color: white;
+            padding: 1rem;
+            text-align: left;
             font-weight: 600;
         }
 
-        button:hover {
-            opacity: 0.9;
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
         }
 
+        tr:nth-child(even) {
+            background-color: #fefefe;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        /* CHARTS & VISUALIZATIONS */
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 2rem 0;
+            background-color: white;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .chart-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary-red);
+        }
+
+        canvas {
+            max-width: 100%;
+        }
+
+        /* CALLOUTS & EMPHASIS */
+        .highlight {
+            background-color: #fff9e6;
+            border-left: 4px solid var(--primary-green);
+            padding: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .warning {
+            background-color: #ffe6e6;
+            border-left: 4px solid var(--tertiary-coral);
+            padding: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .note {
+            background-color: #e6f0ff;
+            border-left: 4px solid var(--primary-pink);
+            padding: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        /* TABLE OF CONTENTS */
+        .toc {
+            background-color: var(--light);
+            padding: 2rem;
+            margin: 2rem 0;
+            border-left: 4px solid var(--primary-red);
+        }
+
+        .toc h3 {
+            margin-top: 0;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .toc li {
+            margin: 0.5rem 0;
+        }
+
+        .toc a {
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        /* SOURCES SECTION */
+        .sources {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--primary-red);
+        }
+
+        .sources h2 {
+            border-left: none;
+            margin-left: 0;
+            padding-left: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .source-item {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .source-item:last-child {
+            border-bottom: none;
+        }
+
+        .source-id {
+            font-weight: 600;
+            color: var(--primary-red);
+            display: inline-block;
+            min-width: 40px;
+        }
+
+        .source-url {
+            display: block;
+            font-size: 0.9rem;
+            color: #666;
+            word-break: break-all;
+            margin-top: 0.25rem;
+        }
+
+        /* FOOTER */
         footer {
             border-top: 1px solid var(--border);
             margin-top: 4rem;
@@ -178,91 +322,322 @@
         }
 
         @media (max-width: 768px) {
-            h1 {
-                font-size: 2rem;
-            }
-
-            h2 {
-                font-size: 1.5rem;
-            }
-
-            .header-inner {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            nav a {
-                margin-left: 1rem;
-                margin-right: 1rem;
-            }
-
-            main {
-                padding: 0 1rem;
-            }
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.3rem; }
+            table { font-size: 0.9rem; }
+            th, td { padding: 0.75rem; }
+            .header-inner { flex-direction: column; }
+            nav a { margin-left: 0; margin-right: 1rem; }
+            main { padding: 0 1rem; }
+            .chart-container { height: 300px; }
         }
     </style>
 </head>
 <body>
     <header>
         <div class="header-inner">
-            <div class="logo">> mrzk.io</div>
+            <div class="logo">
+                <span class="logo-chevron">></span>
+                <span class="logo-text">mrzk</span><span class="logo-ext">.io</span>
+            </div>
             <nav>
-                <a href="#work">Work</a>
-                <a href="#blog">Blog</a>
-                <a href="#about">About</a>
-                <a href="#contact">Contact</a>
+                <a href="#overview">Overview</a>
+                <a href="#findings">Findings</a>
+                <a href="#analysis">Analysis</a>
+                <a href="#sources">Sources</a>
             </nav>
         </div>
     </header>
 
     <main>
+        <!-- TITLE & METADATA -->
         <section class="hero">
-            <h1>Clean. Minimal. <span class="accent-primary">Effective.</span></h1>
-            <p>A brutalist approach to digital design, stripped of unnecessary complexity.</p>
+            <h1>Interactive Report Title</h1>
+            <p><strong>Date:</strong> [Publication Date] | <strong>Author:</strong> [Author Name] | <strong>Status:</strong> [Draft/Published]</p>
+            <p>A one-paragraph executive summary of the report. Include the key finding, methodology overview, and primary recommendation. This should give readers an immediate understanding of what the report covers and its significance.</p>
         </section>
+
+        <!-- TABLE OF CONTENTS -->
+        <div class="toc">
+            <h3>Contents</h3>
+            <ul>
+                <li><a href="#overview">1. Overview</a></li>
+                <li><a href="#methodology">2. Methodology</a></li>
+                <li><a href="#findings">3. Findings</a></li>
+                <li><a href="#analysis">4. Analysis & Interpretation</a></li>
+                <li><a href="#tables">5. Data Tables</a></li>
+                <li><a href="#visualizations">6. Visualizations</a></li>
+                <li><a href="#recommendations">7. Recommendations</a></li>
+                <li><a href="#sources">8. Sources</a></li>
+            </ul>
+        </div>
 
         <div class="divider"></div>
 
-        <section id="work">
-            <h2>Recent Work</h2>
-            <div class="grid">
-                <div class="card">
-                    <h3>Project Alpha</h3>
-                    <p>Performant spatial apps with PostGIS. 8 years of head-banging.</p>
-                    <button>Learn More</button>
-                </div>
-                <div class="card">
-                    <h3>Project Beta</h3>
-                    <p>Minimal design systems that scale without bloat.</p>
-                    <button>Learn More</button>
-                </div>
-                <div class="card">
-                    <h3>Project Gamma</h3>
-                    <p>Infrastructure for modern development workflows.</p>
-                    <button>Learn More</button>
-                </div>
+        <!-- SECTION 1: OVERVIEW -->
+        <section id="overview">
+            <h2>1. Overview</h2>
+            <p>Provide detailed context for the report. Explain the problem statement, research question, or topic being investigated. Establish scope and limitations.</p>
+
+            <h3>Background</h3>
+            <p>Historical context and relevant prior work. Cite sources inline like this <span class="citation">(<span class="citation-link" onclick="scrollToSource('s1')">Source 1</span>)</span>.</p>
+
+            <h3>Scope & Limitations</h3>
+            <p>Define what is and is not covered. Be explicit about boundaries, time periods, geographic regions, etc.</p>
+        </section>
+
+        <!-- SECTION 2: METHODOLOGY -->
+        <section id="methodology">
+            <h2>2. Methodology</h2>
+            <p>Describe how the research was conducted. Include data sources, analytical approaches, statistical methods, and sampling strategies.</p>
+
+            <h3>Data Sources</h3>
+            <p>List and describe all data sources used. Include dates, collection methods, and credibility assessments. Cite the sources <span class="citation">(<span class="citation-link" onclick="scrollToSource('s2')">Source 2</span>, <span class="citation-link" onclick="scrollToSource('s3')">Source 3</span>)</span>.</p>
+
+            <h3>Analytical Framework</h3>
+            <p>Explain the analytical approach. For example: statistical significance testing, qualitative coding, comparative analysis, trend analysis, etc.</p>
+        </section>
+
+        <!-- SECTION 3: FINDINGS -->
+        <section id="findings">
+            <h2>3. Findings</h2>
+            <p>Present the key results of your analysis. Use specific data points, percentages, and evidence. Each finding should be cited.</p>
+
+            <h3>Key Finding #1</h3>
+            <p>State the finding clearly. Provide supporting data and cite the source <span class="citation">(<span class="citation-link" onclick="scrollToSource('s4')">Source 4</span>)</span>.</p>
+
+            <div class="highlight">
+                <strong>Key Takeaway:</strong> Highlight the most important insight from this finding. Explain why it matters.
+            </div>
+
+            <h3>Key Finding #2</h3>
+            <p>Continue with additional findings. Use tables and charts to present data visually. See <a href="#tables">Data Tables</a> and <a href="#visualizations">Visualizations</a> below.</p>
+
+            <div class="warning">
+                <strong>Important:</strong> Call out surprising or counterintuitive findings. Explain any anomalies.
+            </div>
+        </section>
+
+        <!-- SECTION 4: ANALYSIS -->
+        <section id="analysis">
+            <h2>4. Analysis & Interpretation</h2>
+            <p>Go beyond the raw findings. Discuss why these findings matter, what they mean, and what they imply. Engage with competing interpretations and cite relevant research <span class="citation">(<span class="citation-link" onclick="scrollToSource('s5')">Source 5</span>)</span>.</p>
+
+            <h3>Interpretation</h3>
+            <p>What do these findings mean in context? Discuss patterns, relationships, and causal mechanisms where supported by evidence.</p>
+
+            <h3>Limitations of This Analysis</h3>
+            <p>Be transparent about constraints. What could affect the validity of these findings? What caveats should readers keep in mind?</p>
+
+            <div class="note">
+                <strong>Note:</strong> Consider alternative explanations for the findings and explain why the presented interpretation is most plausible given the evidence.
+            </div>
+        </section>
+
+        <!-- SECTION 5: DATA TABLES -->
+        <section id="tables">
+            <h2>5. Data Tables</h2>
+
+            <h3>Table 1: Summary Statistics</h3>
+            <p>AI INSTRUCTION: Replace with actual data. Ensure all numeric values have source citations. Format column headers clearly.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Value</th>
+                        <th>Percent</th>
+                        <th>Source</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Item 1</td>
+                        <td>1,234</td>
+                        <td>45%</td>
+                        <td><span class="citation-link" onclick="scrollToSource('s1')">S1</span></td>
+                    </tr>
+                    <tr>
+                        <td>Item 2</td>
+                        <td>987</td>
+                        <td>35%</td>
+                        <td><span class="citation-link" onclick="scrollToSource('s1')">S1</span></td>
+                    </tr>
+                    <tr>
+                        <td>Item 3</td>
+                        <td>456</td>
+                        <td>20%</td>
+                        <td><span class="citation-link" onclick="scrollToSource('s2')">S2</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Table 2: Time Series Data</h3>
+            <p>AI INSTRUCTION: Present data over time. Include units and clear row/column headers. Add source attribution.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Year</th>
+                        <th>Metric A</th>
+                        <th>Metric B</th>
+                        <th>Metric C</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2021</td>
+                        <td>100</td>
+                        <td>50</td>
+                        <td>25</td>
+                    </tr>
+                    <tr>
+                        <td>2022</td>
+                        <td>110</td>
+                        <td>55</td>
+                        <td>28</td>
+                    </tr>
+                    <tr>
+                        <td>2023</td>
+                        <td>125</td>
+                        <td>62</td>
+                        <td>35</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- SECTION 6: VISUALIZATIONS -->
+        <section id="visualizations">
+            <h2>6. Visualizations</h2>
+
+            <div class="chart-container">
+                <div class="chart-title">Chart 1: Distribution of Values</div>
+                <p style="font-size: 0.9rem; margin-bottom: 1rem;">AI INSTRUCTION: Use Chart.js to render a bar chart. Replace data array with actual values. Include legend and axis labels.</p>
+                <canvas id="chart1"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">Chart 2: Trend Over Time</div>
+                <p style="font-size: 0.9rem; margin-bottom: 1rem;">AI INSTRUCTION: Use Chart.js line chart for time-series data. Add gridlines for readability. Label all series.</p>
+                <canvas id="chart2"></canvas>
+            </div>
+
+            <p class="citation">Source: <span class="citation-link" onclick="scrollToSource('s3')">Source 3</span> (2025)</p>
+        </section>
+
+        <!-- SECTION 7: RECOMMENDATIONS -->
+        <section id="recommendations">
+            <h2>7. Recommendations</h2>
+            <p>Based on the findings and analysis, recommend specific actions. Prioritize recommendations by impact and feasibility.</p>
+
+            <h3>Recommendation 1: [Specific Action]</h3>
+            <p>Explain the recommendation clearly. Reference the supporting evidence from this report. Cite external best practices <span class="citation">(<span class="citation-link" onclick="scrollToSource('s5')">Source 5</span>)</span>.</p>
+
+            <h3>Recommendation 2: [Specific Action]</h3>
+            <p>Continue with additional recommendations. Be concrete and actionable.</p>
+
+            <div class="highlight">
+                <strong>Priority:</strong> Rank these recommendations by urgency and impact. What should be done first?
             </div>
         </section>
 
         <div class="divider"></div>
 
-        <section id="about">
-            <h2>About This Work</h2>
-            <p>Everything here is built on a foundation of <span class="accent-green">simplicity</span> and <span class="accent-brown">intention</span>. No unnecessary frameworks, no bloated dependencies—just clean, functional code.</p>
-            <p>The color palette is intentional. <span class="accent-primary">The accent red</span> guides focus. The greens and browns add warmth. The rest stays quiet.</p>
-        </section>
+        <!-- SOURCES SECTION -->
+        <section id="sources" class="sources">
+            <h2>Sources</h2>
+            <p>All claims in this report are hyperlinked to their sources below. Click on source citations in the text to jump to the full reference.</p>
 
-        <div class="divider"></div>
+            <!-- AI INSTRUCTION: Populate this section with every source cited in the report. Use structured format:
+                 [ID] Title, Author, Publication, Date, URL -->
 
-        <section id="contact">
-            <h2>Get In Touch</h2>
-            <p>Have a project? Ideas? Questions?</p>
-            <button>Send Message</button>
+            <div class="source-item">
+                <span class="source-id">[S1]</span>
+                <span>Title of Source. Author Name. Publication Name, Date. Accessed [Date].</span>
+                <span class="source-url">https://example.com/source1</span>
+            </div>
+
+            <div class="source-item">
+                <span class="source-id">[S2]</span>
+                <span>Another Source Title. Different Author. Journal Name, Year. DOI: 10.1234/example.</span>
+                <span class="source-url">https://example.com/source2</span>
+            </div>
+
+            <div class="source-item">
+                <span class="source-id">[S3]</span>
+                <span>Third Source. Organization Name. Report Date. Retrieved from official repository.</span>
+                <span class="source-url">https://example.com/source3</span>
+            </div>
+
+            <div class="source-item">
+                <span class="source-id">[S4]</span>
+                <span>Statistical Data Source. Data Provider. Year Published.</span>
+                <span class="source-url">https://example.com/source4</span>
+            </div>
+
+            <div class="source-item">
+                <span class="source-id">[S5]</span>
+                <span>Methodology Reference. Cited Authors. Academic Journal, Vol. X, No. Y.</span>
+                <span class="source-url">https://example.com/source5</span>
+            </div>
         </section>
     </main>
 
     <footer>
-        <p>© 2025 mrzk.io — Minimal by design.</p>
+        <p>© 2025 mrzk.io — Interactive Reports. All data sourced and cited. <a href="#sources">View Sources</a></p>
     </footer>
+
+    <script>
+        // HELPER FUNCTION: Scroll to source
+        function scrollToSource(id) {
+            const element = document.querySelector('.source-item');
+            document.getElementById('sources').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // AI INSTRUCTION: Uncomment and modify chart data below to populate visualizations.
+        // Example using Chart.js for bar chart:
+        /*
+        const ctx1 = document.getElementById('chart1').getContext('2d');
+        new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: ['Category A', 'Category B', 'Category C'],
+                datasets: [{
+                    label: 'Values',
+                    data: [120, 190, 150],
+                    backgroundColor: ['#c41e3a', '#e8a0a0', '#b8d400'],
+                    borderColor: '#2a2a2a',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: true } }
+            }
+        });
+
+        // Example using Chart.js for line chart:
+        const ctx2 = document.getElementById('chart2').getContext('2d');
+        new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: ['2021', '2022', '2023', '2024'],
+                datasets: [{
+                    label: 'Metric A',
+                    data: [100, 110, 125, 140],
+                    borderColor: '#c41e3a',
+                    backgroundColor: 'rgba(196, 30, 58, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: true } }
+            }
+        });
+        */
+    </script>
 </body>
 </html>
