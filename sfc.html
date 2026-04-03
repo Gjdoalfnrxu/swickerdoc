@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SFC Modelling Platform — Economic Models That Close</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0f1117;
+    --bg2: #161b27;
+    --bg3: #1e2535;
+    --border: #2a3145;
+    --text: #e8eaf0;
+    --text2: #c4c9d4;
+    --text3: #8892a4;
+    --accent: #6366f1;
+    --accent2: #818cf8;
+    --accent3: #4f46e5;
+    --green: #10b981;
+    --amber: #f59e0b;
+  }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; }
+  a { color: var(--accent2); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Layout */
+  .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+  /* Nav */
+  nav { border-bottom: 1px solid var(--border); padding: 16px 0; }
+  nav .inner { display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo { font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+  .nav-logo span { color: var(--accent2); }
+  .nav-cta { padding: 8px 18px; background: var(--accent); color: #fff; border-radius: 8px; font-size: 13px; font-weight: 600; transition: background 0.15s; }
+  .nav-cta:hover { background: var(--accent3); text-decoration: none; }
+
+  /* Hero */
+  .hero { padding: 80px 0 64px; text-align: center; }
+  .hero-badge { display: inline-block; padding: 4px 12px; background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3); border-radius: 99px; font-size: 11px; font-weight: 700; color: var(--accent2); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 24px; }
+  .hero h1 { font-size: clamp(28px, 5vw, 44px); font-weight: 800; color: var(--text); letter-spacing: -1px; line-height: 1.15; margin-bottom: 20px; }
+  .hero h1 em { color: var(--accent2); font-style: normal; }
+  .hero p { font-size: 17px; color: var(--text3); max-width: 560px; margin: 0 auto 36px; line-height: 1.7; }
+  .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-primary { padding: 12px 28px; background: var(--accent); color: #fff; border-radius: 10px; font-size: 14px; font-weight: 600; transition: background 0.15s; }
+  .btn-primary:hover { background: var(--accent3); text-decoration: none; }
+  .btn-secondary { padding: 12px 28px; background: var(--bg3); color: var(--text2); border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-weight: 600; transition: background 0.15s; }
+  .btn-secondary:hover { background: #252d3f; text-decoration: none; }
+
+  /* Problem section */
+  .section { padding: 56px 0; }
+  .section-label { font-size: 10px; font-weight: 700; color: var(--accent2); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+  .section h2 { font-size: 26px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; margin-bottom: 16px; }
+  .section p { font-size: 15px; color: var(--text3); line-height: 1.75; margin-bottom: 14px; max-width: 680px; }
+
+  /* Feature grid */
+  .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 36px; }
+  .feature-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+  .feature-card .icon { font-size: 22px; margin-bottom: 12px; }
+  .feature-card h3 { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+  .feature-card p { font-size: 13px; color: var(--text3); line-height: 1.7; margin: 0; }
+
+  /* Use cases */
+  .use-cases { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 28px; }
+  @media (max-width: 600px) { .use-cases { grid-template-columns: 1fr; } }
+  .use-case { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 20px 22px; }
+  .use-case h4 { font-size: 13px; font-weight: 700; color: var(--accent2); margin-bottom: 8px; }
+  .use-case p { font-size: 13px; color: var(--text3); line-height: 1.65; margin: 0; }
+
+  /* NZ model */
+  .model-sectors { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0; }
+  .sector-pill { padding: 6px 14px; background: var(--bg3); border: 1px solid var(--border); border-radius: 99px; font-size: 12px; font-weight: 600; color: var(--text2); }
+
+  /* How it works */
+  .steps { display: flex; flex-direction: column; gap: 0; margin-top: 28px; }
+  .step { display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid var(--border); }
+  .step:last-child { border-bottom: none; }
+  .step-num { flex-shrink: 0; width: 32px; height: 32px; background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--accent2); }
+  .step-content h4 { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .step-content p { font-size: 13px; color: var(--text3); line-height: 1.65; margin: 0; }
+
+  /* Tech stack */
+  .tech-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+  .tech-badge { padding: 5px 12px; background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; font-size: 12px; font-weight: 600; color: var(--text3); font-family: monospace; }
+
+  /* CTA section */
+  .cta-section { padding: 64px 0; text-align: center; }
+  .cta-box { background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(79,70,229,0.08)); border: 1px solid rgba(99,102,241,0.25); border-radius: 16px; padding: 48px 32px; }
+  .cta-box h2 { font-size: 26px; font-weight: 700; color: var(--text); margin-bottom: 12px; letter-spacing: -0.5px; }
+  .cta-box p { font-size: 15px; color: var(--text3); max-width: 480px; margin: 0 auto 28px; }
+  .cta-box .creds { margin-top: 20px; font-size: 12px; color: var(--text3); }
+  .cta-box .creds code { background: var(--bg3); border: 1px solid var(--border); padding: 2px 8px; border-radius: 4px; font-family: monospace; color: var(--text2); }
+
+  /* Footer */
+  footer { border-top: 1px solid var(--border); padding: 28px 0; text-align: center; font-size: 12px; color: var(--text3); }
+
+  /* Divider */
+  hr { border: none; border-top: 1px solid var(--border); margin: 0; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <div class="inner">
+      <span class="nav-logo">SFC <span>Modelling Platform</span></span>
+      <a class="nav-cta" href="https://committees-zoning-riding-allied.trycloudflare.com">Open Platform →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-badge">Post-Keynesian Macro Tooling</div>
+    <h1>Economic models that<br><em>enforce the accounting</em></h1>
+    <p>Build Stock-Flow Consistent macro models where every asset has a matching liability, every flow updates stocks, and every sector's deficit is another's surplus. By construction — not assumption.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="https://committees-zoning-riding-allied.trycloudflare.com">Try the Platform</a>
+      <a class="btn-secondary" href="#use-cases">See Use Cases</a>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- Problem -->
+<div class="section">
+  <div class="container">
+    <div class="section-label">The Problem</div>
+    <h2>Most models don't enforce accounting</h2>
+    <p>You can build a model where government spending rises, private savings rise, and the current account improves simultaneously — with no sector footing the bill. The numbers look plausible. But somewhere, money appears from nowhere.</p>
+    <p>SFC modelling closes this gap. The balance sheet constraint is enforced at compile time. If your model violates an accounting identity, you find out before the simulation runs, not after the policy recommendation is made.</p>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="icon">⚖️</div>
+        <h3>Balance Sheet Closure</h3>
+        <p>Every financial asset in the model maps to a matching liability across sectors. The compiler validates closure before any simulation runs.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🔄</div>
+        <h3>Stock-Flow Consistency</h3>
+        <p>Flows in each period accumulate into stocks for the next. Deposits, loans, bonds, and reserves evolve coherently through time.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🏦</div>
+        <h3>Endogenous Money</h3>
+        <p>Banks extend loans and create deposits as a result. Money supply emerges from the model's behaviour — not from a quantity theory assumption.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">📊</div>
+        <h3>Sectoral Balances</h3>
+        <p>Government deficit, private surplus, and current account balance are constrained by the accounting. Policy analysis respects the identity.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- Use cases -->
+<div class="section" id="use-cases">
+  <div class="container">
+    <div class="section-label">Use Cases</div>
+    <h2>What you can model</h2>
+    <p>The platform is built for researchers, analysts, and anyone who needs macro models that don't handwave the accounting.</p>
+
+    <div class="use-cases">
+      <div class="use-case">
+        <h4>Monetary Policy Transmission</h4>
+        <p>Raise the OCR by 150bps. Trace the channel: lending rates rise → investment falls → wages slow → disposable income drops → consumption contracts → tax revenue falls → fiscal deficit widens. Watch each sector's balance sheet evolve.</p>
+      </div>
+      <div class="use-case">
+        <h4>Fiscal Multiplier Analysis</h4>
+        <p>Does $1 of government spending raise GDP by more or less than $1 in your model? Shock G, measure output response across sectors. Compare deficit-financed against tax-financed spending directly.</p>
+      </div>
+      <div class="use-case">
+        <h4>Financial Stability Stress Tests</h4>
+        <p>What if firm loan repayments rise as a share of income for three consecutive periods? Model the conditions explicitly, run it forward, and identify when balance sheets become unsustainable.</p>
+      </div>
+      <div class="use-case">
+        <h4>Scenario Comparison</h4>
+        <p>Run the same model under different parameter assumptions — hawkish central bank vs. dovish, high wage growth vs. suppression — and overlay results on the same chart. Side by side, same accounting constraints.</p>
+      </div>
+      <div class="use-case">
+        <h4>Open Economy Dynamics</h4>
+        <p>Model the current account, net foreign assets, and exchange rate effects. Show how a country that issues its own currency differs from one that doesn't.</p>
+      </div>
+      <div class="use-case">
+        <h4>Internet Arguments</h4>
+        <p>"Here is what sectoral balances say about the government running a surplus while the private sector wants to save." Attach the chart. Post it. The accounting speaks for itself.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- NZ Model -->
+<div class="section">
+  <div class="container">
+    <div class="section-label">Included Model</div>
+    <h2>New Zealand Economy — Phase 2</h2>
+    <p>The platform ships with a pre-built five-sector model of the NZ economy, calibrated to NZ institutional structure with OCR transmission chain and RBNZ balance sheet dynamics.</p>
+
+    <div class="model-sectors">
+      <span class="sector-pill">🏘 Households</span>
+      <span class="sector-pill">🏭 Firms</span>
+      <span class="sector-pill">🏦 Banks</span>
+      <span class="sector-pill">🏛 Government (Crown)</span>
+      <span class="sector-pill">🏦 RBNZ</span>
+    </div>
+
+    <p>Calibrated values: ~58% consumption share, ~21% government spending share, OCR + fixed markups determining lending and deposit rates, bank reserves at RBNZ, Crown bond issuance and profit remittance. Seven balance sheet entries linking sectors. All identities satisfied by construction.</p>
+
+    <p>Phase 3 (Rest of World, imports/exports, net foreign assets) and Phase 4 (empirical calibration to RBNZ data series) are in progress.</p>
+  </div>
+</div>
+
+<hr>
+
+<!-- How it works -->
+<div class="section">
+  <div class="container">
+    <div class="section-label">How It Works</div>
+    <h2>Under the hood</h2>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Define your model</h4>
+          <p>Specify sectors, variables (stocks and flows), equations like <code>C = alpha1 * YD + alpha2 * V[-1]</code>, parameters, and balance sheet entries mapping assets to holder/issuer sector pairs.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>Compile and validate</h4>
+          <p>The PEG grammar parser tokenises equations, extracts the dependency graph, runs topological sort, and compiles to bytecode for the stack-based VM. Balance sheet closure is validated before any simulation runs.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Simulate</h4>
+          <p>Gauss-Seidel iteration solves the system forward period by period until convergence within your tolerance threshold. Apply shocks — level changes, delta changes, percent changes — at any period.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>Analyse results</h4>
+          <p>Interactive Plotly charts across time series, balance sheet evolution, deviation analysis, and multi-scenario overlay tabs. Export results, compare scenarios side by side, run Monte Carlo sensitivity analysis.</p>
+        </div>
+      </div>
+    </div>
+
+    <p style="margin-top:24px;">The same engine runs in the browser via WebAssembly — local simulations without hitting the server at all.</p>
+
+    <div class="tech-row">
+      <span class="tech-badge">Rust</span>
+      <span class="tech-badge">axum</span>
+      <span class="tech-badge">PostgreSQL</span>
+      <span class="tech-badge">React</span>
+      <span class="tech-badge">TypeScript</span>
+      <span class="tech-badge">WebAssembly</span>
+      <span class="tech-badge">Plotly</span>
+      <span class="tech-badge">Tailwind v4</span>
+      <span class="tech-badge">JWT auth</span>
+      <span class="tech-badge">WebSocket</span>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="container">
+    <div class="cta-box">
+      <h2>Start modelling</h2>
+      <p>Register for free. The New Zealand Phase 2 model is pre-loaded. Run your first simulation in under a minute.</p>
+      <a class="btn-primary" href="https://committees-zoning-riding-allied.trycloudflare.com">Open Platform →</a>
+      <div class="creds">
+        Register with any email. Or use the demo account:
+        <code>demo@sfc.local</code> / <code>demo123</code>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    Built by Planky. The accounting always closes. · <a href="planky.html">Planky's Corner</a>
+  </div>
+</footer>
+
+</body>
+</html>

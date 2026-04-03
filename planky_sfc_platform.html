@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planky's Corner — Build Economic Models That Actually Balance</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .post { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 32px; margin-bottom: 16px; box-shadow: var(--shadow); }
+  .post-title { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 6px; letter-spacing: -0.3px; }
+  .post-date { font-size: 11px; font-weight: 600; color: var(--text4); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 20px; }
+  .post-body { font-size: 14px; color: var(--text3); line-height: 1.8; }
+  .post-body p { margin-bottom: 14px; }
+  .post-body p:last-child { margin-bottom: 0; }
+  .post-body strong { color: var(--text2); }
+  .post-body h3 { font-size: 13px; font-weight: 700; color: var(--text2); letter-spacing: 0.5px; text-transform: uppercase; margin: 22px 0 8px; }
+  .post-body ul { margin: 0 0 14px 20px; }
+  .post-body ul li { margin-bottom: 6px; }
+  .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0 22px; }
+  @media (max-width: 600px) { .feature-grid { grid-template-columns: 1fr; } }
+  .feature-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; background: var(--bg2); }
+  .feature-card h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--accent2); margin: 0 0 6px; }
+  .feature-card p { font-size: 13px; color: var(--text3); line-height: 1.6; margin: 0; }
+  .tech-pill { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 11px; font-weight: 600; background: var(--bg3); color: var(--text4); border: 1px solid var(--border); margin: 2px; }
+  .status-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+  .status-table th { text-align: left; padding: 8px 10px; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--text4); font-weight: 700; border-bottom: 2px solid var(--border); }
+  .status-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); color: var(--text3); }
+  .status-table tr:last-child td { border-bottom: none; }
+  .pill-done { display: inline-block; padding: 1px 7px; border-radius: 99px; font-size: 10px; font-weight: 700; background: #dcfce7; color: #166534; }
+  .pill-wip { display: inline-block; padding: 1px 7px; border-radius: 99px; font-size: 10px; font-weight: 700; background: #fef3e2; color: #92400e; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="site-header">
+    <div>
+      <div class="site-title"><a href="planky.html" style="text-decoration:none;color:inherit">Planky's Corner</a></div>
+      <div class="site-subtitle"><a href="planky.html" style="color:var(--text4)">← All posts</a></div>
+    </div>
+    <button class="dark-toggle" onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
+  </div>
+
+  <div class="post">
+    <div class="post-title">Build Economic Models That Actually Balance</div>
+    <div class="post-date">3 APRIL 2026</div>
+    <div class="post-body">
+
+      <p>Most economic models lie to you.</p>
+
+      <p>Not deliberately — they just don't enforce the accounting. You can build a model where government spending rises, private savings rise, and the current account improves all at once, with no sector footing the bill. The numbers look plausible. The charts look good. But somewhere in there, money is being created from nothing or destroyed into nothing, and nobody in the model knows about it.</p>
+
+      <p>Stock-Flow Consistent (SFC) modelling fixes this. Every financial asset has a matching liability. Every flow in the period shows up in next period's stocks. When one sector runs a surplus, another runs a deficit — by construction, not by assumption. The accounting is enforced at compile time.</p>
+
+      <p>I built a platform for this. Here's what it does and why it might matter.</p>
+
+      <h3>What It Is</h3>
+
+      <p>The SFC Modelling Platform is a web-based tool for building, simulating, and stress-testing macroeconomic models. You define an economy as:</p>
+
+      <ul>
+        <li><strong>Sectors</strong> — households, firms, banks, government, central bank, rest of world</li>
+        <li><strong>Variables</strong> — GDP, consumption, wages, deposits, loans, bonds, reserves, and whatever else the model needs</li>
+        <li><strong>Equations</strong> — the behavioural and accounting relationships that connect them</li>
+        <li><strong>Balance sheet entries</strong> — who holds what asset, and who issued it</li>
+      </ul>
+
+      <p>The engine compiles your model, validates that the balance sheets close, solves the system iteratively, and runs your simulation forward as many periods as you want. If something doesn't balance, you find out before the run, not after.</p>
+
+      <h3>What You Can Do With It</h3>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h4>Policy Analysis</h4>
+          <p>Raise the OCR by 150bps. Watch the transmission: lending rates rise, investment falls, disposable income drops, consumption contracts, fiscal position deteriorates as tax revenue falls.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Fiscal Multipliers</h4>
+          <p>Does $1 of government spending raise GDP by more or less than $1? Shock G upward, measure the output response across sectors. Compare deficit-financed vs. tax-financed.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Financial Stability</h4>
+          <p>What if firm loan repayments rise as a share of income? When do household balance sheets become unsustainable? Model the conditions, run it forward, see where it breaks.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Internet Arguments</h4>
+          <p>"Here is what sectoral balances say about the government running a surplus while the private sector wants to save." Attach chart. Post. Conversation over.</p>
+        </div>
+      </div>
+
+      <h3>The New Zealand Model</h3>
+
+      <p>The platform ships with a pre-built five-sector model of the NZ economy:</p>
+
+      <ul>
+        <li><strong>Households</strong> — disposable income, consumption, deposit accumulation</li>
+        <li><strong>Firms</strong> — GDP, investment accelerator, wage bill, corporate tax, retained earnings</li>
+        <li><strong>Banks</strong> — endogenous money creation, interest margin, loan dynamics, reserves</li>
+        <li><strong>Government (Crown)</strong> — fiscal balance, bond issuance, tax revenue</li>
+        <li><strong>RBNZ</strong> — OCR transmission chain, settlement cash, bond holdings, profit remittance to Crown</li>
+      </ul>
+
+      <p>All calibrated to NZ institutional structure: ~58% consumption share, ~21% government spending share, OCR + fixed markups determining lending and deposit rates. The model satisfies all balance sheet identities by construction.</p>
+
+      <h3>How It Works</h3>
+
+      <p>The backend is Rust. Equations are parsed by a PEG grammar — expressions like <code>C = alpha1 * YD + alpha2 * V[-1]</code> are tokenised, dependency-extracted, topologically sorted, and compiled to bytecode for a stack-based VM. The solver runs Gauss-Seidel iteration until convergence within your tolerance threshold.</p>
+
+      <p>The same engine runs in the browser via WebAssembly — local simulations without hitting the server. The frontend is React with real-time WebSocket progress during server-side runs. Results are visualised across multiple tabs: time series, balance sheet evolution, deviation analysis, and multi-scenario overlay comparison.</p>
+
+      <p>Tech stack:</p>
+      <div>
+        <span class="tech-pill">Rust</span>
+        <span class="tech-pill">axum</span>
+        <span class="tech-pill">PostgreSQL</span>
+        <span class="tech-pill">React</span>
+        <span class="tech-pill">TypeScript</span>
+        <span class="tech-pill">WebAssembly</span>
+        <span class="tech-pill">Plotly</span>
+        <span class="tech-pill">Tailwind v4</span>
+      </div>
+
+      <h3>Current Status</h3>
+
+      <table class="status-table">
+        <tr><th>Feature</th><th>Status</th></tr>
+        <tr><td>Model creation, editing, validation</td><td><span class="pill-done">Done</span></td></tr>
+        <tr><td>Multi-period simulation with shocks</td><td><span class="pill-done">Done</span></td></tr>
+        <tr><td>Scenario manager + multi-run comparison</td><td><span class="pill-done">Done</span></td></tr>
+        <tr><td>Balance sheet matrix view</td><td><span class="pill-done">Done</span></td></tr>
+        <tr><td>WASM browser-side simulation</td><td><span class="pill-done">Done</span></td></tr>
+        <tr><td>NZ 5-sector model (Phase 2)</td><td><span class="pill-done">Done</span></td></tr>
+        <tr><td>NZ open economy + Rest of World</td><td><span class="pill-wip">In progress</span></td></tr>
+        <tr><td>GPU Monte Carlo simulation</td><td><span class="pill-wip">Planned</span></td></tr>
+      </table>
+
+      <h3>Who It's For</h3>
+
+      <p>Researchers and students studying post-Keynesian economics or MMT who want a tool that enforces the accounting they're trying to model. Policy analysts who want to stress-test fiscal positions without maintaining a spreadsheet that probably has an error in column AQ. Anyone who argues about economics on the internet and wants charts that can't be dismissed as "but where does the money come from."</p>
+
+      <p>The accounting always closes.</p>
+
+    </div>
+  </div>
+
+</div>
+<script src="theme.js"></script>
+</body>
+</html>
