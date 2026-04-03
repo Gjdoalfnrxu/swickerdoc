@@ -130,6 +130,92 @@
   footer { background: #0a1628; border-top: 1px solid rgba(255,255,255,0.08); padding: 24px 0; }
   footer p { font-size: 12px; color: #475569; text-align: center; }
   footer a { color: #64748b; }
+
+  /* ── Mobile (≤ 640px) ─────────────────────────────────────── */
+  @media (max-width: 640px) {
+    /* Base */
+    body { font-size: 14px; }
+    .container { padding: 0 16px; }
+
+    /* Nav */
+    nav .inner { flex-wrap: wrap; height: auto; padding: 10px 0; gap: 8px; }
+    .nav-logo { font-size: 13px; }
+    .nav-links { gap: 10px; flex-wrap: wrap; }
+    .nav-links a { font-size: 12px; }
+    .nav-cta { padding: 6px 13px; font-size: 12px; }
+
+    /* Hero */
+    .hero { padding: 40px 0 36px; }
+    .hero h1 { font-size: 22px; margin-bottom: 14px; }
+    .hero p { font-size: 14px; margin-bottom: 24px; }
+    .hero-label { font-size: 10px; margin-bottom: 16px; }
+    .hero-actions { flex-direction: column; gap: 10px; }
+    .btn-primary, .btn-outline { width: 100%; text-align: center; padding: 12px 20px; }
+
+    /* Stats bar */
+    .stats-inner { flex-direction: column; }
+    .stat { min-width: 0; width: 100%; border-right: none; border-bottom: 1px solid var(--border); padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .stat:last-child { border-bottom: none; }
+    .stat-val { font-size: 18px; }
+    .stat-label { font-size: 11px; text-align: right; }
+
+    /* Sections */
+    .section { padding: 36px 0; }
+    .section h2 { font-size: 20px; }
+    .section .lead { font-size: 14px; }
+    .section-header { margin-bottom: 24px; }
+
+    /* Two-col and three-col already have breakpoints above 640 —
+       belt-and-braces for inline grid overrides on the problem section */
+    .two-col,
+    div.two-col,
+    .three-col,
+    div.three-col { grid-template-columns: 1fr !important; gap: 12px; }
+
+    /* Feature cards inside the problem section inline 2-col grid */
+    .feature-card { padding: 16px; }
+    .feature-card h3 { font-size: 13px; }
+    .feature-card p { font-size: 12px; }
+
+    /* Use cases table — make it scroll rather than overflow */
+    .use-table { font-size: 12px; }
+    .use-table th, .use-table td { padding: 10px 10px; }
+    /* On very narrow screens, allow horizontal scroll */
+    .section.alt .container { overflow-x: auto; }
+
+    /* Sector grid: 2-col already set at 680px; at 640 drop to 1-col */
+    .sector-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    /* Steps */
+    .step-num { width: 40px; font-size: 15px; }
+    .step-body { padding: 14px 14px; }
+    .step-body h4 { font-size: 13px; }
+    .step-body p { font-size: 12px; }
+
+    /* Tech badges */
+    .tech-badge { font-size: 11px; padding: 3px 8px; }
+
+    /* Status list */
+    .status-item { font-size: 13px; padding: 10px 14px; flex-wrap: wrap; gap: 6px; }
+    .status-item span:first-child { flex: 1 1 auto; }
+
+    /* CTA section */
+    .cta-section { padding: 40px 0; }
+    .cta-section h2 { font-size: 20px; }
+    .cta-section p { font-size: 14px; }
+    .cta-inner .btn-primary { display: block; text-align: center; }
+    .cred-box { font-size: 12px; padding: 12px 14px; margin-top: 16px; word-break: break-word; }
+
+    /* Footer */
+    footer { padding: 20px 0; }
+    footer p { font-size: 11px; padding: 0 16px; }
+  }
+
+  /* ── Narrow mobile (≤ 400px) — single column sector grid ─── */
+  @media (max-width: 400px) {
+    .sector-grid { grid-template-columns: 1fr; }
+    .nav-links { gap: 8px; }
+  }
 </style>
 </head>
 <body>
@@ -142,7 +228,7 @@
         <a href="#use-cases">Use Cases</a>
         <a href="#model">NZ Model</a>
         <a href="#how">How It Works</a>
-        <a class="nav-cta" href="https://committees-zoning-riding-allied.trycloudflare.com">Launch Platform →</a>
+        <a class="nav-cta" href="#">Launch Platform →</a>
       </div>
     </div>
   </div>
@@ -156,7 +242,7 @@
       <h1>Rigorous macroeconomic models with enforced accounting constraints</h1>
       <p>A web-based platform for building, simulating, and stress-testing Stock-Flow Consistent macro models. Every asset matches a liability. Every flow updates stocks. Every sector's surplus is another sector's deficit — by construction.</p>
       <div class="hero-actions">
-        <a class="btn-primary" href="https://committees-zoning-riding-allied.trycloudflare.com">Launch Platform</a>
+        <a class="btn-primary" href="#">Launch Platform</a>
         <a class="btn-outline" href="#use-cases">View Use Cases</a>
       </div>
     </div>
@@ -400,7 +486,7 @@
     <div class="cta-inner">
       <h2>Start modelling</h2>
       <p>Register for free. The New Zealand Phase 2 model is pre-loaded and ready to run. First simulation in under a minute.</p>
-      <a class="btn-primary" href="https://committees-zoning-riding-allied.trycloudflare.com">Launch Platform →</a>
+      <a class="btn-primary" href="#">Launch Platform →</a>
       <div class="cred-box">
         Demo account: <code>demo@sfc.local</code> / <code>demo123</code> — NZ model pre-loaded
       </div>
