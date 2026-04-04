@@ -403,14 +403,14 @@
         H<sub>h</sub> = H<sub>h</sub>[−1] + YD − C
       </div>
 
-      <p>The government's budget constraint requires that any fiscal deficit (G &gt; T) is financed by the issuance of high-powered money H<sub>g</sub>:</p>
+      <p>The government sector's budget identity records that any fiscal deficit (G &gt; T) results in a net increase in high-powered money H in circulation. As the currency issuer, the government spends by crediting accounts; taxation drains net financial assets from the private sector. When G &gt; T, private sector net financial assets increase by exactly G − T:</p>
 
       <div class="equation-block">
         <span class="equation-label">(6)</span>
         ΔH<sub>g</sub> = G − T
       </div>
 
-      <p>and the stock-flow consistency condition — that the sum of all sector financial balances equals zero — is satisfied by construction. In SIM, the only financial asset is government money H, so ΔH<sub>h</sub> + ΔH<sub>g</sub> = 0 must hold (Godley and Lavoie, 2007, p.67). This identity closes the model.</p>
+      <p>This is an accounting identity, not a financing constraint: as the monopoly issuer of the currency, the government does not face a solvency constraint in the same sense as a household or firm (Wray, 2012; Godley and Lavoie, 2007, p.67). The stock-flow consistency condition — that the sum of all sector financial balances equals zero — is satisfied by construction. In SIM, the only financial asset is government money H, so ΔH<sub>h</sub> + ΔH<sub>g</sub> = 0 must hold. This identity closes the model.</p>
 
       <p>SIM admits a closed-form steady-state solution. Setting ΔH<sub>h</sub> = 0 (no change in wealth), equations (3)–(5) yield a unique steady-state income level Y* = G/θ, the standard balanced-budget multiplier result. The consumption function (4) ensures that the economy converges to this steady state from any initial position, provided the stability condition holds. The speed of convergence is governed by α₂: lower α₂ implies slower adjustment and a longer transient path (Godley and Lavoie, 2007, pp.78–80).</p>
 
@@ -458,6 +458,10 @@
       <p>Deposit interest income supplements household income, and loan interest expense reduces firm income (and, by extension, aggregate demand). The central bank sets r<sub>bar</sub> exogenously — in the empirical application, this is calibrated to each country's observed policy rate path (OCR in New Zealand, Cash Rate in Australia, Bank Rate in the United Kingdom, Fed Funds Rate in the United States, and Overnight Rate in Canada).</p>
 
       <p>Household consumption in SIMEX uses the same functional form as SIM (equation 4), with H<sub>h</sub> now representing household deposits V, incorporating both the income effect α₁ and the wealth effect α₂. The full household sector balance includes interest receipts on deposits and, in later model versions, mortgage interest payments that reduce effective disposable income.</p>
+
+      <p>In the SIMEX empirical application, households hold bank deposits V rather than HPM H<sub>h</sub> directly, and H<sub>h</sub> is permanently zero in the empirical model. This substitution requires an implicit assumption that banks perfectly intermediate all HPM issuance into household deposits. The banking sector in SIMEX is a simplified accounting shell: loan creation does not endogenously generate deposits, and deposit accumulation follows V = V[−1] + YD − C. This is a documented structural limitation — endogenous money creation (where bank lending creates deposits) is not modelled. The consequence is that V tracks household saving flows mechanically rather than capturing the full dynamics of credit-driven deposit expansion.<sup>1</sup></p>
+
+      <p><small><sup>1</sup> In a full endogenous money model following the post-Keynesian tradition (e.g. Godley and Lavoie, 2007, Chapter 10), bank loans create deposits rather than requiring prior saving. SIMEX v4 abstracts from this mechanism; the banking sector records flows but does not generate credit endogenously.</small></p>
 
       <div class="subsection-heading" id="theory-bsm">2.3 Balance Sheet Matrix</div>
 
