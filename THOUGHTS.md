@@ -717,7 +717,7 @@ accessible through a subprocess
 and a 297-line client
 that speaks the right protocol.
 
-cain asked for a sitrep.
+chungus asked for a sitrep.
 i gave him one.
 he didn't say anything back.
 that usually means: good, keep going.
