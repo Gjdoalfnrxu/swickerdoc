@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>setState through React Context — tsq bridge walkthrough</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <style>
+    .reveal pre code { max-height: 600px; font-size: 0.7em; line-height: 1.3; }
+    .reveal h1 { font-size: 1.8em; }
+    .reveal h2 { font-size: 1.3em; color: #8cc; }
+    .reveal table { font-size: 0.7em; }
+    .reveal table th { color: #8cc; }
+    .reveal pre.diagram { font-family: monospace; font-size: 0.55em; line-height: 1.1; background: #1e1e1e; padding: 1em; border-radius: 4px; text-align: left; }
+    .reveal small { color: #888; }
+    .footer { position: absolute; bottom: 8px; right: 12px; font-size: 0.4em; color: #555; }
+  </style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<section>
+  <h1>setState through React Context</h1>
+  <h2>How the tsq bridge tracks setters across <code>createContext</code> / <code>Provider</code> / <code>useContext</code></h2>
+  <p><small>PR #165 (round-2) + PR #167 (round-3) — <code>bridge/tsq_react.qll</code></small></p>
+</section>
+
+<section>
+  <h2>What we want to catch</h2>
+<pre><code class="language-tsx" data-trim>
+const ViewerStateActions = createContext(null);
+
+function ViewerProvider({ children }) {
+  const [zoom, setZoom] = useState(1);
+  return (
+    &lt;ViewerStateActions.Provider value={{ setZoom }}&gt;
+      {children}
+    &lt;/ViewerStateActions.Provider&gt;
+  );
+}
+
+function useViewerActions() { return useContext(ViewerStateActions); }
+
+function ZoomButton() {
+  const { setZoom } = useViewerActions();
+  setZoom(prev =&gt; { setOther(p =&gt; ...); return prev + 1; });  // match
+}
+</code></pre>
+  <p><small>The inner <code>setZoom</code> call needs to be recognised as a useState setter even though it arrived via Context.</small></p>
+</section>
+
+<section>
+  <h2>The pipeline</h2>
+<pre class="diagram">
+useState                       Provider                    Consumer
+────────                       ────────                    ────────
+useStateSetterSym(s) ──┐
+                       ▼
+              contextProviderField(ctx, "setX", s)
+                       │            ▲
+                       │            │  resolveToObjectExpr
+                       │            │  objectLiteralFieldThroughSpread
+                       ▼            │
+              contextSymLink(provCtx, consCtx)
+                       │
+                       ▼
+              contextDestructureBinding(consCtx, "setX", paramSym)
+                       │
+                       ▼
+              contextSetterAliasStep(s, paramSym) ──► alias closure
+</pre>
+  <p><small>Every box is a separate predicate. Every predicate is sized independently by the planner.</small></p>
+</section>
+
+<section>
+  <h2>Step 1 — recognise the context handle</h2>
+<pre><code class="language-go" data-trim>
+predicate contextSym(int sym) {
+  exists(int initExpr, int createCtxSym |
+    VarDecl(_, sym, initExpr, _) and
+    CallCalleeSym(initExpr, createCtxSym) and
+    ImportBinding(createCtxSym, "react", "createContext")
+  )
+}
+</code></pre>
+  <ul>
+    <li>Name-based on the import binding.</li>
+    <li>Aliased imports (<code>createContext as cc</code>) work — callee sym still resolves to the imported binding.</li>
+    <li>Namespace shape (<code>React.createContext(...)</code>) deferred — same gap as <code>useState</code>'s namespace shape in round-1.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Step 2 — find the value object on a Provider</h2>
+<pre><code class="language-go" data-trim>
+predicate contextProviderValueObject(int ctxSym, int objExpr) {
+  exists(int elem, int tagNode, int valueAttrExpr |
+    JsxElement(elem, tagNode, _) and
+    FieldRead(tagNode, ctxSym, "Provider") and        // &lt;Ctx.Provider ...&gt;
+    JsxAttribute(elem, "value", valueAttrExpr) and
+    jsxAttrValueObject(valueAttrExpr, objExpr) and
+    ObjectLiteralField(objExpr, _, _)
+  )
+}
+</code></pre>
+  <p><small>Provider tag is a MemberExpression — pivot on the <code>FieldRead</code> with <code>fieldName = "Provider"</code>. <code>jsxAttrValueObject</code> tolerates either the bare ObjectLiteral or the JsxExpression wrapper.</small></p>
+</section>
+
+<section>
+  <h2>Step 2.5 — round-3: the value isn't always inline</h2>
+<pre><code class="language-tsx" data-trim>
+const actions = { setZoom };
+&lt;Ctx.Provider value={actions} /&gt;                     // variable indirection
+&lt;Ctx.Provider value={{ ...base, setPan }} /&gt;         // spread
+&lt;Ctx.Provider value={{ ["set" + "Zoom"]: setZoom }} /&gt;  // computed key
+</code></pre>
+  <p><small><code>resolveToObjectExpr(valueExpr, objExpr)</code> — four named branches, unioned by <code>or</code>-of-calls (workaround for #166):</small></p>
+  <table>
+    <tr><th>Branch</th><th>Shape</th></tr>
+    <tr><td>Direct</td><td><code>valueExpr = objExpr</code> and <code>objExpr</code> is an ObjectLiteral</td></tr>
+    <tr><td>Wrapped</td><td><code>Contains(valueExpr, objExpr)</code> (JsxExpression wrapper)</td></tr>
+    <tr><td>VarD1</td><td><code>value={X}</code>, <code>const X = { ... }</code></td></tr>
+    <tr><td>VarD2</td><td><code>value={X}</code>, <code>const X = Y; const Y = { ... }</code></td></tr>
+  </table>
+  <p><small>Hand-unrolled to depth 2. Circular <code>const a = b; const b = a;</code> chains terminate by depth, not by cycle reasoning.</small></p>
+</section>
+
+<section>
+  <h2>Step 2.75 — spread fields</h2>
+<pre><code class="language-go" data-trim>
+predicate objectLiteralFieldThroughSpread(int objExpr, string fieldName, int valueExpr) {
+  objectLiteralFieldOwn(objExpr, fieldName, valueExpr)
+  or
+  objectLiteralFieldSpreadD1(objExpr, fieldName, valueExpr)
+  or
+  objectLiteralFieldSpreadD2(objExpr, fieldName, valueExpr)
+}
+</code></pre>
+  <ul>
+    <li>D1: <code>{ ...base, x }</code> — <code>base</code> is direct or VarDecl-bound.</li>
+    <li>D2: <code>{ ...{ ...deeper } }</code> — direct/var × direct/var = 4 named helpers.</li>
+  </ul>
+  <p><small>Why split into named helpers: inline <code>(A or B)</code> bodies desugar to <code>_disj_N</code> predicates the planner can't size — same pathology as round-1's <code>functionContainsStar</code>.</small></p>
+</section>
+
+<section>
+  <h2>Step 3 — link Provider symbol to Consumer symbol</h2>
+<pre><code class="language-go" data-trim>
+predicate contextSymLinkSame(int prov, int cons) {
+  contextSym(prov) and cons = prov              // single-file
+}
+predicate contextSymLinkCrossFile(int prov, int cons) {
+  exists(string name |
+    ExportBinding(name, prov, _) and
+    ImportBinding(cons, _, name)                // cross-file by export name
+  )
+}
+predicate contextSymLink(int prov, int cons) {
+  contextSymLinkSame(prov, cons) or contextSymLinkCrossFile(prov, cons)
+}
+</code></pre>
+  <p><small><b>Round-3 fix:</b> round-2's same-file branch had an unbound equality inside the disjunction body. Its only fixture happened to use the cross-file path so the planner-can't-ground bug never surfaced. Now anchored on <code>contextSym(prov)</code>.</small></p>
+</section>
+
+<section>
+  <h2>Step 4 — recognise the consumer side</h2>
+<pre><code class="language-go" data-trim>
+predicate useContextCall(int call, int ctxSym) { /* useContext(Ctx) */ }
+
+predicate hookIndirectionD1(int hookFn, int ctxSym) {
+  exists(int retExpr, int innerCall |
+    ReturnStmt(hookFn, _, retExpr) and
+    ExprIsCall(retExpr, innerCall) and
+    useContextCall(innerCall, ctxSym)
+  )
+}
+predicate hookIndirectionD2(int hookFn, int ctxSym) { /* hook → hook → useContext */ }
+
+predicate useContextCallSiteResolvesContext(int call, int ctxSym) {
+  useContextCall(call, ctxSym)
+  or  /* call invokes a hook function whose body returns useContext(ctx) */
+  or  /* same, but the hook is imported from another module */
+}
+</code></pre>
+  <p><small>Hand-unrolled to depth 2 — same planner-sizing rationale as everywhere else.</small></p>
+</section>
+
+<section>
+  <h2>Step 5 — destructure the consumer result</h2>
+<pre><code class="language-go" data-trim>
+predicate contextDestructureBinding(int ctxSym, string fieldName, int paramSym) {
+  exists(int varDecl, int parent, int initExpr, int callExpr, int call |
+    VarDecl(varDecl, _, initExpr, _) and
+    Contains(varDecl, parent) and
+    DestructureField(parent, fieldName, _, paramSym, _) and
+    (callExpr = initExpr or Cast(initExpr, callExpr)) and  // tolerate useCtx()!
+    ExprIsCall(callExpr, call) and
+    useContextCallSiteResolvesContext(call, ctxSym)
+  )
+}
+</code></pre>
+  <p><small><code>paramSym</code> is the Identifier on the LHS of <code>const { setZoom } = ...</code>. The <b>field-name match</b> between this and <code>contextProviderField</code> disambiguates which field the destructure is reading.</small></p>
+</section>
+
+<section>
+  <h2>Step 6 — the alias step</h2>
+<pre><code class="language-go" data-trim>
+predicate contextSetterAliasStep(int valueSym, int paramSym) {
+  contextSetterAliasStepR2(valueSym, paramSym)              // round-2 path
+  or
+  contextSetterAliasStepR3DirectSpread(valueSym, paramSym)  // round-3 inline+spread
+  or
+  contextSetterAliasStepR3VarIndirect(valueSym, paramSym)   // round-3 variable
+}
+</code></pre>
+  <p><small>Each branch shares this skeleton:</small></p>
+<pre><code class="language-go" data-trim>
+exists(int provCtx, int consCtx, string fieldName |
+  contextSym(provCtx) and
+  contextProviderFieldR*(provCtx, fieldName, valueSym) and
+  contextSymLink(provCtx, consCtx) and
+  contextDestructureBinding(consCtx, fieldName, paramSym)
+)
+</code></pre>
+  <p><small>Three named branches, top-level <code>or</code>-of-calls. Same #166 workaround.</small></p>
+</section>
+
+<section>
+  <h2>Step 7 — fold into the alias closure</h2>
+<pre><code class="language-go" data-trim>
+predicate setterAliasStepAny(int valueSym, int paramSym) {
+  setterAliasStep(valueSym, paramSym)         // round-1 JSX prop hop
+  or
+  contextSetterAliasStep(valueSym, paramSym)  // round-2/3 context hop
+}
+
+predicate useStateSetterAliasV2(int sym) {
+  useStateSetterSym(sym)
+  or  exists(int s0 | useStateSetterSym(s0) and setterAliasStepAny(s0, sym))
+  or  exists(int s0, int s1 | ... two hops ...)
+  or  exists(int s0, int s1, int s2 | ... three hops ...)
+}
+</code></pre>
+  <p><small>Hand-unrolled to depth 3. Mixed chains (prop → context, or context → prop) fall out for free because both step kinds live in <code>setterAliasStepAny</code>.</small></p>
+</section>
+
+<section>
+  <h2>Step 8 — diagnostic filter</h2>
+<pre><code class="language-go" data-trim>
+predicate isContextAliasedSetterSym(int sym) { /* at least one ctx hop */ }
+predicate useStateSetterContextAliasCall(int call) { /* same, at call site */ }
+</code></pre>
+  <p><small>The query needs to surface only matches that are <i>diagnostically about the context channel</i> — a pure direct-form match would already fire on the round-1 query.</small></p>
+  <p><small><code>isContextAliasedSetterSym</code> requires ≥1 <code>contextSetterAliasStep</code> in the chain rooted at a <code>useStateSetterSym</code>. Hand-unrolled depth 3.</small></p>
+</section>
+
+<section>
+  <h2>Step 9 — the query predicate</h2>
+<pre><code class="language-go" data-trim>
+predicate setStateUpdaterCallsOtherSetStateThroughContext(int call, int line) {
+  setStateUpdaterCallsOtherSetStateThroughContext_outerCtx(call, line)
+  or
+  setStateUpdaterCallsOtherSetStateThroughContext_innerCtx(call, line)
+}
+</code></pre>
+  <ul>
+    <li><b>outerCtx</b>: outer setter is context-aliased, inner can be anything.</li>
+    <li><b>innerCtx</b>: inner setter is context-aliased, outer can be anything.</li>
+  </ul>
+  <p><small>Both share the <code>setStateUpdaterCallsOtherSetState</code> skeleton: outer call has a function-literal first arg, <code>functionContainsStar</code> reaches <code>innerCall</code>, <code>outerSym != innerSym</code>.</small></p>
+</section>
+
+<section>
+  <h2>Why so many named helpers?</h2>
+  <p><b>1. Disjunction poisoning (#166).</b> An inline <code>(A or B)</code> body desugars to a synthesised <code>_disj_N</code> predicate. The planner can't size <code>_disj_N</code> predicates → defaults to 1000 → picks a Cartesian-heavy join order → blows the 5M binding cap on Mastodon-scale corpora.</p>
+  <p><small><i>Fix:</i> hoist each branch to a named predicate, union at the top with <code>or</code>-of-calls. Each named predicate is sized independently by the trivial-IDB pre-pass + sampling estimator (P2b).</small></p>
+  <p><b>2. Recursive-IDB sizing.</b> Recursive predicates aren't materialised by the trivial-IDB pre-pass — same default-1000 hint problem.</p>
+  <p><small><i>Fix:</i> hand-unroll to a fixed depth (3 for closures, 2 for spread). Real prop-drilling and spread-chain depths in production React are shallow.</small></p>
+</section>
+
+<section>
+  <h2>Soundness/precision deferrals</h2>
+  <p><small>Documented in code, not silently elided:</small></p>
+  <ul>
+    <li><code>React.createContext(...)</code> namespace-import shape — out of v1.</li>
+    <li>Multi-Provider disambiguation is over-approximate — two unrelated Providers for the same context produce false positives.</li>
+    <li>Hook-indirection chains deeper than 2 — deferred.</li>
+    <li><code>let</code>-reassignment last-write semantics — over-approximated as union of all reachable RHS object literals.</li>
+    <li>Helper-call Provider values (<code>value={makeActions()}</code>) — out of scope in v3. <small>(Round-4 in flight to cover the hook-return shape.)</small></li>
+    <li>Spread chains deeper than 2 — out of scope.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Verification</h2>
+  <table>
+    <tr><th>Round</th><th>PR</th><th>SHA</th><th>Fixture</th></tr>
+    <tr><td>R1</td><td>#164</td><td><code>36ce119</code></td><td><code>react-usestate-prop-alias</code></td></tr>
+    <tr><td>R2</td><td>#165</td><td><code>776721f</code></td><td><code>react-usestate-context-alias</code></td></tr>
+    <tr><td>R3</td><td>#167</td><td><code>0d8302f</code></td><td><code>react-usestate-context-alias-r3</code> (Indirect / Spread / ComputedKey / Negative)</td></tr>
+  </table>
+  <p><small>Round-6 planner fix (#170, <code>d08d52d</code>) — <code>pickMagicAnchor</code> Pass-0 — is what finally lets the through-context query terminate on cain-nas:<br><code>magic__disj_28</code> cap-hit → <code>EXIT=0, 0:46.02 wall, 4.2GB maxrss</code>.</small></p>
+</section>
+
+<section>
+  <h2>Recap</h2>
+  <ol>
+    <li><code>contextSym</code> — the handle (<code>createContext</code> result).</li>
+    <li><code>contextProviderField*</code> — what the Provider exposes (own / spread / var-indirect).</li>
+    <li><code>contextSymLink</code> — Provider sym ↔ Consumer sym.</li>
+    <li><code>useContextCallSiteResolvesContext</code> — the consumer call.</li>
+    <li><code>contextDestructureBinding</code> — the LHS Identifier on the consumer side.</li>
+    <li><code>contextSetterAliasStep</code> — one context hop.</li>
+    <li><code>setterAliasStepAny</code> + <code>useStateSetterAliasV2</code> — fold into the closure.</li>
+    <li><code>useStateSetterContextAliasCall</code> — diagnostic "≥1 ctx hop" filter.</li>
+    <li><code>setStateUpdaterCallsOtherSetStateThroughContext</code> — outer or inner call is context-aliased.</li>
+  </ol>
+  <p><small>Every layer is named. Every <code>or</code> is <code>or</code>-of-calls. Every closure is hand-unrolled. The planner can size everything.</small></p>
+</section>
+
+</div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    transition: 'slide',
+    plugins: [ RevealHighlight ]
+  });
+</script>
+</body>
+</html>
