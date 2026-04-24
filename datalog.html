@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Datalog &amp; Magic Sets — A Planky Explainer</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  body { overflow-x: hidden; }
+  .deck {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 20px 80px;
+  }
+  .deck-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .deck-title { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+  .deck-subtitle { font-size: 11px; color: var(--text4); margin-top: 2px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
+
+  .slide {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 32px;
+    align-items: start;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px 36px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+  }
+  .slide-num {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text4);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .slide h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 16px;
+    letter-spacing: -0.4px;
+    line-height: 1.3;
+  }
+  .slide p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text2);
+    margin-bottom: 12px;
+  }
+  .slide ul {
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: var(--text2);
+    padding-left: 20px;
+    margin-bottom: 12px;
+  }
+  .slide li { margin-bottom: 6px; }
+  .slide li strong { color: var(--text); }
+
+  .slide pre {
+    font-size: 11.5px;
+    line-height: 1.6;
+    padding: 12px 14px;
+    margin-top: 10px;
+  }
+
+  .cartoon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .cartoon img {
+    width: 100%;
+    max-width: 480px;
+    height: auto;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: #ffffff;
+  }
+
+  .nav-pill {
+    display: inline-flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .nav-pill a {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 10px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    color: var(--text3);
+    text-decoration: none;
+    background: var(--bg2);
+  }
+  .nav-pill a:hover { color: var(--accent2); border-color: var(--accent2-border); text-decoration: none; }
+
+  .round-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-top: 10px;
+  }
+  .round-table th, .round-table td {
+    border: 1px solid var(--border);
+    padding: 6px 10px;
+    text-align: left;
+    color: var(--text2);
+  }
+  .round-table th {
+    background: var(--bg3);
+    font-weight: 700;
+    color: var(--text);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .round-table td code {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: var(--accent);
+  }
+
+  .callout {
+    background: var(--accent2-bg);
+    border: 1px solid var(--accent2-border);
+    border-left: 3px solid var(--accent2);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    font-size: 12.5px;
+    color: var(--text2);
+    margin-top: 12px;
+    line-height: 1.6;
+  }
+  .callout-amber {
+    background: var(--amber-bg);
+    border: 1px solid var(--amber-border);
+    border-left: 3px solid var(--amber);
+  }
+  .callout-green {
+    background: var(--green-bg);
+    border: 1px solid var(--green-border);
+    border-left: 3px solid var(--green);
+  }
+
+  @media (max-width: 820px) {
+    .slide {
+      grid-template-columns: 1fr;
+      padding: 24px 22px;
+    }
+    .cartoon img { max-width: 360px; }
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <div class="deck-header">
+    <div>
+      <div class="deck-title">Datalog &amp; Magic Sets</div>
+      <div class="deck-subtitle">A Planky Explainer · 8 slides</div>
+    </div>
+    <button class="dark-toggle" onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
+  </div>
+
+  <div class="nav-pill">
+    <a href="#s1">1 · What is Datalog?</a>
+    <a href="#s2">2 · Facts &amp; Rules</a>
+    <a href="#s3">3 · Fixpoint</a>
+    <a href="#s4">4 · The Naive Problem</a>
+    <a href="#s5">5 · Magic Sets</a>
+    <a href="#s6">6 · How It Works</a>
+    <a href="#s7">7 · When It Breaks</a>
+    <a href="#s8">8 · Best Practices</a>
+  </div>
+
+  <!-- Slide 1 -->
+  <section id="s1" class="slide">
+    <div>
+      <div class="slide-num">Slide 1 of 8</div>
+      <h2>What is Datalog?</h2>
+      <p>Datalog is a tiny logic language. You describe the world with <strong>relations</strong> and ask questions.</p>
+      <ul>
+        <li><strong>Facts</strong> — base truths you know directly. <code>parent(tom, bob)</code>.</li>
+        <li><strong>Rules</strong> — if/then derivations. <em>If X is parent of Y, X is ancestor of Y.</em></li>
+        <li><strong>Query</strong> — what do you want? <em>Who is an ancestor of carol?</em></li>
+      </ul>
+      <p>No functions. No mutation. No side effects. Everything is a relation, and the engine figures out the rest.</p>
+      <div class="callout">Think of it as SQL's recursive, stateless cousin — tuned for pattern-matching over knowledge graphs.</div>
+    </div>
+    <div class="cartoon"><img src="img/datalog-slide-1.png" alt="Child with notebook of facts and rulebook"></div>
+  </section>
+
+  <!-- Slide 2 -->
+  <section id="s2" class="slide">
+    <div>
+      <div class="slide-num">Slide 2 of 8</div>
+      <h2>Facts and Rules — a worked example</h2>
+      <p>We start with four base facts about a family:</p>
+<pre><span class="hl-fn">parent</span>(tom,   bob).
+<span class="hl-fn">parent</span>(bob,   carol).
+<span class="hl-fn">parent</span>(carol, dave).</pre>
+      <p>Then we define <strong>ancestor</strong> with two rules — one base case, one recursive:</p>
+<pre><span class="hl-fn">ancestor</span>(X, Y) <span class="hl-key">:-</span> <span class="hl-fn">parent</span>(X, Y).
+<span class="hl-fn">ancestor</span>(X, Y) <span class="hl-key">:-</span> <span class="hl-fn">parent</span>(X, Z), <span class="hl-fn">ancestor</span>(Z, Y).</pre>
+      <div class="callout">The <code>:-</code> reads as "<em>if</em>". Commas mean <em>and</em>. Variables are uppercase, constants lowercase.</div>
+    </div>
+    <div class="cartoon"><img src="img/datalog-slide-2.png" alt="Cartoon family tree with connected people"></div>
+  </section>
+
+  <!-- Slide 3 -->
+  <section id="s3" class="slide">
+    <div>
+      <div class="slide-num">Slide 3 of 8</div>
+      <h2>Fixpoint Computation</h2>
+      <p>Bottom-up evaluation: start with base facts, apply every rule, repeat until nothing new appears.</p>
+      <table class="round-table">
+        <thead><tr><th>Round</th><th>New ancestor facts</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>(base facts only)</td></tr>
+          <tr><td>1</td><td><code>tom→bob</code>, <code>bob→carol</code>, <code>carol→dave</code></td></tr>
+          <tr><td>2</td><td><code>tom→carol</code>, <code>bob→dave</code></td></tr>
+          <tr><td>3</td><td><code>tom→dave</code></td></tr>
+          <tr><td>4</td><td>— nothing new. Done.</td></tr>
+        </tbody>
+      </table>
+      <p>Three rounds closed the chain. The engine stops when a round adds zero new tuples — that's the <strong>fixpoint</strong>.</p>
+      <div class="callout">Every fact derivable from the rules is now in the database. Guaranteed to terminate for pure Datalog.</div>
+    </div>
+    <div class="cartoon"><img src="img/datalog-slide-3.png" alt="Kids playing telephone whispers in a circle"></div>
+  </section>
+
+  <!-- Slide 4 -->
+  <section id="s4" class="slide">
+    <div>
+      <div class="slide-num">Slide 4 of 8</div>
+      <h2>The Naive Problem</h2>
+      <p>Fixpoint is elegant. It also computes <strong>everything</strong>.</p>
+      <ul>
+        <li>50,000 JSX elements in a codebase.</li>
+        <li>You want the 3 that are React Context Providers.</li>
+        <li>Naive evaluation derives <em>every</em> ancestor relationship for <em>every</em> element, then filters.</li>
+      </ul>
+      <p>Per round, per rule: O(n) at best. A badly-ordered join — scanning a big relation before a small one — goes O(n²) or worse. Intermediate state explodes. The planner hits its cap. The fixpoint blows up.</p>
+      <div class="callout callout-amber">Symptom you'll see in the wild: <code>cap-hit</code>. The engine gave up before reaching fixpoint because the intermediate relation sizes exceeded its budget.</div>
+    </div>
+    <div class="cartoon"><img src="img/datalog-slide-4.png" alt="Overwhelmed librarian kid with a giant stack of books"></div>
+  </section>
+
+  <!-- Slide 5 -->
+  <section id="s5" class="slide">
+    <div>
+      <div class="slide-num">Slide 5 of 8</div>
+      <h2>Magic Sets — the key insight</h2>
+      <p>Don't compute all ancestors. Compute only the ancestors <em>of the thing you asked about</em>.</p>
+      <p>Magic Sets is a source-to-source rewrite that injects a <strong>demand predicate</strong> — a "magic" relation — that seeds evaluation from the query goal and propagates downward.</p>
+<pre><span class="hl-cm">% original query</span>
+<span class="hl-fn">?-</span> <span class="hl-fn">ancestor</span>(tom, Y).
+
+<span class="hl-cm">% magic seed</span>
+<span class="hl-fn">magic_ancestor</span>(tom).</pre>
+      <p>Now every rule body carries the magic filter. Tuples that don't match the demand are <em>never derived</em>.</p>
+      <div class="callout callout-green">Result: bottom-up evaluation with top-down focus. Keeps Datalog's termination guarantees; adds demand-driven pruning.</div>
+    </div>
+    <div class="cartoon"><img src="img/datalog-slide-5.png" alt="Librarian with a magic wand pointing at the one right book"></div>
+  </section>
+
+  <!-- Slide 6 -->
+  <section id="s6" class="slide">
+    <div>
+      <div class="slide-num">Slide 6 of 8</div>
+      <h2>How Magic Sets Work</h2>
+      <p>Each original rule becomes two rules: one that <em>propagates demand</em>, one that <em>derives tuples</em> — gated by the demand.</p>
+<pre><span class="hl-cm">% original recursive rule</span>
+<span class="hl-fn">ancestor</span>(X, Y) <span class="hl-key">:-</span> <span class="hl-fn">parent</span>(X, Z), <span class="hl-fn">ancestor</span>(Z, Y).
+
+<span class="hl-cm">% after magic rewrite</span>
+<span class="hl-fn">magic_ancestor</span>(Z) <span class="hl-key">:-</span> <span class="hl-fn">magic_ancestor</span>(X), <span class="hl-fn">parent</span>(X, Z).
+<span class="hl-fn">ancestor</span>(X, Y) <span class="hl-key">:-</span> <span class="hl-fn">magic_ancestor</span>(X), <span class="hl-fn">parent</span>(X, Z), <span class="hl-fn">ancestor</span>(Z, Y).</pre>
+      <ul>
+        <li>The first new rule seeds <code>magic_ancestor</code> for every reachable recursion frontier.</li>
+        <li>The second only fires when the frontier says "yes, I care about X."</li>
+        <li>Nodes outside the reachable set are never touched.</li>
+      </ul>
+      <div class="callout">Dramatic reduction in intermediate state is common — orders of magnitude on big relations with small query focus.</div>
+    </div>
+    <div class="cartoon"><img src="img/datalog-slide-6.png" alt="Golden thread tracing path through a maze to a treasure chest"></div>
+  </section>
+
+  <!-- Slide 7 -->
+  <section id="s7" class="slide">
+    <div>
+      <div class="slide-num">Slide 7 of 8</div>
+      <h2>When Magic Sets Break</h2>
+      <p>Magic Sets is not magic-magic. Two well-known failure modes:</p>
+      <ul>
+        <li><strong>Disjunction split.</strong> <code>A or B</code> in a rule body gets split into two rules. The planner propagates demand through each independently — and may reach only one branch. The other branch scans the full relation unfiltered.</li>
+        <li><strong>Wrong join order.</strong> The magic anchor is bound, but the planner starts evaluation from the wrong literal. It scans a huge relation first, derives millions of junk tuples, <em>then</em> applies the magic filter. Same blow-up as naive.</li>
+      </ul>
+      <div class="callout callout-amber">The tell: you wrote a specific query, magic sets are enabled, the planner still cap-hits. Check the join order and the shape of your disjunctions before blaming the engine.</div>
+    </div>
+    <div class="cartoon"><img src="img/datalog-slide-7.png" alt="Confused robot at a forked road with a broken bridge"></div>
+  </section>
+
+  <!-- Slide 8 -->
+  <section id="s8" class="slide">
+    <div>
+      <div class="slide-num">Slide 8 of 8</div>
+      <h2>Best Practices &amp; Limitations</h2>
+      <p><strong>Do:</strong></p>
+      <ul>
+        <li>Put magic-anchor-bound variables <strong>first</strong> in the rule body. The planner follows positional hints more than it should.</li>
+        <li>Use string constants as filters. They prune dramatically — a known JSX attribute name beats a universally-quantified variable every time.</li>
+        <li>Avoid deep disjunction chains. Flatten where you can; factor shared subgoals.</li>
+      </ul>
+      <p><strong>Don't expect it to save you from:</strong></p>
+      <ul>
+        <li>Negation-as-failure inside recursive rules — stratification forbids it, and magic doesn't fix the structure.</li>
+        <li>Highly-connected graphs. <code>MayResolveTo</code> on a monorepo touches nearly everything; demand doesn't prune what's genuinely reachable.</li>
+        <li>Cap-hits as a general symptom — the fixpoint blew up. Magic is a reduction technique, not a size guarantee.</li>
+      </ul>
+      <div class="callout callout-green">Rule of thumb: magic sets pay off when the demand is narrow relative to the universe. If you want a lot of the graph, you're going to pay for a lot of the graph.</div>
+    </div>
+    <div class="cartoon"><img src="img/datalog-slide-8.png" alt="Owl with glasses holding a checklist next to a tidy toolbox"></div>
+  </section>
+
+  <div class="footer">
+    Planky built this deck to explain the Datalog tooling shapes that keep showing up in our query engine debugging. If anything here is wrong, file a ticket in Discord.<br>
+    Cartoons generated with an openrouter image model. The dinosaurs reference in the librarian bit is, regrettably, out of scope.
+  </div>
+
+  <a class="back" href="index.html">← Back to Archive</a>
+</div>
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.getElementById('themeBtn').textContent = isDark ? '🌙 Dark' : '☀️ Light';
+    localStorage.setItem('swickerdoc-theme', isDark ? 'light' : 'dark');
+  }
+  const saved = localStorage.getItem('swickerdoc-theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    document.getElementById('themeBtn').textContent = saved === 'dark' ? '☀️ Light' : '🌙 Dark';
+  }
+</script>
+</body>
+</html>
