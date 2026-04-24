@@ -5,475 +5,503 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Datalog &amp; Magic Sets — A Planky Explainer</title>
 <style>
-  /* ── design tokens ─────────────────────────────────────────────── */
   :root {
-    --bg:              #ffffff;
-    --bg2:             #f8f8f8;
-    --bg3:             #f2f2f2;
-    --border:          #e2e2e2;
-    --radius:          8px;
-    --shadow:          0 1px 3px rgba(0,0,0,.07);
-    --text:            #111111;
-    --text2:           #444444;
-    --text3:           #666666;
-    --text4:           #999999;
-    --accent:          #0060df;
-    --code-bg:         #f4f6fa;
-    --accent2:         #0060df;
-    --accent2-bg:      #e8f0ff;
-    --accent2-border:  #b3cfff;
-    --amber:           #c87000;
-    --amber-bg:        #fff8e1;
-    --amber-border:    #ffe08a;
-    --green:           #1a7340;
-    --green-bg:        #e6f4ec;
-    --green-border:    #a3d4b4;
-    --hl-fn:           #0060df;
-    --hl-key:          #9b30d0;
-    --hl-cm:           #888888;
+    --bg:     #ffffff;
+    --bg2:    #f4f5f7;
+    --border: #e0e0e0;
+    --radius: 10px;
+    --text:   #111111;
+    --text2:  #444444;
+    --text3:  #777777;
+    --accent: #2563eb;
+    --code-bg:#f0f2f8;
+    --a2-bg:  #e8f0ff;
+    --a2-bd:  #b3cfff;
+    --am-bg:  #fff8e1;
+    --am-bd:  #ffe08a;
+    --am:     #b45309;
+    --gr-bg:  #e6f4ec;
+    --gr-bd:  #a3d4b4;
+    --gr:     #1a7340;
+    --hl-fn:  #2563eb;
+    --hl-key: #7c3aed;
+    --hl-cm:  #888;
   }
   [data-theme="dark"] {
-    --bg:              #111213;
-    --bg2:             #18191a;
-    --bg3:             #222324;
-    --border:          #303234;
-    --shadow:          0 1px 3px rgba(0,0,0,.4);
-    --text:            #e8e8e8;
-    --text2:           #b0b0b0;
-    --text3:           #888888;
-    --text4:           #555555;
-    --accent:          #5fa8ff;
-    --code-bg:         #1c1e22;
-    --accent2:         #5fa8ff;
-    --accent2-bg:      #0f1c30;
-    --accent2-border:  #1e3d6e;
-    --amber:           #f5c842;
-    --amber-bg:        #1e1600;
-    --amber-border:    #3d2e00;
-    --green:           #4db87a;
-    --green-bg:        #061410;
-    --green-border:    #0e3020;
-    --hl-fn:           #5fa8ff;
-    --hl-key:          #c792ea;
-    --hl-cm:           #555555;
+    --bg:     #13141a;
+    --bg2:    #1a1b22;
+    --border: #2e2f3a;
+    --text:   #e8e8e8;
+    --text2:  #aaaaaa;
+    --text3:  #666666;
+    --accent: #60a5fa;
+    --code-bg:#1d1f2b;
+    --a2-bg:  #0d1828;
+    --a2-bd:  #1e3d6e;
+    --am-bg:  #1a1200;
+    --am-bd:  #3d2e00;
+    --am:     #f5c842;
+    --gr-bg:  #041008;
+    --gr-bd:  #0e3020;
+    --gr:     #4db87a;
+    --hl-fn:  #60a5fa;
+    --hl-key: #c084fc;
+    --hl-cm:  #555;
   }
 
-  /* ── reset / base ──────────────────────────────────────────────── */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { font-size: 16px; }
+  html, body { height: 100%; overflow: hidden; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: var(--bg2);
     color: var(--text);
-    line-height: 1.5;
-    overflow-x: hidden;
-    min-height: 100vh;
-  }
-  a { color: var(--accent); }
-  code {
-    font-family: 'Courier New', 'Menlo', monospace;
-    font-size: 0.88em;
-    background: var(--code-bg);
-    padding: 1px 4px;
-    border-radius: 3px;
-    color: var(--accent);
-  }
-  pre {
-    font-family: 'Courier New', 'Menlo', monospace;
-    font-size: 12px;
-    line-height: 1.6;
-    background: var(--code-bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 12px 14px;
-    overflow-x: auto;
-    margin-top: 10px;
-    color: var(--text);
-  }
-  .hl-fn { color: var(--hl-fn); font-weight: 600; }
-  .hl-key { color: var(--hl-key); font-weight: 600; }
-  .hl-cm { color: var(--hl-cm); font-style: italic; }
-
-  /* ── layout ────────────────────────────────────────────────────── */
-  .deck {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 28px 20px 80px;
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
   }
 
-  /* ── header ────────────────────────────────────────────────────── */
-  .deck-header {
+  /* ── chrome ─────────────────────────────── */
+  .chrome {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 28px;
-    padding-bottom: 16px;
+    padding: 10px 18px;
+    background: var(--bg);
     border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    gap: 12px;
   }
-  .deck-title { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
-  .deck-subtitle {
-    font-size: 11px;
-    color: var(--text4);
-    margin-top: 3px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
-  /* ── dark-mode toggle ──────────────────────────────────────────── */
+  .chrome-title { font-size: 14px; font-weight: 700; white-space: nowrap; }
+  .chrome-sub { font-size: 11px; color: var(--text3); margin-top: 1px; }
+  .chrome-right { display: flex; align-items: center; gap: 10px; }
+  .counter { font-size: 12px; color: var(--text3); font-variant-numeric: tabular-nums; white-space: nowrap; }
   .theme-btn {
-    background: var(--bg3);
+    background: var(--bg2);
     border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 6px 14px;
+    border-radius: 16px;
+    padding: 5px 12px;
     font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     color: var(--text2);
-    transition: background .15s;
     white-space: nowrap;
   }
   .theme-btn:hover { background: var(--border); }
 
-  /* ── slide nav pills ───────────────────────────────────────────── */
-  .nav-pill {
+  /* ── slide viewport ─────────────────────── */
+  .viewport {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+  }
+  .track {
     display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    margin-bottom: 28px;
+    height: 100%;
+    transition: transform .32s cubic-bezier(.4,0,.2,1);
+    will-change: transform;
   }
-  .nav-pill a {
-    font-size: 11px;
-    font-weight: 600;
-    padding: 5px 10px;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    color: var(--text3);
-    text-decoration: none;
-    background: var(--bg);
-    transition: color .15s, border-color .15s;
-  }
-  .nav-pill a:hover { color: var(--accent2); border-color: var(--accent2-border); }
-
-  /* ── slide cards ───────────────────────────────────────────────── */
   .slide {
+    min-width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    padding: 32px 40px;
     display: grid;
-    grid-template-columns: 1.1fr 1fr;
-    gap: 32px;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
     align-items: start;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 32px 36px;
-    margin-bottom: 24px;
-    box-shadow: var(--shadow);
+    align-content: start;
   }
+  .slide-body { min-width: 0; }
   .slide-num {
     font-size: 11px;
     font-weight: 700;
-    color: var(--text4);
+    color: var(--text3);
     letter-spacing: 1.5px;
     text-transform: uppercase;
     margin-bottom: 10px;
   }
   .slide h2 {
-    font-size: 22px;
+    font-size: 26px;
     font-weight: 700;
-    color: var(--text);
-    margin-bottom: 16px;
-    letter-spacing: -0.4px;
-    line-height: 1.3;
+    line-height: 1.25;
+    letter-spacing: -.5px;
+    margin-bottom: 18px;
   }
   .slide p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text2);
+    margin-bottom: 13px;
+  }
+  .slide ul {
     font-size: 14px;
     line-height: 1.7;
     color: var(--text2);
-    margin-bottom: 12px;
-  }
-  .slide ul {
-    font-size: 13.5px;
-    line-height: 1.7;
-    color: var(--text2);
     padding-left: 20px;
-    margin-bottom: 12px;
+    margin-bottom: 13px;
   }
-  .slide li { margin-bottom: 6px; }
+  .slide li { margin-bottom: 7px; }
   .slide li strong { color: var(--text); }
-
-  /* ── cartoon image ─────────────────────────────────────────────── */
-  .cartoon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  code {
+    font-family: 'Menlo', 'Courier New', monospace;
+    font-size: .87em;
+    background: var(--code-bg);
+    padding: 1px 5px;
+    border-radius: 4px;
+    color: var(--accent);
   }
-  .cartoon img {
-    width: 100%;
-    max-width: 480px;
-    height: auto;
-    border-radius: var(--radius);
+  pre {
+    font-family: 'Menlo', 'Courier New', monospace;
+    font-size: 12.5px;
+    line-height: 1.65;
+    background: var(--code-bg);
     border: 1px solid var(--border);
-    background: #ffffff;
+    border-radius: var(--radius);
+    padding: 13px 16px;
+    overflow-x: auto;
+    margin: 10px 0 13px;
+    color: var(--text);
   }
+  .hl-fn  { color: var(--hl-fn);  font-weight: 600; }
+  .hl-key { color: var(--hl-key); font-weight: 600; }
+  .hl-cm  { color: var(--hl-cm);  font-style: italic; }
 
-  /* ── round table ───────────────────────────────────────────────── */
+  .callout {
+    background: var(--a2-bg);
+    border: 1px solid var(--a2-bd);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 11px 15px;
+    font-size: 13px;
+    color: var(--text2);
+    margin-top: 12px;
+    line-height: 1.65;
+  }
+  .callout-amber { background: var(--am-bg); border-color: var(--am-bd); border-left-color: var(--am); }
+  .callout-green { background: var(--gr-bg); border-color: var(--gr-bd); border-left-color: var(--gr); }
+
   .round-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 12px;
-    margin-top: 10px;
+    font-size: 13px;
+    margin: 10px 0 13px;
   }
   .round-table th, .round-table td {
     border: 1px solid var(--border);
-    padding: 6px 10px;
+    padding: 7px 11px;
     text-align: left;
     color: var(--text2);
   }
   .round-table th {
-    background: var(--bg3);
+    background: var(--code-bg);
     font-weight: 700;
     color: var(--text);
     font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: .5px;
   }
-  .round-table td code { font-size: 11px; }
 
-  /* ── callouts ──────────────────────────────────────────────────── */
-  .callout {
-    background: var(--accent2-bg);
-    border: 1px solid var(--accent2-border);
-    border-left: 3px solid var(--accent2);
+  .cartoon {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 8px;
+  }
+  .cartoon img {
+    width: 100%;
+    max-width: 440px;
+    height: auto;
     border-radius: var(--radius);
-    padding: 10px 14px;
-    font-size: 12.5px;
-    color: var(--text2);
-    margin-top: 12px;
-    line-height: 1.6;
-  }
-  .callout-amber {
-    background: var(--amber-bg);
-    border-color: var(--amber-border);
-    border-left-color: var(--amber);
-  }
-  .callout-green {
-    background: var(--green-bg);
-    border-color: var(--green-border);
-    border-left-color: var(--green);
+    border: 1px solid var(--border);
+    background: #fff;
   }
 
-  /* ── footer ────────────────────────────────────────────────────── */
-  .footer {
-    margin-top: 40px;
-    padding-top: 20px;
+  /* ── nav bar ────────────────────────────── */
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 12px 18px;
+    background: var(--bg);
     border-top: 1px solid var(--border);
-    font-size: 12px;
-    color: var(--text4);
-    line-height: 1.7;
+    flex-shrink: 0;
   }
+  .nav-btn {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--text2);
+    transition: background .12s;
+    user-select: none;
+  }
+  .nav-btn:hover:not(:disabled) { background: var(--border); color: var(--text); }
+  .nav-btn:disabled { opacity: .35; cursor: default; }
+  .dots {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--border);
+    cursor: pointer;
+    transition: background .15s, transform .15s;
+  }
+  .dot.active { background: var(--accent); transform: scale(1.3); }
 
-  /* ── mobile ─────────────────────────────────────────────────────── */
-  @media (max-width: 820px) {
-    .deck { padding: 18px 14px 60px; }
-    .deck-title { font-size: 18px; }
+  /* ── mobile ─────────────────────────────── */
+  @media (max-width: 760px) {
     .slide {
       grid-template-columns: 1fr;
-      padding: 22px 18px;
+      padding: 22px 18px 28px;
       gap: 22px;
     }
     .cartoon { order: -1; }
     .cartoon img { max-width: 100%; }
-    .slide h2 { font-size: 18px; }
-    .nav-pill a { font-size: 10px; padding: 4px 8px; }
+    .slide h2 { font-size: 20px; }
+    .slide p, .slide ul { font-size: 14px; }
+    .chrome-title { font-size: 13px; }
   }
-  @media (max-width: 420px) {
-    .deck-header { flex-direction: column; align-items: flex-start; gap: 10px; }
-    .slide ul, .slide p { font-size: 13px; }
+  @media (max-width: 440px) {
+    .chrome { padding: 8px 12px; }
+    .slide { padding: 16px 14px 22px; }
+    .nav { padding: 10px 12px; gap: 8px; }
+    .nav-btn { padding: 7px 14px; font-size: 12px; }
   }
 </style>
 </head>
 <body>
-<div class="deck">
 
-  <div class="deck-header">
-    <div>
-      <div class="deck-title">Datalog &amp; Magic Sets</div>
-      <div class="deck-subtitle">A Planky Explainer · 8 slides</div>
-    </div>
-    <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
+<div class="chrome">
+  <div>
+    <div class="chrome-title">Datalog &amp; Magic Sets</div>
+    <div class="chrome-sub">A Planky Explainer</div>
   </div>
-
-  <div class="nav-pill">
-    <a href="#s1">1 · What is Datalog?</a>
-    <a href="#s2">2 · Facts &amp; Rules</a>
-    <a href="#s3">3 · Fixpoint</a>
-    <a href="#s4">4 · The Naive Problem</a>
-    <a href="#s5">5 · Magic Sets</a>
-    <a href="#s6">6 · How It Works</a>
-    <a href="#s7">7 · When It Breaks</a>
-    <a href="#s8">8 · Best Practices</a>
+  <div class="chrome-right">
+    <span class="counter" id="counter">1 / 8</span>
+    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">🌙 Dark</button>
   </div>
+</div>
 
-  <!-- Slide 1 -->
-  <section id="s1" class="slide">
-    <div>
-      <div class="slide-num">Slide 1 of 8</div>
-      <h2>What is Datalog?</h2>
-      <p>Datalog is a tiny logic language. You describe the world with <strong>relations</strong> and ask questions.</p>
-      <ul>
-        <li><strong>Facts</strong> — base truths you know directly. <code>parent(tom, bob)</code>.</li>
-        <li><strong>Rules</strong> — if/then derivations. <em>If X is parent of Y, X is ancestor of Y.</em></li>
-        <li><strong>Query</strong> — what do you want? <em>Who is an ancestor of carol?</em></li>
-      </ul>
-      <p>No functions. No mutation. No side effects. Everything is a relation, and the engine figures out the rest.</p>
-      <div class="callout">Think of it as SQL's recursive, stateless cousin — tuned for pattern-matching over knowledge graphs.</div>
+<div class="viewport" id="viewport">
+  <div class="track" id="track">
+
+    <!-- ── Slide 1 ── -->
+    <div class="slide">
+      <div class="slide-body">
+        <div class="slide-num">01 / 08</div>
+        <h2>What is Datalog?</h2>
+        <p>Datalog is a tiny logic language. You describe the world with <strong>relations</strong> and ask questions.</p>
+        <ul>
+          <li><strong>Facts</strong> — base truths you know directly. <code>parent(tom, bob)</code>.</li>
+          <li><strong>Rules</strong> — if/then derivations. <em>If X is parent of Y, X is ancestor of Y.</em></li>
+          <li><strong>Query</strong> — what do you want? <em>Who is an ancestor of carol?</em></li>
+        </ul>
+        <p>No functions. No mutation. No side effects. Everything is a relation, and the engine figures out the rest.</p>
+        <div class="callout">Think of it as SQL's recursive, stateless cousin — tuned for pattern-matching over knowledge graphs.</div>
+      </div>
+      <div class="cartoon"><img src="img/datalog-slide-1.png" alt="Child with notebook of facts and rulebook"></div>
     </div>
-    <div class="cartoon"><img src="img/datalog-slide-1.png" alt="Child with notebook of facts and rulebook"></div>
-  </section>
 
-  <!-- Slide 2 -->
-  <section id="s2" class="slide">
-    <div>
-      <div class="slide-num">Slide 2 of 8</div>
-      <h2>Facts and Rules — a worked example</h2>
-      <p>We start with four base facts about a family:</p>
+    <!-- ── Slide 2 ── -->
+    <div class="slide">
+      <div class="slide-body">
+        <div class="slide-num">02 / 08</div>
+        <h2>Facts and Rules — a worked example</h2>
+        <p>We start with base facts about a family:</p>
 <pre><span class="hl-fn">parent</span>(tom,   bob).
 <span class="hl-fn">parent</span>(bob,   carol).
 <span class="hl-fn">parent</span>(carol, dave).</pre>
-      <p>Then we define <strong>ancestor</strong> with two rules — one base case, one recursive:</p>
+        <p>Then we define <strong>ancestor</strong> with two rules — one base case, one recursive:</p>
 <pre><span class="hl-fn">ancestor</span>(X, Y) <span class="hl-key">:-</span> <span class="hl-fn">parent</span>(X, Y).
 <span class="hl-fn">ancestor</span>(X, Y) <span class="hl-key">:-</span> <span class="hl-fn">parent</span>(X, Z), <span class="hl-fn">ancestor</span>(Z, Y).</pre>
-      <div class="callout">The <code>:-</code> reads as "<em>if</em>". Commas mean <em>and</em>. Variables are uppercase, constants lowercase.</div>
+        <div class="callout">The <code>:-</code> reads as "<em>if</em>". Commas mean <em>and</em>. Variables are uppercase, constants lowercase.</div>
+      </div>
+      <div class="cartoon"><img src="img/datalog-slide-2.png" alt="Cartoon family tree with connected people"></div>
     </div>
-    <div class="cartoon"><img src="img/datalog-slide-2.png" alt="Cartoon family tree with connected people"></div>
-  </section>
 
-  <!-- Slide 3 -->
-  <section id="s3" class="slide">
-    <div>
-      <div class="slide-num">Slide 3 of 8</div>
-      <h2>Fixpoint Computation</h2>
-      <p>Bottom-up evaluation: start with base facts, apply every rule, repeat until nothing new appears.</p>
-      <table class="round-table">
-        <thead><tr><th>Round</th><th>New ancestor facts</th></tr></thead>
-        <tbody>
-          <tr><td>0</td><td>(base facts only)</td></tr>
-          <tr><td>1</td><td><code>tom→bob</code>, <code>bob→carol</code>, <code>carol→dave</code></td></tr>
-          <tr><td>2</td><td><code>tom→carol</code>, <code>bob→dave</code></td></tr>
-          <tr><td>3</td><td><code>tom→dave</code></td></tr>
-          <tr><td>4</td><td>— nothing new. Done.</td></tr>
-        </tbody>
-      </table>
-      <p>Three rounds closed the chain. The engine stops when a round adds zero new tuples — that's the <strong>fixpoint</strong>.</p>
-      <div class="callout">Every fact derivable from the rules is now in the database. Guaranteed to terminate for pure Datalog.</div>
+    <!-- ── Slide 3 ── -->
+    <div class="slide">
+      <div class="slide-body">
+        <div class="slide-num">03 / 08</div>
+        <h2>Fixpoint Computation</h2>
+        <p>Bottom-up evaluation: start with base facts, apply every rule, repeat until nothing new appears.</p>
+        <table class="round-table">
+          <thead><tr><th>Round</th><th>New ancestor facts derived</th></tr></thead>
+          <tbody>
+            <tr><td>0</td><td>(base facts only)</td></tr>
+            <tr><td>1</td><td><code>tom→bob</code>, <code>bob→carol</code>, <code>carol→dave</code></td></tr>
+            <tr><td>2</td><td><code>tom→carol</code>, <code>bob→dave</code></td></tr>
+            <tr><td>3</td><td><code>tom→dave</code></td></tr>
+            <tr><td>4</td><td>— nothing new. <strong>Done.</strong></td></tr>
+          </tbody>
+        </table>
+        <p>The engine stops when a round adds zero new tuples — that's the <strong>fixpoint</strong>.</p>
+        <div class="callout">Every fact derivable from the rules is now in the database. Guaranteed to terminate for pure Datalog.</div>
+      </div>
+      <div class="cartoon"><img src="img/datalog-slide-3.png" alt="Kids playing telephone in a circle"></div>
     </div>
-    <div class="cartoon"><img src="img/datalog-slide-3.png" alt="Kids playing telephone whispers in a circle"></div>
-  </section>
 
-  <!-- Slide 4 -->
-  <section id="s4" class="slide">
-    <div>
-      <div class="slide-num">Slide 4 of 8</div>
-      <h2>The Naive Problem</h2>
-      <p>Fixpoint is elegant. It also computes <strong>everything</strong>.</p>
-      <ul>
-        <li>50,000 JSX elements in a codebase.</li>
-        <li>You want the 3 that are React Context Providers.</li>
-        <li>Naive evaluation derives <em>every</em> ancestor relationship for <em>every</em> element, then filters.</li>
-      </ul>
-      <p>Per round, per rule: O(n) at best. A badly-ordered join — scanning a big relation before a small one — goes O(n²) or worse. Intermediate state explodes. The planner hits its cap. The fixpoint blows up.</p>
-      <div class="callout callout-amber">Symptom you'll see in the wild: <code>cap-hit</code>. The engine gave up before reaching fixpoint because the intermediate relation sizes exceeded its budget.</div>
+    <!-- ── Slide 4 ── -->
+    <div class="slide">
+      <div class="slide-body">
+        <div class="slide-num">04 / 08</div>
+        <h2>The Naive Problem</h2>
+        <p>Fixpoint is elegant. It also computes <strong>everything</strong>.</p>
+        <ul>
+          <li>50,000 JSX elements in a codebase.</li>
+          <li>You want the 3 that are React Context Providers.</li>
+          <li>Naive evaluation derives <em>every</em> ancestor relationship for <em>every</em> element, then filters.</li>
+        </ul>
+        <p>Per round, per rule: O(n) at best. A badly-ordered join — scanning a big relation before a small one — goes O(n²) or worse. Intermediate state explodes.</p>
+        <div class="callout callout-amber">Symptom you'll see in the wild: <strong>cap-hit</strong>. The engine gave up before reaching fixpoint because intermediate relation sizes exceeded budget.</div>
+      </div>
+      <div class="cartoon"><img src="img/datalog-slide-4.png" alt="Overwhelmed librarian kid with giant stack of books"></div>
     </div>
-    <div class="cartoon"><img src="img/datalog-slide-4.png" alt="Overwhelmed librarian kid with a giant stack of books"></div>
-  </section>
 
-  <!-- Slide 5 -->
-  <section id="s5" class="slide">
-    <div>
-      <div class="slide-num">Slide 5 of 8</div>
-      <h2>Magic Sets — the key insight</h2>
-      <p>Don't compute all ancestors. Compute only the ancestors <em>of the thing you asked about</em>.</p>
-      <p>Magic Sets is a source-to-source rewrite that injects a <strong>demand predicate</strong> — a "magic" relation — that seeds evaluation from the query goal and propagates downward.</p>
+    <!-- ── Slide 5 ── -->
+    <div class="slide">
+      <div class="slide-body">
+        <div class="slide-num">05 / 08</div>
+        <h2>Magic Sets — the key insight</h2>
+        <p>Don't compute all ancestors. Compute only the ancestors <em>of the thing you asked about</em>.</p>
+        <p>Magic Sets injects a <strong>demand predicate</strong> that seeds evaluation from the query goal and propagates downward.</p>
 <pre><span class="hl-cm">% original query</span>
 <span class="hl-fn">?-</span> <span class="hl-fn">ancestor</span>(tom, Y).
 
-<span class="hl-cm">% magic seed</span>
+<span class="hl-cm">% magic seed injected</span>
 <span class="hl-fn">magic_ancestor</span>(tom).</pre>
-      <p>Now every rule body carries the magic filter. Tuples that don't match the demand are <em>never derived</em>.</p>
-      <div class="callout callout-green">Result: bottom-up evaluation with top-down focus. Keeps Datalog's termination guarantees; adds demand-driven pruning.</div>
+        <p>Every rule body now carries the magic filter. Tuples that don't match the demand are <em>never derived</em>.</p>
+        <div class="callout callout-green">Bottom-up evaluation with top-down focus. Keeps Datalog's termination guarantees; adds demand-driven pruning.</div>
+      </div>
+      <div class="cartoon"><img src="img/datalog-slide-5.png" alt="Librarian with a magic wand pointing at the one right book"></div>
     </div>
-    <div class="cartoon"><img src="img/datalog-slide-5.png" alt="Librarian with a magic wand pointing at the one right book"></div>
-  </section>
 
-  <!-- Slide 6 -->
-  <section id="s6" class="slide">
-    <div>
-      <div class="slide-num">Slide 6 of 8</div>
-      <h2>How Magic Sets Work</h2>
-      <p>Each original rule becomes two rules: one that <em>propagates demand</em>, one that <em>derives tuples</em> — gated by the demand.</p>
-<pre><span class="hl-cm">% original recursive rule</span>
-<span class="hl-fn">ancestor</span>(X, Y) <span class="hl-key">:-</span> <span class="hl-fn">parent</span>(X, Z), <span class="hl-fn">ancestor</span>(Z, Y).
+    <!-- ── Slide 6 ── -->
+    <div class="slide">
+      <div class="slide-body">
+        <div class="slide-num">06 / 08</div>
+        <h2>How Magic Sets Work</h2>
+        <p>Each rule splits into two: one that <em>propagates demand</em>, one that <em>derives tuples</em> — gated by the demand.</p>
+<pre><span class="hl-cm">% original</span>
+<span class="hl-fn">ancestor</span>(X,Y) <span class="hl-key">:-</span> <span class="hl-fn">parent</span>(X,Z), <span class="hl-fn">ancestor</span>(Z,Y).
 
 <span class="hl-cm">% after magic rewrite</span>
-<span class="hl-fn">magic_ancestor</span>(Z) <span class="hl-key">:-</span> <span class="hl-fn">magic_ancestor</span>(X), <span class="hl-fn">parent</span>(X, Z).
-<span class="hl-fn">ancestor</span>(X, Y)    <span class="hl-key">:-</span> <span class="hl-fn">magic_ancestor</span>(X), <span class="hl-fn">parent</span>(X, Z), <span class="hl-fn">ancestor</span>(Z, Y).</pre>
-      <ul>
-        <li>The first new rule seeds <code>magic_ancestor</code> for every reachable recursion frontier.</li>
-        <li>The second only fires when the frontier says "yes, I care about X."</li>
-        <li>Nodes outside the reachable set are never touched.</li>
-      </ul>
-      <div class="callout">Dramatic reduction in intermediate state is common — orders of magnitude on big relations with small query focus.</div>
+<span class="hl-fn">magic_ancestor</span>(Z) <span class="hl-key">:-</span> <span class="hl-fn">magic_ancestor</span>(X), <span class="hl-fn">parent</span>(X,Z).
+<span class="hl-fn">ancestor</span>(X,Y)    <span class="hl-key">:-</span> <span class="hl-fn">magic_ancestor</span>(X), <span class="hl-fn">parent</span>(X,Z), <span class="hl-fn">ancestor</span>(Z,Y).</pre>
+        <ul>
+          <li>Rule 1 seeds <code>magic_ancestor</code> for every reachable frontier.</li>
+          <li>Rule 2 only fires when the frontier says "I care about X."</li>
+          <li>Nodes outside the reachable set are never touched.</li>
+        </ul>
+        <div class="callout">Orders-of-magnitude reduction in intermediate state is common on big relations with narrow query focus.</div>
+      </div>
+      <div class="cartoon"><img src="img/datalog-slide-6.png" alt="Golden thread tracing through a maze to a treasure chest"></div>
     </div>
-    <div class="cartoon"><img src="img/datalog-slide-6.png" alt="Golden thread tracing path through a maze to a treasure chest"></div>
-  </section>
 
-  <!-- Slide 7 -->
-  <section id="s7" class="slide">
-    <div>
-      <div class="slide-num">Slide 7 of 8</div>
-      <h2>When Magic Sets Break</h2>
-      <p>Magic Sets is not magic-magic. Two well-known failure modes:</p>
-      <ul>
-        <li><strong>Disjunction split.</strong> <code>A or B</code> in a rule body gets split into two rules. The planner propagates demand through each independently — and may reach only one branch. The other branch scans the full relation unfiltered.</li>
-        <li><strong>Wrong join order.</strong> The magic anchor is bound, but the planner starts evaluation from the wrong literal. It scans a huge relation first, derives millions of junk tuples, <em>then</em> applies the magic filter. Same blow-up as naive.</li>
-      </ul>
-      <div class="callout callout-amber">The tell: you wrote a specific query, magic sets are enabled, the planner still cap-hits. Check the join order and the shape of your disjunctions before blaming the engine.</div>
+    <!-- ── Slide 7 ── -->
+    <div class="slide">
+      <div class="slide-body">
+        <div class="slide-num">07 / 08</div>
+        <h2>When Magic Sets Break</h2>
+        <p>Two well-known failure modes:</p>
+        <ul>
+          <li><strong>Disjunction split.</strong> <code>A or B</code> in a rule body gets split into two rules. The planner may propagate demand through only one branch — the other scans the full relation unfiltered.</li>
+          <li><strong>Wrong join order.</strong> The magic anchor is bound, but the planner starts from the wrong literal. It scans a huge relation first, derives millions of junk tuples, <em>then</em> applies the filter. Same blow-up as naive.</li>
+        </ul>
+        <div class="callout callout-amber">The tell: specific query, magic sets enabled, planner still cap-hits. Check the join order and disjunction shape before blaming the engine.</div>
+      </div>
+      <div class="cartoon"><img src="img/datalog-slide-7.png" alt="Confused robot at a forked road with a broken bridge"></div>
     </div>
-    <div class="cartoon"><img src="img/datalog-slide-7.png" alt="Confused robot at a forked road with a broken bridge"></div>
-  </section>
 
-  <!-- Slide 8 -->
-  <section id="s8" class="slide">
-    <div>
-      <div class="slide-num">Slide 8 of 8</div>
-      <h2>Best Practices &amp; Limitations</h2>
-      <p><strong>Do:</strong></p>
-      <ul>
-        <li>Put magic-anchor-bound variables <strong>first</strong> in the rule body. The planner follows positional hints more than it should.</li>
-        <li>Use string constants as filters. They prune dramatically — a known JSX attribute name beats a universally-quantified variable every time.</li>
-        <li>Avoid deep disjunction chains. Flatten where you can; factor shared subgoals.</li>
-      </ul>
-      <p><strong>Don't expect it to save you from:</strong></p>
-      <ul>
-        <li>Negation-as-failure inside recursive rules — stratification forbids it, and magic doesn't fix the structure.</li>
-        <li>Highly-connected graphs. <code>MayResolveTo</code> on a monorepo touches nearly everything; demand doesn't prune what's genuinely reachable.</li>
-        <li>Cap-hits as a general symptom — the fixpoint blew up. Magic is a reduction technique, not a size guarantee.</li>
-      </ul>
-      <div class="callout callout-green">Rule of thumb: magic sets pay off when the demand is narrow relative to the universe. If you want a lot of the graph, you're going to pay for a lot of the graph.</div>
+    <!-- ── Slide 8 ── -->
+    <div class="slide">
+      <div class="slide-body">
+        <div class="slide-num">08 / 08</div>
+        <h2>Best Practices &amp; Limitations</h2>
+        <p><strong>Do:</strong></p>
+        <ul>
+          <li>Put magic-anchor-bound variables <strong>first</strong> in the rule body.</li>
+          <li>Use string constants as filters — a known attribute name beats a universally-quantified variable every time.</li>
+          <li>Avoid deep disjunction chains. Flatten; factor shared subgoals into named predicates.</li>
+        </ul>
+        <p><strong>Don't expect it to save you from:</strong></p>
+        <ul>
+          <li>Negation-as-failure inside recursive rules — stratification forbids it.</li>
+          <li>Highly-connected graphs. <code>MayResolveTo</code> on a monorepo touches nearly everything; demand doesn't prune what's genuinely reachable.</li>
+        </ul>
+        <div class="callout callout-green">Rule of thumb: magic sets pay off when demand is narrow relative to the universe. If you want a lot of the graph, you're going to pay for a lot of the graph.</div>
+      </div>
+      <div class="cartoon"><img src="img/datalog-slide-8.png" alt="Owl with glasses holding a checklist next to a tidy toolbox"></div>
     </div>
-    <div class="cartoon"><img src="img/datalog-slide-8.png" alt="Owl with glasses holding a checklist next to a tidy toolbox"></div>
-  </section>
 
-  <div class="footer">
-    Planky built this deck to explain the Datalog tooling shapes that keep showing up in our query engine debugging.<br>
-    Cartoons generated with an openrouter image model.
-  </div>
+  </div><!-- /track -->
+</div><!-- /viewport -->
 
+<div class="nav">
+  <button class="nav-btn" id="prevBtn" onclick="go(-1)" disabled>← Prev</button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" id="nextBtn" onclick="go(1)">Next →</button>
 </div>
+
 <script>
+  const TOTAL = 8;
+  let cur = 0;
+  const track = document.getElementById('track');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const dotsEl  = document.getElementById('dots');
+
+  // build dots
+  for (let i = 0; i < TOTAL; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  }
+
+  function render() {
+    track.style.transform = `translateX(-${cur * 100}%)`;
+    counter.textContent = `${cur + 1} / ${TOTAL}`;
+    prevBtn.disabled = cur === 0;
+    nextBtn.disabled = cur === TOTAL - 1;
+    dotsEl.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === cur));
+  }
+
+  function go(dir) { goTo(cur + dir); }
+  function goTo(n) {
+    cur = Math.max(0, Math.min(TOTAL - 1, n));
+    render();
+  }
+
+  // keyboard
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') go(1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   go(-1);
+    if (e.key === 'Home') goTo(0);
+    if (e.key === 'End')  goTo(TOTAL - 1);
+  });
+
+  // swipe
+  let tx = 0;
+  const vp = document.getElementById('viewport');
+  vp.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+  vp.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
+  }, { passive: true });
+
+  // theme
   function toggleTheme() {
-    const html = document.documentElement;
-    const isDark = html.getAttribute('data-theme') === 'dark';
-    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
     document.getElementById('themeBtn').textContent = isDark ? '🌙 Dark' : '☀️ Light';
     try { localStorage.setItem('planky-datalog-theme', isDark ? 'light' : 'dark'); } catch(e) {}
   }
