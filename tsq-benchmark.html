@@ -112,9 +112,9 @@
     <tr><td>2.4</td><td>Next.js getServerSideProps SSR sources</td><td><span class="pill pill-green">MERGED #268</span></td></tr>
     <tr><td>3.2</td><td>Deserialization sinks (node-serialize, yaml, vm)</td><td><span class="pill pill-green">MERGED #267</span></td></tr>
     <tr><td>1.4</td><td>Class hierarchy / virtual dispatch</td><td><span class="pill pill-green">MERGED #274</span></td></tr>
-    <tr><td>2.6</td><td>TypeGuard → Sanitizer bridge</td><td><span class="pill pill-yellow">IN PR #273</span></td></tr>
+    <tr><td>2.6</td><td>TypeGuard → Sanitizer bridge</td><td><span class="pill pill-green">MERGED #273</span></td></tr>
     <tr><td>3.1</td><td>RegExp / ReDoS detection</td><td><span class="dim">FUTURE</span></td></tr>
-    <tr><td>3.4</td><td>Dynamic import()</td><td><span class="pill pill-yellow">IN PR #272</span></td></tr>
+    <tr><td>3.4</td><td>Dynamic import()</td><td><span class="pill pill-green">MERGED #272</span></td></tr>
   </table>
 </section>
 
@@ -279,8 +279,8 @@
   <table>
     <tr><th>Gap</th><th>Description</th><th>Blocker</th><th>Effort</th></tr>
     <tr><td>1.4</td><td>Class hierarchy / virtual dispatch</td><td>ClassNameDecl bridge + 4-way join rule</td><td><span class="pill pill-green">MERGED #274</span></td></tr>
-    <tr><td>2.6</td><td>TypeGuard → Sanitizer bridge</td><td>SanitizedEdge covers transitive FlowStar paths</td><td><span class="pill pill-yellow">IN PR #273</span></td></tr>
-    <tr><td>3.4</td><td>Dynamic import()</td><td>await import() + SymID joinability + dedup</td><td><span class="pill pill-yellow">IN PR #272</span></td></tr>
+    <tr><td>2.6</td><td>TypeGuard → Sanitizer bridge</td><td>SanitizedEdge covers transitive FlowStar paths</td><td><span class="pill pill-green">MERGED #273</span></td></tr>
+    <tr><td>3.4</td><td>Dynamic import()</td><td>await import() + SymID joinability + dedup</td><td><span class="pill pill-green">MERGED #272</span></td></tr>
     <tr><td>2.4+</td><td>Next.js SSR full end-to-end alert</td><td>SSR handler not wired to exec sink</td><td class="warn">~50 LOC</td></tr>
     <tr><td>3.1</td><td>RegExp / ReDoS detection</td><td>Needs Go regex parser integration</td><td class="fail">~300 LOC</td></tr>
     <tr><td>3.5</td><td>Type-based library discrimination</td><td>All detection is import-binding-based</td><td class="fail">L effort</td></tr>
