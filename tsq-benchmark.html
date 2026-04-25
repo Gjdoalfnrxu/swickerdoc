@@ -216,41 +216,61 @@
   <p style="margin-top:12px;font-size:.58em;" class="dim">Query evaluation dominates (5–10ms). Extraction is sub-2ms for single-file fixtures. Tier 3 higher-order rules add O(1) joins, not new scans.</p>
 </section>
 
-<!-- 10. Real-codebase scale -->
+<!-- 10. Real-codebase results -->
 <section>
-  <h2>Real-Codebase Scale — Home Server</h2>
-  <p class="dim" style="font-size:.6em;">tsq built from source · run on home server (Ubuntu 20.04, GLIBC 2.31) · corpora from ~/setstate-bench/corpus/</p>
-  <table style="margin-top:10px;">
-    <tr><th>Corpus</th><th>.ts files</th><th>ExprMayRef</th><th>Total facts</th><th>DB size</th><th>Extract</th><th>Query</th><th>Alerts</th></tr>
+  <h2>Real-Codebase Results — Home Server</h2>
+  <p class="dim" style="font-size:.58em;">tsq built from source · Ubuntu 20.04, GLIBC 2.31 · 4 codebases: detection + scale + precision</p>
+  <table style="margin-top:8px;font-size:.6em;">
+    <tr><th>Corpus</th><th>Type</th><th>.ts files</th><th>Facts</th><th>Extract</th><th>Query</th><th>Alerts</th><th>Why</th></tr>
+    <tr>
+      <td><strong>vuln-express-api</strong></td>
+      <td>Express API w/ vulns</td>
+      <td>1</td>
+      <td>2,975</td>
+      <td class="pass">2.5s</td>
+      <td class="pass">92ms</td>
+      <td class="pass"><strong>4</strong></td>
+      <td class="pass">SQLi×2, SSRF, cmd inj, redirect ✓</td>
+    </tr>
+    <tr>
+      <td><strong>RealWorld TS API</strong></td>
+      <td>NestJS + Prisma ORM</td>
+      <td>38</td>
+      <td>77,587</td>
+      <td class="pass">2.2s</td>
+      <td class="pass">460ms</td>
+      <td class="dim">0</td>
+      <td class="dim">Prisma ORM — no raw SQL sinks ✓</td>
+    </tr>
     <tr>
       <td><strong>jitsi-meet</strong></td>
+      <td>React frontend</td>
       <td>1,272</td>
-      <td>90,938</td>
       <td>5,092,288</td>
-      <td>63.6 MB</td>
       <td class="warn">33.9s</td>
       <td class="warn">38.7s</td>
-      <td class="dim">0 <small>†</small></td>
+      <td class="dim">0</td>
+      <td class="dim">Frontend — no HTTP handlers ✓</td>
     </tr>
     <tr>
       <td><strong>mastodon</strong></td>
+      <td>React frontend</td>
       <td>250</td>
-      <td>38,393</td>
       <td>2,092,906</td>
-      <td>26.2 MB</td>
-      <td class="pass">18.5s</td>
-      <td class="pass">19.2s</td>
-      <td class="dim">0 <small>†</small></td>
+      <td class="warn">18.5s</td>
+      <td class="warn">19.2s</td>
+      <td class="dim">0</td>
+      <td class="dim">Frontend — no HTTP handlers ✓</td>
     </tr>
   </table>
-  <br>
-  <p style="font-size:.62em;"><small>†</small> <span class="dim">Expected: both corpora are <strong>React frontend</strong> TypeScript, not Express/Koa/Fastify backends. No <code>ExpressHandler</code> or <code>TaintSource</code> facts emitted → no end-to-end taint paths fire. Zero false positives on frontend code — precision holds at scale.</span></p>
   <div class="stat-grid" style="margin-top:10px;">
-    <div class="stat-box"><div class="n warn">5.1M</div><div class="l">jitsi facts</div></div>
-    <div class="stat-box"><div class="n warn">2.1M</div><div class="l">mastodon facts</div></div>
+    <div class="stat-box"><div class="n pass">4</div><div class="l">vulns detected</div></div>
     <div class="stat-box"><div class="n pass">0</div><div class="l">false positives</div></div>
-    <div class="stat-box"><div class="n dim">34s</div><div class="l">jitsi extract</div></div>
+    <div class="stat-box"><div class="n warn">5.1M</div><div class="l">jitsi facts</div></div>
+    <div class="stat-box"><div class="n pass">92ms</div><div class="l">query (small)</div></div>
+    <div class="stat-box"><div class="n warn">38.7s</div><div class="l">query (5M facts)</div></div>
   </div>
+  <p class="dim" style="font-size:.58em;margin-top:8px;">Detection fires on Express + raw SQL/exec/fetch patterns. Precision holds on Prisma ORM and React frontends — zero false positives across 7M+ facts of non-target code.</p>
 </section>
 
 <!-- 11. Remaining Gaps -->
@@ -258,11 +278,11 @@
   <h2>Remaining Gaps &amp; Roadmap</h2>
   <table>
     <tr><th>Gap</th><th>Description</th><th>Blocker</th><th>Effort</th></tr>
-    <tr><td>1.4</td><td>Class hierarchy / virtual dispatch</td><td>Extends() emits use-site ID not decl ID</td><td class="warn">~200 LOC</td></tr>
-    <tr><td>2.6</td><td>TypeGuard → Sanitizer bridge</td><td>Walker emits zero TypeGuard facts</td><td class="fail">BLOCKED</td></tr>
+    <tr><td>1.4</td><td>Class hierarchy / virtual dispatch</td><td>ClassHierarchy + TC bridge rules + Extends fix</td><td><span class="pill pill-yellow">IN PR</span></td></tr>
+    <tr><td>2.6</td><td>TypeGuard → Sanitizer bridge</td><td>TypeGuard emitted; bridge rule needed</td><td><span class="pill pill-yellow">IN PR</span></td></tr>
+    <tr><td>3.4</td><td>Dynamic import()</td><td>import() not emitted as ImportBinding</td><td><span class="pill pill-yellow">IN PR</span></td></tr>
     <tr><td>2.4+</td><td>Next.js SSR full end-to-end alert</td><td>SSR handler not wired to exec sink</td><td class="warn">~50 LOC</td></tr>
     <tr><td>3.1</td><td>RegExp / ReDoS detection</td><td>Needs Go regex parser integration</td><td class="fail">~300 LOC</td></tr>
-    <tr><td>3.4</td><td>Dynamic import()</td><td>import() not emitted as ImportBinding</td><td class="warn">~50 LOC</td></tr>
     <tr><td>3.5</td><td>Type-based library discrimination</td><td>All detection is import-binding-based</td><td class="fail">L effort</td></tr>
     <tr><td>misc</td><td>Inline arrow SSRF / JWT</td><td>req.body.url two-hop FieldRead not TaintSource</td><td class="warn">~80 LOC</td></tr>
   </table>
