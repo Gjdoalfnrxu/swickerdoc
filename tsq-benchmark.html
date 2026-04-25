@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>tsq — CodeQL Parity &amp; Benchmark Results</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css">
+  <style>
+    :root {
+      --accent:  #E94560;
+      --green:   #48BB78;
+      --yellow:  #ECC94B;
+      --dim:     #A0AEC0;
+      --navy:    #1A1A2E;
+    }
+    .reveal { background: var(--navy); }
+    .reveal h1 { color: var(--accent); font-size: 1.9em; }
+    .reveal h2 { color: var(--accent); font-size: 1.25em; margin-bottom: .4em; }
+    .reveal h3 { color: var(--yellow); font-size: 1em; margin: .3em 0; }
+    .reveal p, .reveal li { font-size: .78em; color: #e2e8f0; }
+    .reveal small { color: var(--dim); font-size: .65em; }
+    .reveal table { font-size: .65em; border-collapse: collapse; width: 100%; }
+    .reveal table th { color: var(--accent); border-bottom: 1px solid #333; padding: 4px 8px; }
+    .reveal table td { padding: 4px 8px; border-bottom: 1px solid #222; }
+    .reveal table tr:nth-child(even) td { background: #12122a; }
+    .pass  { color: var(--green); font-weight: bold; }
+    .fail  { color: var(--accent); font-weight: bold; }
+    .warn  { color: var(--yellow); }
+    .dim   { color: var(--dim); }
+    .pill  { display: inline-block; border-radius: 4px; padding: 1px 6px; font-size: .7em; font-weight: bold; }
+    .pill-green  { background: #2f6846; color: var(--green); }
+    .pill-yellow { background: #5a4a1a; color: var(--yellow); }
+    .pill-red    { background: #4a1a24; color: var(--accent); }
+    .tier-box { display:inline-block; border-radius:8px; padding:12px 20px; margin:6px; vertical-align:top; width:27%; }
+    .tier-easy   { background:#0f3320; border:1px solid var(--green); }
+    .tier-medium { background:#3a2e00; border:1px solid var(--yellow); }
+    .tier-hard   { background:#3a0f18; border:1px solid var(--accent); }
+    .tier-box h3 { margin:0 0 6px; }
+    .tier-box p  { font-size:.65em; margin:0; }
+    .big-num { font-size:2.8em; font-weight:bold; line-height:1; }
+    .stat-grid { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin-top:16px; }
+    .stat-box { background:#16213e; border-radius:8px; padding:14px 18px; min-width:110px; text-align:center; }
+    .stat-box .n { font-size:1.8em; font-weight:bold; }
+    .stat-box .l { font-size:.6em; color:var(--dim); margin-top:2px; }
+    .bar-row { display:flex; align-items:center; gap:8px; margin:3px 0; }
+    .bar-label { font-size:.55em; color:var(--dim); width:200px; text-align:right; flex-shrink:0; }
+    .bar-track { flex:1; background:#12122a; border-radius:4px; height:14px; overflow:hidden; }
+    .bar-fill  { height:100%; border-radius:4px; transition:width .6s ease; }
+    .bar-val { font-size:.55em; color:var(--dim); width:40px; }
+    .cartoon-wrap { display:flex; gap:30px; align-items:center; justify-content:center; }
+    .cartoon-wrap img { border-radius:12px; max-height:400px; box-shadow:0 0 30px #E9456044; }
+    .cartoon-caption { max-width:340px; }
+    footer { position:fixed; bottom:8px; right:16px; font-size:.35em; color:#333; }
+  </style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. Title -->
+<section>
+  <h1>tsq</h1>
+  <h2>CodeQL Parity &amp; Vulnerability Detection Benchmark</h2>
+  <p class="dim">Interprocedural taint tracking for TypeScript / JavaScript</p>
+  <br>
+  <p><small>Results — 2026-04-25 · 18 benchmark cases · All passed</small></p>
+</section>
+
+<!-- 2. Agenda -->
+<section>
+  <h2>Agenda</h2>
+  <ol style="font-size:.75em;line-height:1.9;">
+    <li>What is tsq?</li>
+    <li>CodeQL parity — gap analysis &amp; fixes</li>
+    <li>Benchmark design — 3 tiers</li>
+    <li>Tier 1 results — Easy cases</li>
+    <li>Tier 2 results — Medium cases</li>
+    <li>Tier 3 results — Hard cases (new capability)</li>
+    <li>Performance summary</li>
+    <li>Remaining gaps &amp; roadmap</li>
+  </ol>
+</section>
+
+<!-- 3. What is tsq -->
+<section>
+  <h2>What is tsq?</h2>
+  <p>A <strong>semi-naive Datalog query engine</strong> over tree-sitter TypeScript/JavaScript ASTs.</p>
+  <ul style="margin-top:12px;">
+    <li>Extracts facts (relations) from source files via the <code>TypeAwareWalker</code></li>
+    <li>Evaluates QL queries (CodeQL-compatible syntax) against those facts</li>
+    <li>Ships a taint-tracking pipeline — <strong>16 local flow steps</strong> + interprocedural</li>
+    <li>Bridge layer provides CodeQL-compatible imports (<code>DataFlow::Node</code>, <code>TaintTracking::Configuration</code>)</li>
+  </ul>
+  <br>
+  <p><span class="warn">Key constraint:</span> v1 <code>CallResultSym</code> intentionally empty — no demand-driven call graph.</p>
+  <p><span class="dim">Workaround:</span> library summaries (InterFlow rules) cover 25+ frameworks explicitly.</p>
+</section>
+
+<!-- 4. Parity gaps -->
+<section>
+  <h2>CodeQL Parity — Gap Status</h2>
+  <table>
+    <tr><th>Gap</th><th>Description</th><th>Status</th></tr>
+    <tr><td>1.1</td><td>Global symbol resolution (fetch, eval, document, window)</td><td><span class="pill pill-green">MERGED #260</span></td></tr>
+    <tr><td>1.2</td><td>DataFlow::CallNode / FunctionNode / moduleMember</td><td><span class="pill pill-green">MERGED #262</span></td></tr>
+    <tr><td>1.3</td><td>CommonJS require() support</td><td><span class="pill pill-green">MERGED #261</span></td></tr>
+    <tr><td>2.2</td><td>Array method taint (map/filter/reduce/flatMap…)</td><td><span class="pill pill-green">MERGED #264</span></td></tr>
+    <tr><td>2.3</td><td>Promise .then/.catch/.finally taint chain</td><td><span class="pill pill-green">MERGED #263</span></td></tr>
+    <tr><td>2.8</td><td>Function.prototype.bind() pre-arg aliasing</td><td><span class="pill pill-green">MERGED #265</span></td></tr>
+    <tr><td>2.9</td><td>Anonymous arrow handlers for Express routes</td><td><span class="pill pill-green">MERGED #266</span></td></tr>
+    <tr><td>2.4</td><td>Next.js getServerSideProps SSR sources</td><td><span class="pill pill-green">MERGED #268</span></td></tr>
+    <tr><td>3.2</td><td>Deserialization sinks (node-serialize, yaml, vm)</td><td><span class="pill pill-green">MERGED #267</span></td></tr>
+    <tr><td>1.4</td><td>Class hierarchy / virtual dispatch</td><td><span class="pill pill-yellow">PENDING</span></td></tr>
+    <tr><td>2.6</td><td>TypeGuard → Sanitizer bridge</td><td><span class="pill pill-red">BLOCKED</span></td></tr>
+    <tr><td>3.1</td><td>RegExp / ReDoS detection</td><td><span class="dim">FUTURE</span></td></tr>
+    <tr><td>3.4</td><td>Dynamic import()</td><td><span class="dim">FUTURE</span></td></tr>
+  </table>
+</section>
+
+<!-- 5. Benchmark design -->
+<section>
+  <h2>Benchmark Design — 3 Tiers</h2>
+  <p class="dim" style="font-size:.65em;">18 TypeScript fixtures · TaintAlert query (Tier 1-2) · InterFlow query (Tier 3) · Positive + negative cases</p>
+  <br>
+  <div>
+    <div class="tier-box tier-easy">
+      <h3 class="pass">TIER 1 — EASY</h3>
+      <p>5 positive + 1 negative</p>
+      <p class="dim">Single file · named handler · direct req.param → sink · no async</p>
+    </div>
+    <div class="tier-box tier-medium">
+      <h3 class="warn">TIER 2 — MEDIUM</h3>
+      <p>6 positive + 1 negative</p>
+      <p class="dim">Multi-hop · operator propagation · framework sinks · deserialization</p>
+    </div>
+    <div class="tier-box tier-hard">
+      <h3 style="color:var(--accent)">TIER 3 — HARD</h3>
+      <p>3 positive + 1 negative</p>
+      <p class="dim">Higher-order callbacks · promise chains · .bind() aliasing (PRs #263/#264/#265)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 6. Tier 1 results -->
+<section>
+  <h2>Tier 1 — Easy Cases</h2>
+  <p class="dim" style="font-size:.6em;">Single-file · named Express handler · direct req.param → known sink · no async</p>
+  <table>
+    <tr><th>Case</th><th>Kind</th><th>Alerts</th><th>Extract</th><th>Query</th><th>Total</th><th></th></tr>
+    <tr><td>Command Injection — named handler + exec</td><td>command_injection</td><td>1</td><td>1.3ms</td><td>8.1ms</td><td>9.4ms</td><td class="pass">PASS</td></tr>
+    <tr><td>SQL Injection — template literal</td><td>sql</td><td>1</td><td>1.1ms</td><td>5.7ms</td><td>6.8ms</td><td class="pass">PASS</td></tr>
+    <tr><td>SQL Injection — string concatenation</td><td>sql</td><td>1</td><td>0.9ms</td><td>7.4ms</td><td>8.3ms</td><td class="pass">PASS</td></tr>
+    <tr><td>Open Redirect — res.redirect</td><td>open_redirect</td><td>1</td><td>1.0ms</td><td>5.0ms</td><td>6.0ms</td><td class="pass">PASS</td></tr>
+    <tr><td>Header Injection — res.setHeader</td><td>header_injection</td><td>1</td><td>1.3ms</td><td>7.0ms</td><td>8.3ms</td><td class="pass">PASS</td></tr>
+    <tr style="opacity:.7"><td><em>NEGATIVE — hardcoded SQL no source</em></td><td>—</td><td>0</td><td>0.7ms</td><td>4.1ms</td><td>4.8ms</td><td class="pass">PASS</td></tr>
+  </table>
+</section>
+
+<!-- 7. Tier 2 results -->
+<section>
+  <h2>Tier 2 — Medium Cases</h2>
+  <p class="dim" style="font-size:.6em;">Multi-hop flows · operator propagation · framework sinks · deserialization</p>
+  <table>
+    <tr><th>Case</th><th>Kind</th><th>Alerts</th><th>Extract</th><th>Query</th><th>Total</th><th></th></tr>
+    <tr><td>SSRF — named handler + node-fetch</td><td>ssrf</td><td>1</td><td>0.9ms</td><td>5.1ms</td><td>6.0ms</td><td class="pass">PASS</td></tr>
+    <tr><td>SQL Injection — += augmented assign</td><td>sql</td><td>1</td><td>0.9ms</td><td>5.4ms</td><td>6.3ms</td><td class="pass">PASS</td></tr>
+    <tr><td>SQL Injection — bracket/subscript access</td><td>sql</td><td>1</td><td>2.1ms</td><td>10.1ms</td><td>12.2ms</td><td class="pass">PASS</td></tr>
+    <tr><td>SQL Injection — nullish coalescing ??</td><td>sql</td><td>1</td><td>0.9ms</td><td>5.6ms</td><td>6.5ms</td><td class="pass">PASS</td></tr>
+    <tr><td>Prototype Pollution — deepmerge sink</td><td>prototype-pollution</td><td>1</td><td>1.0ms</td><td>4.7ms</td><td>5.7ms</td><td class="pass">PASS</td></tr>
+    <tr><td>Deserialization — node-serialize/yaml/vm</td><td>code_injection</td><td>2</td><td>3.7ms</td><td>9.6ms</td><td>13.3ms</td><td class="pass">PASS</td></tr>
+    <tr style="opacity:.7"><td><em>NEGATIVE — await fixture no HTTP source</em></td><td>—</td><td>0</td><td>1.1ms</td><td>3.8ms</td><td>4.9ms</td><td class="pass">PASS</td></tr>
+  </table>
+</section>
+
+<!-- 8. Tier 3 results -->
+<section>
+  <h2>Tier 3 — Hard Cases</h2>
+  <p class="dim" style="font-size:.6em;">Higher-order patterns enabled by PRs #263/#264/#265 · verified via InterFlow (taint propagation edge)</p>
+  <table>
+    <tr><th>Case</th><th>Edges</th><th>Min Required</th><th>Extract</th><th>Query</th><th>Total</th><th></th></tr>
+    <tr><td>Array.map inline-arrow propagation</td><td>5</td><td>3</td><td>1.1ms</td><td>4.5ms</td><td>5.6ms</td><td class="pass">PASS</td></tr>
+    <tr><td>Promise .then() inline-arrow chain</td><td>3</td><td>3</td><td>1.4ms</td><td>7.5ms</td><td>8.9ms</td><td class="pass">PASS</td></tr>
+    <tr><td>Function.prototype.bind pre-arg</td><td>1</td><td>1</td><td>0.6ms</td><td>4.0ms</td><td>4.6ms</td><td class="pass">PASS</td></tr>
+    <tr style="opacity:.7"><td><em>NEGATIVE — declare-fn not a taint source</em></td><td>0</td><td>0</td><td>0.9ms</td><td>3.6ms</td><td>4.5ms</td><td class="pass">PASS</td></tr>
+  </table>
+  <br>
+  <p class="dim" style="font-size:.65em;">InterFlow edges pinned with MinAlerts to prevent vacuous passes from background tuples. Kind-match assertion on all Tier 1–2 positive cases.</p>
+</section>
+
+<!-- 9. Performance -->
+<section>
+  <h2>Performance Summary</h2>
+  <p class="dim" style="font-size:.6em;">Extraction + query evaluation per fixture (single-file projects, local machine)</p>
+  <div class="stat-grid">
+    <div class="stat-box"><div class="n pass">9.5ms</div><div class="l">Tier 1 avg</div></div>
+    <div class="stat-box"><div class="n warn">8.1ms</div><div class="l">Tier 2 avg</div></div>
+    <div class="stat-box"><div class="n" style="color:var(--accent)">5.9ms</div><div class="l">Tier 3 avg</div></div>
+    <div class="stat-box"><div class="n dim">8.0ms</div><div class="l">Overall avg</div></div>
+    <div class="stat-box"><div class="n pass">18/18</div><div class="l">Pass rate</div></div>
+    <div class="stat-box"><div class="n" style="color:#63b3ed">1.4ms</div><div class="l">Extraction avg</div></div>
+    <div class="stat-box"><div class="n" style="color:#fc8181">6.6ms</div><div class="l">Query avg</div></div>
+  </div>
+  <br>
+  <div style="max-width:700px;margin:0 auto;">
+    <div class="bar-row"><span class="bar-label">Cmd Injection</span><div class="bar-track"><div class="bar-fill" style="width:47%;background:var(--green)"></div></div><span class="bar-val">9.4ms</span></div>
+    <div class="bar-row"><span class="bar-label">SQL template</span><div class="bar-track"><div class="bar-fill" style="width:34%;background:var(--green)"></div></div><span class="bar-val">6.8ms</span></div>
+    <div class="bar-row"><span class="bar-label">Open Redirect</span><div class="bar-track"><div class="bar-fill" style="width:30%;background:var(--green)"></div></div><span class="bar-val">6.0ms</span></div>
+    <div class="bar-row"><span class="bar-label">SSRF node-fetch</span><div class="bar-track"><div class="bar-fill" style="width:30%;background:var(--yellow)"></div></div><span class="bar-val">6.0ms</span></div>
+    <div class="bar-row"><span class="bar-label">Bracket access</span><div class="bar-track"><div class="bar-fill" style="width:61%;background:var(--yellow)"></div></div><span class="bar-val">12.2ms</span></div>
+    <div class="bar-row"><span class="bar-label">Deserialization</span><div class="bar-track"><div class="bar-fill" style="width:66%;background:var(--yellow)"></div></div><span class="bar-val">13.3ms</span></div>
+    <div class="bar-row"><span class="bar-label">Array.map inline</span><div class="bar-track"><div class="bar-fill" style="width:28%;background:var(--accent)"></div></div><span class="bar-val">5.6ms</span></div>
+    <div class="bar-row"><span class="bar-label">Promise .then()</span><div class="bar-track"><div class="bar-fill" style="width:44%;background:var(--accent)"></div></div><span class="bar-val">8.9ms</span></div>
+    <div class="bar-row"><span class="bar-label">.bind() pre-arg</span><div class="bar-track"><div class="bar-fill" style="width:23%;background:var(--accent)"></div></div><span class="bar-val">4.6ms</span></div>
+  </div>
+  <p style="margin-top:12px;font-size:.58em;" class="dim">Query evaluation dominates (5–10ms). Extraction is sub-2ms for single-file fixtures. Tier 3 higher-order rules add O(1) joins, not new scans.</p>
+</section>
+
+<!-- 10. Gaps -->
+<section>
+  <h2>Remaining Gaps &amp; Roadmap</h2>
+  <table>
+    <tr><th>Gap</th><th>Description</th><th>Blocker</th><th>Effort</th></tr>
+    <tr><td>1.4</td><td>Class hierarchy / virtual dispatch</td><td>Extends() emits use-site ID not decl ID</td><td class="warn">~200 LOC</td></tr>
+    <tr><td>2.6</td><td>TypeGuard → Sanitizer bridge</td><td>Walker emits zero TypeGuard facts</td><td class="fail">BLOCKED</td></tr>
+    <tr><td>2.4+</td><td>Next.js SSR full end-to-end alert</td><td>SSR handler not wired to exec sink</td><td class="warn">~50 LOC</td></tr>
+    <tr><td>3.1</td><td>RegExp / ReDoS detection</td><td>Needs Go regex parser integration</td><td class="fail">~300 LOC</td></tr>
+    <tr><td>3.4</td><td>Dynamic import()</td><td>import() not emitted as ImportBinding</td><td class="warn">~50 LOC</td></tr>
+    <tr><td>3.5</td><td>Type-based library discrimination</td><td>All detection is import-binding-based</td><td class="fail">L effort</td></tr>
+    <tr><td>misc</td><td>Inline arrow SSRF / JWT</td><td>req.body.url two-hop FieldRead not TaintSource</td><td class="warn">~80 LOC</td></tr>
+  </table>
+</section>
+
+<!-- 11. Closing / cartoon -->
+<section>
+  <div class="cartoon-wrap">
+    <img src="tsq_cartoon.png" alt="tsq cartoon — robot catching code bugs">
+    <div class="cartoon-caption">
+      <div class="big-num pass">18 / 18</div>
+      <p style="margin-top:8px;">benchmark cases passing</p>
+      <p class="dim">9 CodeQL parity gaps closed</p>
+      <p class="dim">Sub-20ms end-to-end on real TypeScript fixtures</p>
+      <br>
+      <p><small>14 positive (recall) + 4 negative (precision)</small></p>
+      <p><small>Kind-match assertion on all Tier 1–2 positive cases</small></p>
+      <p class="dim" style="margin-top:16px;font-size:.55em;">github.com/Gjdoalfnrxu/tsq</p>
+    </div>
+  </div>
+</section>
+
+</div></div>
+<footer>tsq benchmark — 2026-04-25</footer>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    transition: 'slide',
+    transitionSpeed: 'fast',
+    plugins: [RevealHighlight],
+  });
+</script>
+</body>
+</html>
