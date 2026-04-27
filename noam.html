@@ -881,13 +881,18 @@ function renderQuestion() {
 
   const answersEl = document.getElementById('answers');
   answersEl.innerHTML = '';
-  const opts = [{ ...q.a, label: 'A' }, { ...q.b, label: 'B' }];
-  opts.forEach((opt, idx) => {
+  const opts = [
+    { ...q.a, reaction: q.reactions[0] },
+    { ...q.b, reaction: q.reactions[1] }
+  ];
+  if (Math.random() > 0.5) opts.reverse();
+  opts[0].label = 'A'; opts[1].label = 'B';
+  opts.forEach((opt) => {
     const btn = document.createElement('button');
     btn.className = 'answer-btn';
     btn.setAttribute('data-label', opt.label + ')');
     btn.textContent = opt.text;
-    btn.onclick = () => selectAnswer(idx, opt.score, q.reactions[idx], opt.score > 0);
+    btn.onclick = () => selectAnswer(btn, opt.score, opt.reaction, opt.score > 0);
     answersEl.appendChild(btn);
   });
 
@@ -928,7 +933,7 @@ function timeOut() {
   setTimeout(() => { document.getElementById('next-btn').style.display = 'block'; }, 400);
 }
 
-function selectAnswer(idx, pts, reaction, isGood) {
+function selectAnswer(clickedBtn, pts, reaction, isGood) {
   if (answered) return;
   answered = true;
   clearInterval(timerInterval);
@@ -941,9 +946,9 @@ function selectAnswer(idx, pts, reaction, isGood) {
   document.getElementById('streak-counter').textContent = `🔥 STREAK: ${streak}`;
 
   const btns = document.querySelectorAll('.answer-btn');
-  btns.forEach((b, i) => {
+  btns.forEach(b => {
     b.disabled = true;
-    if (i === idx) b.classList.add(isGood ? 'selected-good' : 'selected-bad');
+    if (b === clickedBtn) b.classList.add(isGood ? 'selected-good' : 'selected-bad');
   });
 
   const reactionEl = document.getElementById('noam-reaction');
