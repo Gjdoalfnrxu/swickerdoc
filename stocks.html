@@ -7,12 +7,10 @@
   <style>
     :root {
       --bg: #0d0d0d;
-      --surface: #161616;
-      --border: #2a2a2a;
+      --surface: #111;
+      --border: #222;
       --text: #e8e8e8;
-      --muted: #888;
-      --green: #22c55e;
-      --red: #ef4444;
+      --muted: #666;
       --accent: #6366f1;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -23,240 +21,128 @@
       font-size: 13px;
       min-height: 100vh;
       padding: 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
     }
     h1 {
-      font-size: 1.1rem;
+      font-size: 1rem;
       color: var(--muted);
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.2rem;
       letter-spacing: 0.1em;
       text-transform: uppercase;
     }
     .subtitle {
-      color: #444;
-      font-size: 0.75rem;
+      color: #333;
+      font-size: 0.72rem;
+      margin-bottom: 2.5rem;
+    }
+    .widget-wrap {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
       margin-bottom: 2rem;
     }
-    .section {
-      margin-bottom: 2rem;
-    }
-    .section-title {
-      font-size: 0.7rem;
+    .widget-label {
+      font-size: 0.68rem;
       text-transform: uppercase;
       letter-spacing: 0.15em;
       color: var(--accent);
+      padding: 0.5rem 1rem;
       border-bottom: 1px solid var(--border);
-      padding-bottom: 0.4rem;
-      margin-bottom: 0.75rem;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 0.6rem;
-    }
-    .card {
       background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 0.75rem 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
     }
-    .card:hover { border-color: #444; }
-    .ticker {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text);
-      letter-spacing: 0.05em;
-    }
-    .label {
+    .notes {
+      margin-top: 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 0.5rem;
+      color: var(--muted);
       font-size: 0.68rem;
-      color: var(--muted);
-      margin-bottom: 0.3rem;
     }
-    .price {
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
-    .change {
-      font-size: 0.75rem;
-    }
-    .up { color: var(--green); }
-    .down { color: var(--red); }
-    .loading { color: #555; font-size: 0.75rem; }
-    .error { color: #666; font-size: 0.7rem; }
-    .note {
-      font-size: 0.7rem;
-      color: #555;
-      font-style: italic;
-      margin-top: 0.25rem;
-    }
-    .refresh-bar {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 2rem;
-      color: var(--muted);
-      font-size: 0.7rem;
-    }
-    #refresh-btn {
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      padding: 0.3rem 0.75rem;
-      border-radius: 4px;
-      cursor: pointer;
-      font-family: inherit;
-      font-size: 0.7rem;
-    }
-    #refresh-btn:hover { border-color: #555; color: var(--text); }
-    #last-updated { color: #444; }
+    .note-item { padding: 0.5rem; border-left: 1px solid var(--border); }
+    .note-ticker { color: #aaa; font-weight: bold; }
+    .note-text { color: #555; margin-top: 0.15rem; }
   </style>
 </head>
 <body>
 
 <h1>Chungus Portfolio Watchlist</h1>
-<p class="subtitle">Hormuz thesis · Surveillance capitalism · Helium · Fertilizer</p>
+<p class="subtitle">Hormuz thesis · Surveillance capitalism · Helium · Fertilizer · Real-time via TradingView</p>
 
-<div class="refresh-bar">
-  <button id="refresh-btn" onclick="fetchAll()">↻ Refresh</button>
-  <span id="last-updated">Loading…</span>
+<div class="widget-wrap">
+  <div class="widget-label">All Tickers — Hormuz / Tankers / Surveillance / Fertilizer / Helium</div>
+  <div class="tradingview-widget-container">
+    <div class="tradingview-widget-container__widget"></div>
+    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+    {
+      "colorTheme": "dark",
+      "dateRange": "1D",
+      "showChart": false,
+      "locale": "en",
+      "isTransparent": true,
+      "showSymbolLogo": false,
+      "showFloatingTooltip": false,
+      "width": "100%",
+      "height": 700,
+      "tabs": [
+        {
+          "title": "Hormuz / Tankers",
+          "symbols": [
+            {"s": "NYSE:FRO",  "d": "Frontline — VLCC tankers (BEST PLAY)"},
+            {"s": "NYSE:DHT",  "d": "DHT Holdings — tankers"},
+            {"s": "NYSE:NAT",  "d": "Nordic American Tankers"},
+            {"s": "AMEX:XLE", "d": "Energy Select ETF"},
+            {"s": "NYSE:XOM", "d": "Exxon Mobil"},
+            {"s": "NYSE:RTX", "d": "RTX Corp — defense"},
+            {"s": "AMEX:GLD", "d": "Gold ETF — safe haven"}
+          ]
+        },
+        {
+          "title": "Surveillance",
+          "symbols": [
+            {"s": "NYSE:SONY", "d": "Sony Group — IMX sensors (in everything)"},
+            {"s": "NYSE:MSI",  "d": "Motorola Solutions — Avigilon analytics"},
+            {"s": "NASDAQ:AXON","d": "Axon — AI analytics / body cams"},
+            {"s": "NASDAQ:AMBA","d": "Ambarella — AI vision chips (leveraged bet)"},
+            {"s": "NASDAQ:NVDA","d": "NVIDIA — inference compute"}
+          ]
+        },
+        {
+          "title": "Fertilizer",
+          "symbols": [
+            {"s": "NYSE:NTR",  "d": "Nutrien — world's largest potash"},
+            {"s": "NYSE:MOS",  "d": "Mosaic — potash + phosphate"},
+            {"s": "NYSE:CF",   "d": "CF Industries — nitrogen / nat gas linked"}
+          ]
+        },
+        {
+          "title": "Helium",
+          "symbols": [
+            {"s": "NYSE:APD",  "d": "Air Products — helium distribution"},
+            {"s": "NYSE:LIN",  "d": "Linde — industrial gases"}
+          ]
+        },
+        {
+          "title": "Short Ideas",
+          "symbols": [
+            {"s": "NASDAQ:AAL","d": "American Airlines — fuel exposure"},
+            {"s": "NYSE:DAL",  "d": "Delta Air Lines — fuel exposure"}
+          ]
+        }
+      ]
+    }
+    </script>
+  </div>
 </div>
 
-<div class="section">
-  <div class="section-title">Hormuz / Oil & Tankers</div>
-  <div class="grid" id="hormuz"></div>
+<div class="notes">
+  <div class="note-item"><span class="note-ticker">FRO</span><div class="note-text">Frontline: if Hormuz closes, tankers reroute Africa. Voyage 3x longer = day rates spike. Most direct Hormuz bet.</div></div>
+  <div class="note-item"><span class="note-ticker">CF</span><div class="note-text">CF Industries: nitrogen fertilizer tied to nat gas. Hormuz disruption = nat gas spike = CF runs.</div></div>
+  <div class="note-item"><span class="note-ticker">AMBA</span><div class="note-text">Ambarella: makes AI vision chips inside smart cameras. Small cap, volatile, leveraged play on AI-in-cameras trend.</div></div>
+  <div class="note-item"><span class="note-ticker">NTR</span><div class="note-text">Nutrien: Russia/Belarus sanctioned = potash supply hole. Nutrien fills it.</div></div>
+  <div class="note-item"><span class="note-ticker">SONY</span><div class="note-text">Sony IMX sensors: inside the majority of surveillance cameras globally. Boring, solid, real exposure.</div></div>
+  <div class="note-item"><span class="note-ticker">APD / LIN</span><div class="note-text">No pure-play listed helium that isn't a micro-cap on a minor exchange. APD/LIN are the safe way to hold helium exposure.</div></div>
 </div>
-
-<div class="section">
-  <div class="section-title">Surveillance Capitalism</div>
-  <div class="grid" id="surveillance"></div>
-</div>
-
-<div class="section">
-  <div class="section-title">Fertilizer</div>
-  <div class="grid" id="fertilizer"></div>
-</div>
-
-<div class="section">
-  <div class="section-title">Helium (Industrial Gas)</div>
-  <div class="grid" id="helium"></div>
-</div>
-
-<div class="section">
-  <div class="section-title">Short Ideas (Hormuz Losers)</div>
-  <div class="grid" id="shorts"></div>
-</div>
-
-<script>
-const WATCHLIST = {
-  hormuz: [
-    { ticker: 'FRO',  label: 'Frontline — VLCC tankers' },
-    { ticker: 'DHT',  label: 'DHT Holdings — tankers' },
-    { ticker: 'NAT',  label: 'Nordic American Tankers' },
-    { ticker: 'XLE',  label: 'Energy Select ETF' },
-    { ticker: 'XOM',  label: 'Exxon Mobil' },
-    { ticker: 'RTX',  label: 'RTX Corp — defense' },
-    { ticker: 'GLD',  label: 'Gold ETF — safe haven' },
-  ],
-  surveillance: [
-    { ticker: 'SONY', label: 'Sony Group — IMX sensors' },
-    { ticker: 'MSI',  label: 'Motorola Solutions — Avigilon' },
-    { ticker: 'AXON', label: 'Axon — AI analytics/bodycam' },
-    { ticker: 'AMBA', label: 'Ambarella — AI vision chips' },
-    { ticker: 'NVDA', label: 'NVIDIA — inference compute' },
-  ],
-  fertilizer: [
-    { ticker: 'NTR',  label: "Nutrien — world's largest potash" },
-    { ticker: 'MOS',  label: 'Mosaic — potash + phosphate' },
-    { ticker: 'CF',   label: 'CF Industries — nitrogen/nat gas' },
-  ],
-  helium: [
-    { ticker: 'APD',  label: 'Air Products — helium distribution' },
-    { ticker: 'LIN',  label: 'Linde — industrial gases' },
-  ],
-  shorts: [
-    { ticker: 'AAL',  label: 'American Airlines — fuel exposure' },
-    { ticker: 'DAL',  label: 'Delta Air Lines — fuel exposure' },
-  ],
-};
-
-const allTickers = Object.values(WATCHLIST).flat().map(s => s.ticker);
-let priceData = {};
-
-async function fetchAll() {
-  document.getElementById('last-updated').textContent = 'Fetching…';
-  const symbols = allTickers.join(',');
-  const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbols}`;
-  const proxy = `https://corsproxy.io/?${encodeURIComponent(url)}`;
-
-  try {
-    const res = await fetch(proxy);
-    const json = await res.json();
-    const quotes = json?.quoteResponse?.result || [];
-    quotes.forEach(q => {
-      priceData[q.symbol] = {
-        price: q.regularMarketPrice,
-        change: q.regularMarketChange,
-        changePct: q.regularMarketChangePercent,
-        currency: q.currency,
-      };
-    });
-    render();
-    const now = new Date();
-    document.getElementById('last-updated').textContent =
-      `Updated ${now.toLocaleTimeString()} — 15min delay on most tickers`;
-  } catch (e) {
-    document.getElementById('last-updated').textContent = 'Fetch failed — try refreshing';
-  }
-}
-
-function render() {
-  for (const [section, stocks] of Object.entries(WATCHLIST)) {
-    const el = document.getElementById(section);
-    el.innerHTML = '';
-    stocks.forEach(s => {
-      const d = priceData[s.ticker];
-      let priceHtml, changeHtml;
-      if (!d) {
-        priceHtml = `<span class="loading">—</span>`;
-        changeHtml = '';
-      } else {
-        const sign = d.change >= 0 ? '+' : '';
-        const cls = d.change >= 0 ? 'up' : 'down';
-        const arrow = d.change >= 0 ? '▲' : '▼';
-        priceHtml = `<span class="price ${cls}">${d.currency === 'USD' ? '$' : ''}${d.price.toFixed(2)}</span>`;
-        changeHtml = `<span class="change ${cls}">${arrow} ${sign}${d.change.toFixed(2)} (${sign}${d.changePct.toFixed(2)}%)</span>`;
-      }
-      el.innerHTML += `
-        <div class="card">
-          <div class="ticker">${s.ticker}</div>
-          <div class="label">${s.label}</div>
-          ${priceHtml}
-          ${changeHtml}
-        </div>`;
-    });
-  }
-}
-
-// Initial render with loading state
-for (const [section, stocks] of Object.entries(WATCHLIST)) {
-  const el = document.getElementById(section);
-  el.innerHTML = '';
-  stocks.forEach(s => {
-    el.innerHTML += `
-      <div class="card">
-        <div class="ticker">${s.ticker}</div>
-        <div class="label">${s.label}</div>
-        <span class="loading">loading…</span>
-      </div>`;
-  });
-}
-
-fetchAll();
-// Auto-refresh every 60 seconds
-setInterval(fetchAll, 60000);
-</script>
 
 </body>
 </html>
