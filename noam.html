@@ -352,8 +352,8 @@
   .backroom-title { font-size: 52px; color: #ff2222; text-shadow: 0 0 20px rgba(255,0,0,0.6); letter-spacing: 4px; margin-bottom: 20px; animation: redpulse 1s ease-in-out infinite; }
   .backroom-text { font-size: 22px; color: #888; max-width: 560px; line-height: 1.6; margin-bottom: 24px; }
 
-  /* ── PETE EASTER EGG ── */
-  #pete-screen {
+  /* ── NASSEEM EASTER EGG ── */
+  #nasseem-screen {
     display: none;
     width: 100%;
     max-width: 760px;
@@ -364,10 +364,10 @@
     text-align: center;
   }
 
-  .pete-title { font-size: 42px; color: var(--blue); letter-spacing: 3px; margin-bottom: 16px; }
-  .pete-count { font-size: 120px; color: var(--amber); margin-bottom: 8px; }
-  .pete-text { font-size: 22px; color: #666; max-width: 500px; line-height: 1.6; margin-bottom: 32px; }
-  .pete-quote { font-size: 18px; color: #333; font-style: italic; max-width: 480px; line-height: 1.5; margin-bottom: 32px; }
+  .nasseem-title { font-size: 42px; color: var(--blue); letter-spacing: 3px; margin-bottom: 16px; }
+  .nasseem-count { font-size: 120px; color: var(--amber); margin-bottom: 8px; }
+  .nasseem-text { font-size: 22px; color: #666; max-width: 500px; line-height: 1.6; margin-bottom: 32px; }
+  .nasseem-quote { font-size: 18px; color: #333; font-style: italic; max-width: 480px; line-height: 1.5; margin-bottom: 32px; }
 
   /* ── SCANLINES ── */
   body::after {
@@ -501,17 +501,17 @@
   <button class="action-btn secondary" onclick="resetGame()">[ LEAVE ]</button>
 </div>
 
-<!-- PETE EASTER EGG SCREEN -->
-<div id="pete-screen">
-  <div class="pete-title">YOU FOUND IT</div>
-  <div class="pete-count">16</div>
+<!-- NASSEEM EASTER EGG SCREEN -->
+<div id="nasseem-screen">
+  <div class="nasseem-title">YOU FOUND IT</div>
+  <div class="nasseem-count">16</div>
   <div style="font-size:24px;color:#555;letter-spacing:2px;margin-bottom:16px">CHOMSKY INTERACTIONS</div>
-  <div class="pete-text">
+  <div class="nasseem-text">
     There is a member of this tribunal who has referenced "Understanding Power" 16 times in Discord.<br><br>
     He claims to hate Chomsky.<br><br>
     The evidence does not support this.
   </div>
-  <div class="pete-quote">
+  <div class="nasseem-quote">
     "I hate Chomsky"<br>
     — Nasseem, 16 times before referencing Chomsky<br><br>
     "Understanding Power is actually pretty good"<br>
@@ -546,16 +546,16 @@ function playBackroom() { beep(110,0.3,'sawtooth',0.15); setTimeout(()=>beep(90,
 function playResult(stars) { const n=[196,247,294,370,440,523,659,784,988,1047]; for(let i=0;i<Math.min(stars,10);i++) setTimeout(()=>beep(n[i],0.15,'sine',0.12),i*80); }
 function playTyping()   { beep(800+Math.random()*200,0.02,'square',0.04); }
 function playUrgent()   { beep(880,0.05,'square',0.15); }
-function playPete()     { beep(523,0.1,'sine',0.1); setTimeout(()=>beep(523,0.1,'sine',0.1),120); setTimeout(()=>beep(659,0.3,'sine',0.15),240); }
+function playNasseem()     { beep(523,0.1,'sine',0.1); setTimeout(()=>beep(523,0.1,'sine',0.1),120); setTimeout(()=>beep(659,0.3,'sine',0.15),240); }
 
-// ── PETE EASTER EGG ──────────────────────────────────
+// ── NASSEEM EASTER EGG ───────────────────────────────
 let faceClickCount = 0;
 function faceClick() {
   faceClickCount++;
   beep(400 + faceClickCount * 30, 0.04, 'square', 0.06);
   if (faceClickCount >= 16) {
-    playPete();
-    showScreen('pete-screen');
+    playNasseem();
+    showScreen('nasseem-screen');
     faceClickCount = 0;
   }
 }
@@ -806,13 +806,13 @@ let timeLeft = 15;
 let highScore = 0;
 
 function showScreen(id) {
-  ['title-screen','game-screen','results-screen','backroom-screen','pete-screen'].forEach(s => {
+  ['title-screen','game-screen','results-screen','backroom-screen','nasseem-screen'].forEach(s => {
     const el = document.getElementById(s);
     el.style.display = 'none';
   });
   const target = document.getElementById(id);
   target.style.display = 'flex';
-  if (['game-screen','results-screen','backroom-screen','pete-screen'].includes(id)) {
+  if (['game-screen','results-screen','backroom-screen','nasseem-screen'].includes(id)) {
     target.style.flexDirection = 'column';
   }
   if (id === 'title-screen') {
