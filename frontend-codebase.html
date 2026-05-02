@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MY FIRST REAL CODEBASE!! a thesis defense</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Patrick+Hand&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f5ecd7;
+    --ink:#2b241c;
+    --ink-soft:#4a3f33;
+    --gold:#c89b3c;
+    --oxblood:#8a2a1f;
+    --copper:#a86b32;
+    --moss:#5e7148;
+    --pinkmush:#d96a8e;
+    --bluestain:#3b6e8f;
+    --shadow:rgba(43,36,28,.18);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:#1a1410;color:var(--ink);font-family:"Patrick Hand",system-ui,sans-serif}
+  html{scroll-snap-type:y mandatory;scroll-behavior:smooth}
+  body{font-size:18px;line-height:1.45}
+  .slide{
+    scroll-snap-align:start;
+    min-height:100vh;
+    width:min(960px,94vw);
+    margin:24px auto;
+    padding:48px 56px 56px;
+    background:var(--paper);
+    border:2px solid var(--ink);
+    border-radius:6px;
+    box-shadow:0 30px 60px rgba(0,0,0,.6), inset 0 0 80px rgba(191,165,124,.35);
+    position:relative;
+    overflow:hidden;
+  }
+  .slide::after{
+    content:attr(data-n) " / 14";
+    position:absolute;bottom:14px;right:22px;
+    font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--ink-soft);opacity:.7;
+  }
+  h1,h2,h3{font-family:"Caveat",cursive;color:var(--oxblood);margin:0 0 12px;line-height:1.05;font-weight:700}
+  h1{font-size:64px}
+  h2{font-size:46px}
+  h3{font-size:30px;color:var(--moss)}
+  p{margin:10px 0}
+  em.snap{color:var(--copper);font-style:italic}
+  strong.shout{color:var(--oxblood);letter-spacing:.5px}
+  code, pre{font-family:"JetBrains Mono",monospace;font-size:14px}
+  pre{
+    background:#efe3c4;border:1px dashed var(--copper);border-radius:4px;
+    padding:14px 16px;overflow:auto;color:var(--ink);
+    box-shadow:inset 0 0 0 4px var(--paper);
+  }
+  .kicker{font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--copper);margin-bottom:6px}
+  .filepath{font-family:"JetBrains Mono",monospace;font-size:13px;color:var(--bluestain);background:#efe3c4;padding:2px 6px;border-radius:3px;border:1px solid #d6c79c}
+  .mush{
+    margin-top:18px;padding:14px 16px;
+    background:linear-gradient(180deg,#f1e2c2 0%,#e9d6b1 100%);
+    border-left:5px solid var(--pinkmush);
+    border-radius:4px;
+    font-family:"Caveat",cursive;font-size:24px;color:var(--moss);
+    line-height:1.15;
+  }
+  .mush::before{content:"mushroom corner!! ";font-size:18px;color:var(--pinkmush);font-weight:700;text-transform:uppercase;letter-spacing:1px}
+  .tangent{font-family:"Caveat",cursive;font-size:22px;color:var(--bluestain);margin:12px 0}
+  .ascii{
+    background:#efe3c4;border:1px dashed var(--ink-soft);
+    padding:18px;white-space:pre;font-family:"JetBrains Mono",monospace;
+    font-size:13px;line-height:1.35;color:var(--ink);border-radius:4px;
+  }
+  .pill{display:inline-block;background:var(--oxblood);color:var(--paper);padding:2px 10px;border-radius:99px;font-size:14px;font-family:"JetBrains Mono",monospace;letter-spacing:1px;margin-right:6px}
+  .pill.gold{background:var(--gold);color:var(--ink)}
+  .pill.moss{background:var(--moss)}
+  .pill.blue{background:var(--bluestain)}
+  .quote{
+    font-family:"Caveat",cursive;font-size:54px;line-height:1.05;color:var(--ink);
+    text-align:center;padding:60px 20px;
+  }
+  .quote small{display:block;font-size:22px;color:var(--ink-soft);margin-top:18px;font-family:"Patrick Hand",sans-serif}
+  .grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:start}
+  .annot{font-family:"Caveat",cursive;font-size:22px;color:var(--bluestain);padding-left:16px;border-left:3px dotted var(--bluestain)}
+  ul.loose li{margin:8px 0}
+  .footer-tape{
+    position:absolute;top:18px;left:-40px;transform:rotate(-6deg);
+    background:var(--gold);color:var(--ink);
+    padding:4px 60px;font-family:"JetBrains Mono",monospace;
+    font-size:11px;letter-spacing:2px;text-transform:uppercase;
+    box-shadow:0 2px 6px var(--shadow);
+  }
+  .smol{font-size:15px;color:var(--ink-soft)}
+  .splat{color:var(--pinkmush);font-weight:700}
+</style>
+</head>
+<body>
+
+<section class="slide" data-n="1">
+  <div class="footer-tape">SLIDE DECK FRESHLY HARVESTED</div>
+  <p class="kicker">a thesis defense</p>
+  <h1>MY FIRST REAL CODEBASE!!!</h1>
+  <h2 style="color:var(--copper);font-size:34px">(it's a casino, but like, satirically)</h2>
+  <p style="font-size:22px;margin-top:30px">hi hi hi OKAY YOU GUYS so I have been working on this thing called <strong class="shout">SUNK COST</strong> and I am going to walk you through the ENTIRE frontend src tree because I am SO proud of it and also because if I don't infodump about it RIGHT NOW I will combust.</p>
+  <p class="tangent">housekeeping: my girlfriend (the one i live with, who is also a girlfriend, yes, both, don't worry about it) read this deck and said "this is unhinged" which i'm choosing to take as a compliment.</p>
+  <p class="smol">aesthetic disclaimer: i picked the colours from a real western photograph AND the pink in the sidebar is from a <em>Mycena leaiana</em> field guide because of COURSE it is. let's go.</p>
+</section>
+
+<section class="slide" data-n="2">
+  <p class="kicker">the whole shape of the thing</p>
+  <h2>okay so the WHOLE THING is built on...</h2>
+  <p>vite + svelte 5 (runes!! i love runes!!) + threlte for the 3D bits + a couple of <strong class="shout">RUST CRATES COMPILED TO WASM</strong> for anything that touches RNG or money. that last bit is non-negotiable, i will die on this hill.</p>
+  <div class="ascii">frontend/src/
+├── design-tokens.ts        ← the single source of vibe
+├── Hello.svelte            ← lobby-ish, don't look at it
+├── slots/                  ← the OG. webgl cabinet, threlte reels
+├── blackjack/              ← humble. card-based. tasteful.
+├── roulette/               ← a wheel. just a wheel. (for now)
+├── crash/                  ← THE NEW HOTNESS. a pig. a rope. wasm.
+└── renderer/               ← shared canvas + sprite + chip helpers
+                              (yes it has craps and horse-racing
+                               stubs in it, i was AMBITIOUS, ok)</div>
+  <div class="mush">imagine the repo as a forest floor. each game folder is its own fruiting body, but underneath them <em>all</em> there's one mycelial mat — <code>renderer/</code>, <code>design-tokens.ts</code>, the svelte stores. you pull on one mushroom and the whole network twitches.</div>
+</section>
+
+<section class="slide" data-n="3">
+  <p class="kicker">the design tokens!!!</p>
+  <h2>we have a CSS custom property system!!!</h2>
+  <p>okay so technically what happens here is — <span class="filepath">/frontend/src/design-tokens.ts</span> exports a frozen <code>TOKENS</code> object AND <span class="filepath">/frontend/design/DESIGN_SYSTEM.md</span> locks the actual hexes in prose so future-me can't drift. there is a <strong class="shout">forbidden colours list</strong>. no blue. no cyan. no neon. THE PAPER MUST STAY WARM.</p>
+  <pre>FELT_COLOR:    "#1a5c2a"   // the felt
+BORDER_COLOR:  "#d4af37"   // brass trim
+WIN_ANIM_MS:   800         // === LOSS_ANIM_MS, on purpose
+LOSS_ANIM_MS:  800         // (there's a console.assert!!)</pre>
+  <p class="tangent">the assert is because if wins last longer than losses the game is <em>lying with timing</em>, which the harm-reduction lit is RIGHT about and i won't budge on.</p>
+  <div class="mush">tokens are like the hyphal compatibility test — two mycelia only fuse if their alleles match. two components only stop clashing if they pull from the same token map. literally the same energy.</div>
+</section>
+
+<section class="slide" data-n="4">
+  <p class="kicker">the lobby</p>
+  <h2>just a humble static html.</h2>
+  <p><span class="filepath">/frontend/public/index.html</span> — 522 lines of hand-rolled HTML+CSS for the front door. no framework!! NONE!! it's the <em>lobby</em>, it doesn't need to hydrate, it needs to <strong class="shout">load in 80ms and look like a saloon</strong>.</p>
+  <div class="grid2">
+    <div>
+      <ul class="loose">
+        <li><span class="pill gold">design tokens</span> mirrored as :root vars so the lobby and the SPA agree on paper-base #e9d6b1</li>
+        <li><span class="pill">sepia bg</span> with a kerosene-lamp radial gradient under the SUNK COST wordmark</li>
+        <li><span class="pill moss">no tracking</span> not a single analytics ping. spite-driven feature.</li>
+      </ul>
+    </div>
+    <div class="annot">future me: if you ever feel the urge to "framework-ify the lobby" — DON'T. you tried. it got slower. revert.</div>
+  </div>
+  <p class="tangent">i added comments EVERYWHERE because future me has the memory of a goldfish and current me has the memory of a goldfish on shrooms (NOT THOSE ONES. <em>panaeolus cinctulus</em> is poisonous to your judgement, not your hippocampus, but still).</p>
+</section>
+
+<section class="slide" data-n="5">
+  <p class="kicker">slots, part 1 of 2</p>
+  <h2>SLOTS!! the WebGL cabinet!!</h2>
+  <p>okay this is the biggest folder and i am SO sorry, look. <span class="filepath">/frontend/src/slots/</span> has its OWN sub-architecture:</p>
+  <div class="ascii">slots/
+├── SlotsApp.svelte         ← top-level. hosts the Threlte canvas.
+├── main.ts                 ← entry, mounts SlotsApp
+├── webgl/                  ← shaders, reel meshes, particle FX
+├── chrome/                 ← DOM HUD: balance, bet, spin, auto
+├── components/             ← win overlays, leaderboard, bonus screens
+├── state/                  ← reelStore, winStore, cinematicStore...
+├── spinController.ts       ← THE conductor. orchestrates everything.
+├── timing.ts               ← anticipation windows, dwell, frame budgets
+├── audioBindings.ts        ← stingers + tension layer
+└── pkg/slots.js            ← WASM!! rng + paytable lives in RUST.</div>
+  <p>the spin pipeline goes: <code>handleSpin → wasm RNG → reelStore.start → useTask raf loop → anticipation if 3+ scatters → resolve → winStore.show → audio stinger</code>. every step is its own module. i broke it apart because the imperative-canvas version was 600 lines of <em>vibes</em> and i couldn't test it.</p>
+  <div class="mush">a basidiocarp drops spores on a frame-perfect cycle — <code>useTask</code> is the same idea. each tick the gills shed one more frame of multiplier into the air.</div>
+</section>
+
+<section class="slide" data-n="6">
+  <p class="kicker">slots, part 2 of 2</p>
+  <h2>the bonus cinematic + win overlays</h2>
+  <p>OKAY so when you get three dynamite scatters, <code>cinematicStore</code> kicks in and the whole reel grid <em>tilts</em> while a kerosene-lamp pulse sweeps across, then you drop into the bonus screen. the cinematic is <strong class="shout">skippable by tap</strong> because i'm not a monster. <span class="filepath">slots/SlotsApp.svelte</span> wires the pointer fallthrough straight to <code>cinematicStore.trySkip()</code>.</p>
+  <p>win tiers live in tokens — <code>standard / blackjack / big-win / jackpot / free-spin-trigger</code> — each one specifies particle count + glow + label. there is a <span class="pill blue">JACKPOT</span> tier with <strong>200 particles</strong>, which is the most particles i have ever felt allowed to ship.</p>
+  <p class="tangent">i KNOW 200 isn't a lot in webgl terms. i just mean emotionally.</p>
+  <div class="mush">win tiers are like fruiting flushes — first flush is the standard win, and a jackpot is the year the <em>whole log</em> goes off at once. you don't get one without months of substrate prep, which in our case is the spin pipeline.</div>
+</section>
+
+<section class="slide" data-n="7">
+  <p class="kicker">blackjack</p>
+  <h2>blackjack: the calm one.</h2>
+  <p><span class="filepath">/frontend/src/blackjack/BlackjackGame.svelte</span> — card dealing, split, double, surrender, all the standard rules, no surprises. <code>game.ts</code> has the rules engine, <code>store.ts</code> is the svelte writable, <code>actions/</code> are the player intents, <code>animation-helpers.ts</code> handles the card flips. it has TESTS. it has like FORTY tests.</p>
+  <p>i'm including it because it's the slide where i can <strong class="shout">breathe</strong>. no shaders. no wasm. one canvas, two hands, a chip stack. it's the cup of chamomile in this deck.</p>
+  <div class="mush">blackjack is <em>Agaricus bisporus</em>. the supermarket button mushroom. unsexy, totally reliable, cooked the same way for a hundred years, and you would actually MISS it if it were gone.</div>
+</section>
+
+<section class="slide" data-n="8">
+  <p class="kicker">roulette</p>
+  <h2>roulette: also calm. suspiciously calm.</h2>
+  <p><span class="filepath">/frontend/src/roulette/</span> is just <code>game.ts</code>, <code>sounds.ts</code>, and a <code>__tests__</code> folder. THAT'S IT. no svelte component yet — the wheel rendering is borrowed from <span class="filepath">/frontend/src/renderer/roulette/</span> in the shared mycelium.</p>
+  <p>fun fact about this: <em>this is actually a really common pattern</em> (split the rules engine from the renderer so the rules can run headless in tests) but i think MY implementation is a bit unhinged because the rules engine is just <code>game.ts</code> exporting pure functions and a TS discriminated union for outcomes. no class, no factory, no DI container. just functions. <strong class="shout">JUST. FUNCTIONS.</strong></p>
+  <p class="tangent">yes i know this isn't industry standard but LISTEN — when the only state is "the wheel landed on 17" you do not need a service locator.</p>
+</section>
+
+<section class="slide" data-n="9">
+  <p class="kicker">CRASH — the new hotness</p>
+  <h2>CRASH!! the pig climbs the rope ladder!!</h2>
+  <p>OK OK OK OK. <span class="filepath">/frontend/src/crash/</span>. this is the satire game. a pig with little angel wings climbs a rope ladder, the multiplier ticks up, you cash out before it falls. it is also <strong class="shout">provably fair via commit-reveal</strong> because if we're going to mock the genre we should at least out-engineer it.</p>
+  <pre>// crash/engine/wasmClient.ts
+//   1. centralises the WASM import (mockable in vitest)
+//   2. unwraps { result } | { error } into a Result&lt;T&gt;
+//      discriminated union — no implicit unwrap, no silent swallowing
+//   3. coerces performance.now() to bigint for the engine</pre>
+  <p>the rust crate at <code>crates/crash/</code> owns: the seed schedule, the crash-point distribution, the multiplier curve, the commit hash, the reveal verification. the TS side owns: pixels, taps, vibes. clean seam. you can't cheat the engine from devtools. <em>i tried.</em></p>
+  <div class="mush">the WASM module is a <strong>sclerotium</strong> — a dense little knot of dormant compute that wakes up the second nutrients (a player click) hit it, fruits a round, then goes back to sleep. cleanest boundary in the whole repo.</div>
+</section>
+
+<section class="slide" data-n="10">
+  <p class="kicker">CRASH — the 3D bit</p>
+  <h2>the pig billboard + the InstancedMesh ladder</h2>
+  <div class="grid2">
+    <div>
+      <p><span class="filepath">scene/PigBillboard.svelte</span> renders <code>pig-angel-wings.png</code> on a camera-facing quad. NO SKELETON YET. the climb is just <code>pigY = f(multiplier)</code> with sinusoidal bob + tilt for fake life. phase 3.5 will do the real glTF rig. shipping the billboard first was a <strong class="shout">deliberate choice</strong> — see, i learned about scope from getting burned on slots.</p>
+    </div>
+    <div class="annot">look at the little flourish where the bob frequency drops as the multiplier climbs — pig is getting tired!! i giggled when i wrote it!!</div>
+  </div>
+  <p><span class="filepath">scene/RopeLadder.svelte</span> is ~400 thin Box rungs in a single <code>InstancedMesh</code> from y=0 to y=200, plus two CylinderGeometry side ropes. the whole Group sways ~0.05wu at 0.5Hz for "wind in the rigging" — <strong>suppressed under prefers-reduced-motion</strong> because we are NICE here.</p>
+  <div class="mush">an instanced mesh is a <em>cluster</em> — one genome, many fruiting bodies, one draw call. that's <em>Armillaria</em> energy. (the world's largest organism is a honey fungus in oregon. unrelated. wanted you to know.)</div>
+</section>
+
+<section class="slide" data-n="11">
+  <p class="kicker">CRASH — camera follow</p>
+  <h2>the camera follow was a BUG that became a FEATURE.</h2>
+  <p><span class="filepath">scene/CrashScene.svelte</span> instantiates the PerspectiveCamera as a sibling of the renderers and lerps <code>camera.position.y</code> toward <code>cameraTargetY</code> at rate <strong>0.1</strong> per tick. originally i forgot to clamp it and the camera <em>overshot the pig</em> on every crash, which looked AMAZING — the pig vanishes upward, the camera lags, you see only sky and falling rope. so i kept it and called it "the abandonment frame".</p>
+  <pre>const CAMERA_LERP_RATE = 0.1;
+// Hold the camera at last Y for ~600ms after a crash so the pig is seen
+// (or rather, conspicuously isn't). the abandonment frame.</pre>
+  <p class="tangent">this is my favourite comment in the entire repo. i reread it sometimes. it's fine.</p>
+</section>
+
+<section class="slide" data-n="12">
+  <div class="quote">
+    "every game folder has its own <em>state/</em> directory exporting a writable store, and every component <code>$:</code>-subscribes to it.<br/>that's the mycelium. that's the whole thing."
+    <small>— me, at 2am, to my girlfriend, who said "go to bed"</small>
+  </div>
+  <p class="kicker" style="text-align:center">the svelte store pattern</p>
+  <p style="text-align:center"><span class="filepath">crash/state/crashStore.ts</span> &nbsp; <span class="filepath">slots/state/reelStore.ts</span> &nbsp; <span class="filepath">blackjack/store.ts</span></p>
+  <p>NO wasm calls live in the store. controllers (<code>roundController</code>, <code>spinController</code>) own the engine plumbing and push <em>state-shaped</em> updates in. the store exposes only the snapshot the chrome cares about. one direction, no loops, easy to test.</p>
+  <div class="mush">stores are the mycelial network and components are the fruiting bodies above ground. when the substrate (state) shifts, every mushroom in the patch fruits in sync. <span class="splat">that's reactivity, baby.</span></div>
+</section>
+
+<section class="slide" data-n="13">
+  <p class="kicker">tests + CI</p>
+  <h2>the spore-print key.</h2>
+  <p>vitest on the TS side, <code>cargo test</code> + <strong>proptests</strong> on the rust side. the proptests are the part i'm most smug about — they generate random seeds and assert that <em>commit then reveal</em> always verifies, that the multiplier curve is monotonic during Climbing, and that no codepath returns a negative balance.</p>
+  <p>CI: github actions running on a <strong class="shout">self-hosted NAS box at home</strong> (labels: <code>pesos-deploy</code>, <code>e2e</code>). playwright e2e suite drives the lobby + each game in headless chromium. <em>i did not set up the runners</em>, my devops friend did, but i USE them and i RESPECT them.</p>
+  <div class="mush">a test suite is the mushroom hunter's spore-print key — you can think a thing is <em>Agaricus</em> all day, but you don't <em>know</em> until you put it gill-side-down on white paper overnight. proptests are spore prints.</div>
+</section>
+
+<section class="slide" data-n="14">
+  <p class="kicker">closing</p>
+  <h1 style="font-size:84px">AND THAT'S MY CODEBASE!!!</h1>
+  <p style="font-size:22px;margin-top:20px">things i did NOT show you because the deck would explode: <code>renderer/craps.ts</code> (stub!), <code>renderer/horse-racing.ts</code> (stub!! but it has sprites already!!), the audio stinger graph, the harm-disclosure dwell timer (<code>HARM_DISCLOSURE_DWELL_MS = 500</code>, mandatory, non-skippable), the leaderboard ring buffer, the entire <code>e2e/</code> folder.</p>
+  <p>what's left: phase 4 (real pig rig), phase 5 (multiplayer crash lobby — terrifying), phase 6 (mobile portrait pass), phase 7 (i don't know yet, ask me in a month).</p>
+  <p class="tangent">ANYWAY. that's not what we're here for. (it kind of is.) thank you for coming to my thesis defense, this is my FIRST big codebase, i'm so proud of it honestly, please clap, or don't, but if you don't <strong class="shout">at least tell me which slide had your favourite mushroom analogy.</strong></p>
+  <p style="text-align:right;margin-top:40px;font-family:'Caveat',cursive;font-size:36px;color:var(--oxblood)">xoxo, me 🍄</p>
+</section>
+
+</body>
+</html>
